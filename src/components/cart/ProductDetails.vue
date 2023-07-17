@@ -1,0 +1,27 @@
+<template>
+    <v-card flat>
+        <v-row>
+            <v-col cols="3" justify-center class="text-subtitle-2 pr-2">
+                <v-avatar size="large" :lazy-src="useAppConfig().defaults.thumbnail"
+                    :image="cartItem.product.image.url"></v-avatar>
+            </v-col>
+            <v-col cols="5" class="text-subtitle-2 px-0 mx-0">
+                {{ cartItem.product.name }}
+            </v-col>
+            <v-col cols=" 4">
+                <v-card-actions>
+                    <v-icon>mdi-plus</v-icon>
+                    <v-spacer></v-spacer>
+                    <v-icon>mdi-minus</v-icon>
+                </v-card-actions>
+            </v-col>
+        </v-row>
+    </v-card>
+</template>
+<script >
+export default {
+    props: {
+        cartItem: { type: Object }
+    }
+}
+</script>

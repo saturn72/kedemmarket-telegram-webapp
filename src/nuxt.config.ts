@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  devtools: { enabled: true },
+  //  devtools: { enabled: true },
   app: {
     head: {
       titleTemplate: '%s - kedemmarket-cart',
@@ -24,10 +24,12 @@ export default defineNuxtConfig({
     }
   ],
   modules: [
-    '@nuxtjs/i18n',
+    // '@nuxtjs/i18n',
     '@invictus.codes/nuxt-vuetify',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
   ],
-  i18n: {
-    vueI18n: './i18n.config.ts'
+  vuetify: {
+
   }
 })

@@ -9,4 +9,3 @@
         "maxAgeSeconds": 3600
     }
 ]
-//gsutil cors set cors.json gs://muttop.appspot.com/
