@@ -61,6 +61,33 @@ const getOrCreateVendorCart = (state: CartState): VendorCart => {
     return getVendorCart(state) as VendorCart;
 }
 
+const incrementCartItemInternal = (cart: VendorCart, product: Product): void => {
+    const existCartItem = findItem(cart.items, product.id);
+
+    if (!existCartItem) {
+        const ci = {
+            product, orderedQuantity: 1, addedOnUtc: new Date(),
+        };
+        cart.items.push(ci);
+
+    } else {
+        existCartItem.orderedQuantity++;
+    };
+}
+
+const decrementCartItemInternal = (cart: VendorCart, product: Product): void => {
+    const ci = findItem(cart.items, product.id);
+    if (!ci) {
+        return;
+    }
+
+    if (ci.orderedQuantity > 0) {
+        ci.orderedQuantity--;
+        if (ci.orderedQuantity === 0) {
+            _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
+        }
+    }
+}
 export const useCartStore = defineStore('cart', {
     state: (): CartState => {
         return {
@@ -103,23 +130,23 @@ export const useCartStore = defineStore('cart', {
             return ci?.orderedQuantity || 0;
         },
 
-        incrementCartItem(product: Product): void {
-            const cart = getOrCreateVendorCart(this.$state);
-            const existCartItem = findItem(cart.items, product.id);
-
-            if (!existCartItem) {
-                const ci = {
-                    product, orderedQuantity: 1, addedOnUtc: new Date(),
-                };
-                cart.items.push(ci);
-
-            } else {
-                existCartItem.orderedQuantity++;
+        incrementCartItem(vendorCart: VendorCart, product: Product): void {
+            const cart = this.$state.vendorCarts?.find(vc => vc.id == vendorCart.id);
+            if (!cart) {
+                return;
             }
+            incrementCartItemInternal(cart, product);
         },
 
-        decrementCartItem(product: Product): void {
-            const cart = getOrCreateVendorCart(this.$state);
+        decrementCartItem(vendorCart: VendorCart, product: Product): void {
+            const cart = this.$state.vendorCarts?.find(vc => vc.id == vendorCart.id);
+            if (!cart) {
+                return;
+            }
+            decrementCartItemInternal(cart, product);
+        },
+        removeItemFromCart(vendorCart: VendorCart, product: Product): void {
+            const cart = this.$state.vendorCarts?.find(vc => vc.id == vendorCart.id);
             if (!cart) {
                 return;
             }
@@ -128,13 +155,19 @@ export const useCartStore = defineStore('cart', {
             if (!ci) {
                 return;
             }
+            _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
+        },
+        incrementVendorCartItem(product: Product): void {
+            const cart = getOrCreateVendorCart(this.$state);
+            incrementCartItemInternal(cart, product);
+        },
 
-            if (ci.orderedQuantity > 0) {
-                ci.orderedQuantity--;
-                if (ci.orderedQuantity === 0) {
-                    _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
-                }
+        decrementVendorCartItem(product: Product): void {
+            const cart = getOrCreateVendorCart(this.$state);
+            if (!cart) {
+                return;
             }
+            decrementCartItemInternal(cart, product);
         },
     },
     persist: {

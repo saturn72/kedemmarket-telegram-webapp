@@ -1,6 +1,6 @@
 <template>
-    <VendorProductCartAddButton v-if="qty == 0" :product="product"></VendorProductCartAddButton>
-    <VendorProductCartPlusMinusButtons v-else :product="product"></VendorProductCartPlusMinusButtons>
+    <ProductCartAddButton v-if="qty == 0" :product="product"></ProductCartAddButton>
+    <ProductCartPlusMinusButtons v-else :product="product"></ProductCartPlusMinusButtons>
 </template>
 <script>
 

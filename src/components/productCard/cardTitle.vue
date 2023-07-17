@@ -43,11 +43,11 @@ export default {
         Price
     },
     async created() {
-        // vxm.cart.$subscribe("incrementCartItem", payload => {
+        // vxm.cart.$subscribe("incrementVendorCartItem", payload => {
         //     this.countCartQuantity();
         // });
 
-        // vxm.cart.$subscribe("decrementCartItem", payload => {
+        // vxm.cart.$subscribe("decrementVendorCartItem", payload => {
         //     this.countCartQuantity();
         // });
 

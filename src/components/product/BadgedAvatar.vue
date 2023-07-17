@@ -1,9 +1,9 @@
 <template>
-    <v-btn ripple block variant="flat" color="success" @click="addToCart(product)">{{ $t('addButton')
-    }}</v-btn>
+    <v-badge :model-value="qty > 0" :content="qty" color="success" rounded size="medium">
+        <ProductAvatar :product="product"></ProductAvatar>
+    </v-badge>
 </template>
 <script>
-
 import { useCartStore } from '@/stores/cart'
 
 export default {
@@ -15,10 +15,5 @@ export default {
             return useCartStore().getProductQuantity(this.product.id);
         }
     },
-    methods: {
-        addToCart(product) {
-            useCartStore().incrementCartItem(product);
-        }
-    }
 }
 </script>

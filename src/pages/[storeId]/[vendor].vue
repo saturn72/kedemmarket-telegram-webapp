@@ -13,11 +13,11 @@
           <v-col cols="6" v-for="product in vendor.products" :key="product.id">
             <v-card flat>
               <v-card-title class="d-flex justify-center">
-                <VendorProductBadgedAvatar :product="product"></VendorProductBadgedAvatar>
+                <ProductBadgedAvatar :product="product"></ProductBadgedAvatar>
               </v-card-title>
               <v-card-text>{{ product.name }}<strong>&centerdot; {{ product.price }}</strong></v-card-text>
               <v-card-actions>
-                <VendorProductButtons :product="product"></VendorProductButtons>
+                <ProductButtons :product="product"></ProductButtons>
               </v-card-actions>
             </v-card>
           </v-col>

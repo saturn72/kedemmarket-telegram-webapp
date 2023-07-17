@@ -30,6 +30,11 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
   ],
   vuetify: {
-
+    vuetifyOptions: {
+      locale: {
+        locale: 'he',
+        fallback: 'he'
+      }
+    }
   }
 })

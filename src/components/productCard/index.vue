@@ -2,8 +2,8 @@
     <v-card class="mx-1" outlined>
         <card-title :product="product"></card-title>
         <v-card-text>
-            <AddRemoveFromCart :product="product" :qty.sync="qty" @increment="incrementCartItem"
-                @decrement="decrementCartItem">
+            <AddRemoveFromCart :product="product" :qty.sync="qty" @increment="incrementVendorCartItem"
+                @decrement="decrementVendorCartItem">
             </AddRemoveFromCart>
         </v-card-text>
     </v-card>
@@ -28,12 +28,12 @@ export default {
         // this.qty = await vxm.cart.getProductQuantity(this.product.id);
     },
     methods: {
-        async decrementCartItem(product) {
-            // vxm.cart.decrementCartItem(product);
+        async decrementVendorCartItem(product) {
+            // vxm.cart.decrementVendorCartItem(product);
             // this.qty = await vxm.cart.getProductQuantity(product.id);
         },
-        async incrementCartItem(product) {
-            // vxm.cart.incrementCartItem(product);
+        async incrementVendorCartItem(product) {
+            // vxm.cart.incrementVendorCartItem(product);
             // this.qty = await vxm.cart.getProductQuantity(product.id);
         },
     },

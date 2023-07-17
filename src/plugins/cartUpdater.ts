@@ -7,8 +7,8 @@ function CartUpdaterPiniaPlugin({ store }: PiniaPluginContext) {
             return;
         }
 
-        if (action.name == 'decrementCartItem' ||
-            action.name == 'incrementCartItem') {
+        if (action.name == 'decrementVendorCartItem' ||
+            action.name == 'incrementVendorCartItem') {
             const { $backend } = useNuxtApp();
             $backend.updateCart();
         }

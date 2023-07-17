@@ -1,7 +1,11 @@
 <template>
-    <v-btn class="mt-7" @click="onClicked()">
-        {{ $t('backToStore') }}
-    </v-btn>
+    <v-row>
+        <v-col justify-center>
+            <v-btn @click="onClicked()">
+                {{ $t('backToStore') }}
+            </v-btn>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
