@@ -5,11 +5,14 @@ export default {
     myOrders: "ההזמנות שלי",
     profile: "פרופיל",
     ooops: "אופפס 🤔",
-    yourCartIsEmpty: "עגלת הקניות ריקה 🛒",
+    yourCartIsEmpty: "🛒 עגלת הקניות ריקה",
     backToStore: "חזרה לחנות 🏬",
     cart: "🛒 עגלת קניות",
     carts: "🛒 עגלות הקנייה שלי",
-    deleteFromCart: '🗑 למחוק את ##0## מהעגלה?',
+    deleteFromCart: '🗑 להסיר את ##0## מהעגלה?',
     confirm: "אישור",
-    cancel: "ביטול"
+    cancel: "ביטול",
+    checkoutCart: "💸 תשלום",
+    checkoutAllCarts: "💸 תשלום על כל העגלות",
+    placeingOrder: "מבצע הזמנה...",
 }

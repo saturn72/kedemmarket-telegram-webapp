@@ -27,6 +27,11 @@ export default defineNuxtPlugin((nuxtApp) => {
             },
             user: () => getAuth(app).currentUser,
             backend: {
+                placeOrder(orderCarts: []) {
+
+                    console.log("this is place order");
+                    console.log(orderCarts);
+                },
                 updateCart() {
                     // const functions = getFunctions(app);
                     // connectFunctionsEmulator(functions, "127.0.0.1", 5001)

@@ -10,5 +10,8 @@ export default {
     carts: "Carts 🛒",
     deleteFromCart: "🗑 Delete ##0## from cart?",
     confirm: "Confirm",
-    cancel: "Cancel"
+    cancel: "Cancel",
+    checkoutCart: "💸 Checkout",
+    checkoutAllCarts: "💸 Checkout All",
+    placeingOrder: "Placing Order...",
 }
