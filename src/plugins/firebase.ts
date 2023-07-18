@@ -1,6 +1,7 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 export default defineNuxtPlugin((nuxtApp) => {
     const app: FirebaseApp = initializeApp(useAppConfig().firebase);
@@ -27,10 +28,11 @@ export default defineNuxtPlugin((nuxtApp) => {
             },
             user: () => getAuth(app).currentUser,
             backend: {
-                placeOrder(orderCarts: []) {
-
-                    console.log("this is place order");
-                    console.log(orderCarts);
+                async placeOrder(orderCarts: []) {
+                    const functions = getFunctions();
+                    const po = httpsCallable(functions, 'placeOrder');
+                    const res = await po({ body: orderCarts });
+                    console.log(res);
                 },
                 updateCart() {
                     // const functions = getFunctions(app);
