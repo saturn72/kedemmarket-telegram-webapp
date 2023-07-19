@@ -1,7 +1,7 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
 
 export default defineNuxtPlugin((nuxtApp) => {
     const app: FirebaseApp = initializeApp(useAppConfig().firebase);
@@ -26,18 +26,24 @@ export default defineNuxtPlugin((nuxtApp) => {
                     }
                 }
             },
+
             user: () => getAuth(app).currentUser,
+
             backend: {
-                async placeOrder(orderCarts: []) {
+                async placeOrder(orderCarts: []): Promise<any> {
                     const functions = getFunctions();
-                    const po = httpsCallable(functions, 'placeOrder');
-                    const res = await po({ body: orderCarts });
-                    console.log(res);
+
+                    if (process.env.NODE_ENV != 'production') {
+                        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+                    }
+
+                    const po = httpsCallable(functions, 'addOrder');
+                    return await po(orderCarts);
                 },
                 updateCart() {
                     // const functions = getFunctions(app);
                     // connectFunctionsEmulator(functions, "127.0.0.1", 5001)
-                    console.log("this is cart update cloud function");
+                    console.log("this should ineract with  cart update cloud function");
                 }
             }
         }

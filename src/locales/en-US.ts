@@ -13,5 +13,8 @@ export default {
     cancel: "Cancel",
     checkoutCart: "💸 Checkout",
     checkoutAllCarts: "💸 Checkout All",
-    placeingOrder: "Placing Order...",
+    placingOrder: "Placing Order...",
+    orderPlaced: "Order Placed",
+    thankYouMessage: "🙏 Thank you for placing it!",
+    youAreRedirectedToTheStore: "🏎 You'll be redirected to the store soon",
 }

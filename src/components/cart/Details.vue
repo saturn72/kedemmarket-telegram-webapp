@@ -9,12 +9,24 @@
         </v-card>
     </v-dialog>
 
-    <v-dialog persistent v-model="placingOrder" width="300" class="text-center">
-        <v-card>
-            <v-card-title>{{ $t('placeingOrder') }}</v-card-title>
+    <v-dialog persistent v-model="orderDialog" class="text-center">
+        <v-card v-if="!orderPlaced">
+            <v-card-title>{{ $t('placingOrder') }}</v-card-title>
             <v-col class="d-flex justify-center">
                 <v-progress-circular indeterminate :size="75" :width="5"></v-progress-circular>
             </v-col>
+        </v-card>
+        <v-card v-else loading fixed>
+            <v-card-title>{{ $t('orderPlaced') }}</v-card-title>
+            <v-card-subtitle>
+                {{ $t('thankYouMessage') }}
+            </v-card-subtitle>
+            <v-card-text>
+                {{ $t('youAreRedirectedToTheStore') }}
+            </v-card-text>
+            <v-card-actions>
+                <AppBackToStoreButton block />
+            </v-card-actions>
         </v-card>
     </v-dialog>
 
@@ -56,12 +68,16 @@ const carts = computed(() => useCartStore().vendorCarts?.filter(c => c.items?.le
 
 </script>
 <script>
+
+import { useVendorStore } from "@/stores/vendor";
+
 export default {
     data() {
         return {
             itemToDelete: null,
             cartToDeleteFrom: null,
-            placingOrder: false,
+            orderDialog: false,
+            orderPlaced: false,
         }
     },
     methods: {
@@ -90,10 +106,18 @@ export default {
                 useCartStore().decrementCartItem(cart, item.product);
             }
         },
-        checkoutCart(cart) {
+        async checkoutCart(cart) {
             const orderCarts = cart ? [cart] : useCartStore().vendorCarts?.filter(c => c.items?.length > 0);
-            this.placingOrder = true;
-            this.$backend.placeOrder(orderCarts);
+            this.orderDialog = true;
+            const res = await this.$backend.placeOrder(orderCarts);
+            this.orderPlaced = true;
+
+            useCartStore().removeCarts(orderCarts)
+            setTimeout(function () {
+                const route = useVendorStore().route ?? useAppConfig().defaults.storeRoute;
+                useNuxtApp().$router.push(route);
+            }, 3000);
+
         }
     }
 }

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { Product, Vendor } from '~/model';
-import _ from 'lodash';
+import _, { forEach } from 'lodash';
 import { useVendorStore } from './vendor';
 
 type CartItem = {
@@ -156,6 +156,15 @@ export const useCartStore = defineStore('cart', {
                 return;
             }
             _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
+        },
+
+        removeCarts(cartsToRemove: VendorCart[]): void {
+            if (!cartsToRemove) {
+                return;
+            }
+
+            const idsToRemove = cartsToRemove.map(c => c.id);
+            _.remove(this.$state.vendorCarts, vc => _.indexOf(idsToRemove, vc.id) !== -1)
         },
         incrementVendorCartItem(product: Product): void {
             const cart = getOrCreateVendorCart(this.$state);

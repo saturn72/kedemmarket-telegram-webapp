@@ -15,20 +15,23 @@ const { getFirestore } = require("firebase-admin/firestore");
 
 initializeApp();
 
-export const placeOrder = onRequest(async (req, res) => {
-    logger.info("start placeOrder", { structuredData: true });
+export const addOrder = onRequest(async (req, res) => {
+    logger.debug("start addOrder", { structuredData: true });
 
-    const body = req.body;
+    const data = req.body;
+    if (!data) {
+        res.send({ error: "missing cart infos" })
+    }
 
     const writeResult = await getFirestore()
         .collection("orders")
         .add({
-            data: body,
+            cartItems: data,
             status: 'placed'
         });
-    // Send back a message that we've successfully written the message
-    res.json({ orderId: writeResult.id });
-    res.send(writeResult.id);
+
+    logger.debug("end addOrder", { structuredData: true });
+    res.send({ data: writeResult.id });
 });
 
 export const updateCart = onRequest((request, response) => {

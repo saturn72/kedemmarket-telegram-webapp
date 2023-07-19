@@ -14,5 +14,8 @@ export default {
     cancel: "ביטול",
     checkoutCart: "💸 תשלום",
     checkoutAllCarts: "💸 תשלום על כל העגלות",
-    placeingOrder: "מבצע הזמנה...",
+    placingOrder: "מבצע הזמנה...",
+    orderPlaced: "📃 ההזמנה נשלחה!",
+    thankYouMessage: "🙏 תודה רבה",
+    youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב"
 }
