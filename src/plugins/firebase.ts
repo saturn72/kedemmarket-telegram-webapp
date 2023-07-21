@@ -8,20 +8,19 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     return {
         provide: {
-            getApp() {
-                return app
-            },
             storage: {
                 getDownloadUrl: async (uri: string): Promise<string | null> => {
                     while (uri.startsWith('/')) {
                         uri = uri.substring(1);
                     }
+                    uri = uri.replaceAll("  ", " ").replaceAll(' ', '-').toLowerCase();
 
                     try {
                         const s = getStorage(app);
                         const r = ref(s, uri);
                         return await getDownloadURL(r);
-                    } catch {
+                    } catch (error) {
+                        createError({ data: error });
                         return null;
                     }
                 }

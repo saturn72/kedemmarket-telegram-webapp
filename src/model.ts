@@ -1,8 +1,8 @@
-export interface mediaItem {
+export interface MediaItem {
+    alt: string;
     src: string;
-    url: string;
-    alt: any;
     title: string;
+    url: string;
 }
 
 export interface Product {
@@ -10,19 +10,26 @@ export interface Product {
     name: string;
     description: string;
     price: number;
-    image: mediaItem;
+    image: MediaItem;
 }
 
-export interface Store {
+export interface VendorStore {
     id: any;
     name: string;
-    logo?: mediaItem;
+    logo?: MediaItem;
 }
 
 export interface Vendor {
     id: any;
     name: string;
-    image?: string;
-    store: Store;
+    image?: MediaItem;
+    store?: VendorStore;
     products?: Product[];
+}
+
+export interface Store {
+    id: any;
+    name: string;
+    image?: string;
+    vendors?: Vendor[];
 }

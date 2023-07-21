@@ -22,7 +22,9 @@ export default defineNuxtPlugin((nuxtApp) => {
             cache: {
                 get: async <T>(key: string): Promise<T | undefined | null> => getItemFromLocalStorage<T>(key),
                 getOrAcquire: async<T>(key: string, acquire: () => Promise<T>, expiration: number): Promise<T | undefined | null> => {
-                    var item = getItemFromLocalStorage<T>(key);
+                    const k = key.replaceAll(' ', '-').toLowerCase();
+
+                    var item = getItemFromLocalStorage<T>(k);
                     if (item) {
                         return item;
                     }
@@ -34,7 +36,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                             data: av,
                             expiration: moment.utc().add(expiration, 'seconds')
                         }
-                        localStorage.setItem(key, JSON.stringify(entry))
+                        localStorage.setItem(k, JSON.stringify(entry))
                         return av;
                     }
                     return null;

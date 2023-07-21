@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { Product, Vendor } from '~/model';
-import _, { forEach } from 'lodash';
+import { Product } from '~/model';
+import _ from 'lodash';
 import { useVendorStore } from './vendor';
 
 type CartItem = {
