@@ -8,13 +8,12 @@
     </v-container>
     <v-container v-else>
         <v-card flat>
-            {{ searchItems }}
-            <v-autocomplete :items="searchItems">
-
+            <v-autocomplete v-model="select" v-model:search="search" :loading="loading" :items="items" class="mx-4"
+                density="comfortable" hide-no-data hide-details :label="$t('productSearch')">
             </v-autocomplete>
             <v-card-text>
                 <v-row justify="center">
-                    <v-col cols="6" v-for="product in products" :key="product.id">
+                    <v-col cols="6" v-for=" product  in  itemsToDisplay " :key="product.id">
                         <v-card flat>
                             <v-card-title class="d-flex justify-center">
                                 <ProductBadgedAvatar :product="product"></ProductBadgedAvatar>
@@ -43,14 +42,44 @@ export default {
         store.setStore();
 
         const products = computed(() => store.getProducts);
-        let searchItems = [];
 
-        watch(products, (newValue) => {
-            searchItems = newValue.map(p => p.name);
-        });
         return {
             products,
-            searchItems: [],
+        }
+    },
+    watch: {
+        search(val) {
+            if (!val || val.trim().length == 0) {
+                this.itemsToDisplay = this.products;
+            }
+
+            this.loading = true
+            const term = val.toLowerCase();
+
+            this.itemsToDisplay = this.products.filter(p => {
+                return p.name.toLowerCase().indexOf((term || '')) > -1
+                // ||
+                // p.description.toLowerCase().indexOf((term || '')) > -1 ||
+                // p.price.indexOf((term || '')) > -1;
+            })
+            // this.items = this.searchItems.filter(e => {
+            //     return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+            // })
+            this.loading = false
+            // console.log(val)
+            // val && val !== this.select && this.querySelections(val)
+        },
+        products(newValue) {
+            this.searchItems = newValue.map(p => p.name);
+        }
+    },
+    data() {
+        return {
+            loading: false,
+            items: [],
+            search: null,
+            select: null,
+            searchItems: []
         }
     }
 }

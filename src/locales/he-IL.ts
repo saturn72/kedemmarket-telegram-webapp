@@ -13,9 +13,9 @@ export default {
     confirm: "אישור",
     cancel: "ביטול",
     checkoutCart: "💸 תשלום",
-    checkoutAllCarts: "💸 תשלום על כל העגלות",
     placingOrder: "מבצע הזמנה...",
     orderPlaced: "📃 ההזמנה נשלחה!",
     thankYouMessage: "🙏 תודה רבה",
-    youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב"
+    youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב",
+    productSearch: "🔎 חיפוש..."
 }

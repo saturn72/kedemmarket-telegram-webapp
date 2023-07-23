@@ -12,9 +12,9 @@ export default {
     confirm: "Confirm",
     cancel: "Cancel",
     checkoutCart: "💸 Checkout",
-    checkoutAllCarts: "💸 Checkout All",
     placingOrder: "Placing Order...",
     orderPlaced: "Order Placed",
     thankYouMessage: "🙏 Thank you for placing it!",
     youAreRedirectedToTheStore: "🏎 You'll be redirected to the store soon",
+    productSearch: "🔍 Search...",
 }
