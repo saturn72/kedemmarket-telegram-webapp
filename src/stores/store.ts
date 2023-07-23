@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Store, Vendor } from '~/model';
+import { Product, Store, Vendor } from '~/model';
 import { getStores } from "@/services/store";
 import _ from 'lodash';
 
@@ -7,22 +7,39 @@ type StoreState = {
     stores?: Store[] | undefined;
 }
 
+const getAllStoresVendors = (stores: Store[] | undefined): Vendor[] | undefined => {
+    if (!stores) {
+        return undefined;
+    }
+    const vendorArray = stores.map(s => {
+        if (s.vendors) {
+            return s.vendors;
+        }
+    });
+
+    const f = _.flatten(vendorArray);
+    return _.uniqBy(f, x => x?.id) as Vendor[];
+}
+
 export const useStoreStore = defineStore('store', {
     state: (): StoreState => { return { stores: undefined } },
-
     getters: {
         getVendors(state): Vendor[] | undefined {
-            if (!state.stores) {
+            return getAllStoresVendors(state.stores);
+        },
+        getProducts(state): Product[] | undefined {
+            const vendors = getAllStoresVendors(state.stores);
+            if (!vendors) {
                 return undefined;
             }
-            const vendorArray = state.stores.map(s => {
-                if (s.vendors) {
-                    return s.vendors;
+
+            const vendorProductArray = vendors.map(v => {
+                if (v.products) {
+                    return v.products;
                 }
             });
 
-            const f = _.flatten(vendorArray);
-            return _.uniqBy(f, x => x?.id) as Vendor[];
+            return _.flatten(vendorProductArray) as Product[];
         }
     },
     actions: {

@@ -32,92 +32,67 @@
 
     <v-container>
         <p class="mb-3">
-            <v-btn block size="small" :disabled="carts.length == 0" color="secondary" @click="checkoutCart()">{{
-                carts.length > 1 ?
-                $t('checkoutAllCarts') :
+            <v-btn block size="small" :disabled="cartItems == 0" color="secondary" @click="checkoutCart()">{{
                 $t('checkoutCart')
             }}</v-btn>
         </p>
-        <v-card v-for="cart in carts" :key="cart.id" tile class="mb-5">
-            <v-card-title>
-                <v-row class="my-1">
-                    <v-col>
-                        <v-avatar class="ml-2" size="large" :lazy-src="useAppConfig().defaults.thumbnail"
-                            :image="cart.vendor?.image"></v-avatar>
-                        {{ cart.vendor.name }}
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col>
-                        <v-btn size="small" color="secondary" @click="checkoutCart(cart)">{{ $t('checkoutCart') }}</v-btn>
-                    </v-col>
-                </v-row>
-            </v-card-title>
-            <v-divider></v-divider>
-
-            <CartProductDetails v-for="item in cart.items" :cart-item="item" @removeFromCart="removeFromCart(cart, item)"
-                @increment="incrementCartItem(cart, item)" @decrement="decrementCartItem(cart, item)">
-            </CartProductDetails>
-        </v-card>
+        <CartProductDetails v-for="item in cartItems" :cartItem="item" @removeFromCart="removeFromCart(item)"
+            @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
+        </CartProductDetails>
     </v-container>
 </template>
 <script setup>
 import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
-const carts = computed(() => useCartStore().vendorCarts?.filter(c => c.items?.length > 0)) ?? [];
+const cartItems = computed(() => useCartStore().items?.filter(c => c.orderedQuantity > 0));
 
 </script>
 <script>
 
-import { useVendorStore } from "@/stores/vendor";
+import { useCartStore } from "@/stores/cart";
 
 export default {
     data() {
         return {
             itemToDelete: null,
-            cartToDeleteFrom: null,
             orderDialog: false,
             orderPlaced: false,
         }
     },
     methods: {
-        removeFromCart(cart, item) {
+        removeFromCart(item) {
             const t = this.$t('deleteFromCart');
             this.dialogText = t.replace("##0##", item.product.name)
             this.itemToDelete = item;
-            this.cartToDeleteFrom = cart;
         },
         onConfirmRemoveFromCart() {
-            useCartStore().removeItemFromCart(this.cartToDeleteFrom, this.itemToDelete.product);
+            useCartStore().removeItemFromCart(this.itemToDelete.product);
             this.resetRemoveFromCart();
         },
         resetRemoveFromCart() {
-            this.cartToDeleteFrom = null
             this.itemToDelete = null;
         },
-        incrementCartItem(cart, item) {
-            useCartStore().incrementCartItem(cart, item.product);
+        incrementCartItem(item) {
+            useCartStore().incrementCartItem(item.product);
         },
-        decrementCartItem(cart, item) {
+        decrementCartItem(item) {
             if (item.orderedQuantity == 1) {
-                this.removeFromCart(cart, item)
+                this.removeFromCart(item)
             }
             else {
-                useCartStore().decrementCartItem(cart, item.product);
+                useCartStore().decrementCartItem(item.product);
             }
         },
-        async checkoutCart(cart) {
-            const orderCarts = cart ? [cart] : useCartStore().vendorCarts?.filter(c => c.items?.length > 0);
+        async checkoutCart() {
             this.orderDialog = true;
-            const res = await this.$backend.placeOrder(orderCarts);
+            await this.$backend.placeOrder(useCartStore());
             this.orderPlaced = true;
 
-            useCartStore().removeCarts(orderCarts)
             setTimeout(function () {
-                const route = useVendorStore().route ?? useAppConfig().defaults.storeRoute;
-                useNuxtApp().$router.push(route);
+                useCartStore().$reset()
+                useRouter().push('/')
             }, 3000);
-
         }
     }
 }

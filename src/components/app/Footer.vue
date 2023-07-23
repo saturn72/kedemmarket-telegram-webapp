@@ -23,11 +23,10 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
-import { useVendorStore } from '@/stores/vendor';
 import { computed } from 'vue'
 
-const cartItemCount = computed(() => useCartStore().cartItemCount);
-const cartTotal = computed(() => useCartStore().vendorCartTotal);
+const cartItemCount = computed(() => useCartStore().getCartItemCount);
+const cartTotal = computed(() => useCartStore().getCartTotal);
 </script>
 <script>
 export default {

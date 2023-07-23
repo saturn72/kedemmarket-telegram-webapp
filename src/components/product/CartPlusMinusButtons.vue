@@ -1,12 +1,12 @@
 <template>
     <v-row>
         <v-col cols="6">
-            <v-btn ripple variant="flat" block color="success" @click="incrementVendorCartItem(product)">
+            <v-btn ripple variant="flat" block color="success" @click="incrementCartItem(product)">
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
         </v-col>
         <v-col cols="6">
-            <v-btn ripple variant="flat" block color="warning" @click="decrementVendorCartItem(product)">
+            <v-btn ripple variant="flat" block color="warning" @click="decrementCartItem(product)">
                 <v-icon>mdi-minus</v-icon>
             </v-btn>
         </v-col>
@@ -21,11 +21,11 @@ export default {
         product: { type: Object, default: {} },
     },
     methods: {
-        incrementVendorCartItem(product) {
-            useCartStore().incrementVendorCartItem(product);
+        incrementCartItem(product) {
+            useCartStore().incrementCartItem(product);
         },
-        decrementVendorCartItem(product) {
-            useCartStore().decrementVendorCartItem(product);
+        decrementCartItem(product) {
+            useCartStore().decrementCartItem(product);
         }
     }
 }

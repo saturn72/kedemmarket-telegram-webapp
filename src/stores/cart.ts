@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { Product } from '~/model';
 import _ from 'lodash';
-import { useVendorStore } from './vendor';
 
 type CartItem = {
     product: Product;
@@ -9,19 +8,9 @@ type CartItem = {
     addedOnUtc: Date
 }
 
-type VendorCart = {
-    id: any,
-    vendor: {
-        id: any;
-        name: string;
-        image?: string | undefined;
-    },
-    items: CartItem[]
-};
-
 type CartState = {
     cartId?: any | undefined,
-    vendorCarts: VendorCart[]
+    items: CartItem[]
 }
 
 const findItem = (items: CartItem[] | undefined, productId: any): CartItem | undefined => {
@@ -31,153 +20,72 @@ const findItem = (items: CartItem[] | undefined, productId: any): CartItem | und
     return items?.find((i: CartItem) => i.product.id === productId);
 }
 
-const getVendorCart = (state: CartState): VendorCart | undefined => {
-    const v = useVendorStore().vendor;
-
-    if (!v) {
-        return undefined;
-    }
-
-    return state.vendorCarts?.find(vc => vc.id == v.id);
-}
-
-const getOrCreateVendorCart = (state: CartState): VendorCart => {
-    let cart = getVendorCart(state);
-    if (!cart) {
-        const currentVendor = useVendorStore().vendor;
-        if (!currentVendor) {
-            throw Error("no vendor found");
-        }
-
-        const vendor = {
-            id: currentVendor.id,
-            name: currentVendor.name,
-            image: currentVendor?.image,
-        };
-
-        const vendorCart: VendorCart = { id: vendor.id, vendor, items: [] };
-        state.vendorCarts.push(vendorCart);
-    }
-    return getVendorCart(state) as VendorCart;
-}
-
-const incrementCartItemInternal = (cart: VendorCart, product: Product): void => {
-    const existCartItem = findItem(cart.items, product.id);
-
-    if (!existCartItem) {
-        const ci = {
-            product, orderedQuantity: 1, addedOnUtc: new Date(),
-        };
-        cart.items.push(ci);
-
-    } else {
-        existCartItem.orderedQuantity++;
-    };
-}
-
-const decrementCartItemInternal = (cart: VendorCart, product: Product): void => {
-    const ci = findItem(cart.items, product.id);
-    if (!ci) {
-        return;
-    }
-
-    if (ci.orderedQuantity > 0) {
-        ci.orderedQuantity--;
-        if (ci.orderedQuantity === 0) {
-            _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
-        }
-    }
-}
 export const useCartStore = defineStore('cart', {
     state: (): CartState => {
         return {
-            vendorCarts: []
+            cartId: undefined,
+            items: []
         };
     },
     getters: {
 
-        cartItemCount(state): number {
-            const cart = getVendorCart(state)
-            if (!cart) {
-                return 0;
-            }
-
+        getCartItemCount(state): number {
             let t = 0;
-            cart.items?.forEach((ci: CartItem) => t += ci.orderedQuantity);
+            state.items?.forEach((ci: CartItem) => t += ci.orderedQuantity);
             return t;
         },
 
-        vendorCartTotal(state): number {
-            console.log("this is vct")
-            const cart = getVendorCart(state);
-            if (!cart) {
-                return 0;
-            }
-            let total = 0;
-            cart.items?.forEach((ci: CartItem) => total += ci.orderedQuantity * ci.product.price);
-            return total;
+        getCartTotal(state): number {
+            let t = 0;
+            state.items?.forEach((ci: CartItem) => t += ci.orderedQuantity * ci.product.price);
+            return t;
         }
     },
     actions: {
+        incrementCartItem(product: Product): void {
+            const existCartItem = findItem(this.$state.items, product.id);
 
-        getProductQuantity(productId: any): number {
-            const cart = getVendorCart(this.$state);
-            if (!cart) {
-                return 0;
-            }
+            if (!existCartItem) {
+                const ci = {
+                    product, orderedQuantity: 1, addedOnUtc: new Date(),
+                };
+                this.$state.items.push(ci);
 
-            const ci = findItem(cart.items, productId);
-            return ci?.orderedQuantity || 0;
+            } else {
+                existCartItem.orderedQuantity++;
+            };
         },
 
-        incrementCartItem(vendorCart: VendorCart, product: Product): void {
-            const cart = this.$state.vendorCarts?.find(vc => vc.id == vendorCart.id);
-            if (!cart) {
-                return;
-            }
-            incrementCartItemInternal(cart, product);
-        },
-
-        decrementCartItem(vendorCart: VendorCart, product: Product): void {
-            const cart = this.$state.vendorCarts?.find(vc => vc.id == vendorCart.id);
-            if (!cart) {
-                return;
-            }
-            decrementCartItemInternal(cart, product);
-        },
-        removeItemFromCart(vendorCart: VendorCart, product: Product): void {
-            const cart = this.$state.vendorCarts?.find(vc => vc.id == vendorCart.id);
-            if (!cart) {
-                return;
-            }
-
-            const ci = findItem(cart.items, product.id);
+        decrementCartItem(product: Product): void {
+            const ci = findItem(this.$state.items, product.id);
             if (!ci) {
                 return;
             }
-            _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
+
+            if (ci.orderedQuantity > 0) {
+                ci.orderedQuantity--;
+                if (ci.orderedQuantity === 0) {
+                    _.remove(this.$state.items, (ci: CartItem) => ci.product.id === product.id);
+                }
+            }
         },
 
-        removeCarts(cartsToRemove: VendorCart[]): void {
-            if (!cartsToRemove) {
+        removeItemFromCart(product: Product): void {
+            const ci = findItem(this.$state.items, product.id);
+            if (!ci) {
                 return;
             }
-
-            const idsToRemove = cartsToRemove.map(c => c.id);
-            _.remove(this.$state.vendorCarts, vc => _.indexOf(idsToRemove, vc.id) !== -1)
-        },
-        incrementVendorCartItem(product: Product): void {
-            const cart = getOrCreateVendorCart(this.$state);
-            incrementCartItemInternal(cart, product);
+            _.remove(this.$state.items, (ci: CartItem) => ci.product.id === product.id);
         },
 
-        decrementVendorCartItem(product: Product): void {
-            const cart = getOrCreateVendorCart(this.$state);
-            if (!cart) {
-                return;
-            }
-            decrementCartItemInternal(cart, product);
+        getProductQuantity(productId: any): number {
+            const ci = findItem(this.$state.items, productId);
+            return ci?.orderedQuantity || 0;
         },
+
+        clearCart(): void {
+            this.$reset();
+        }
     },
     persist: {
         storage: persistedState.localStorage

@@ -17,7 +17,7 @@ export default {
     },
     methods: {
         addToCart(product) {
-            useCartStore().incrementVendorCartItem(product);
+            useCartStore().incrementCartItem(product);
         }
     }
 }

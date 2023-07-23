@@ -12,6 +12,5 @@ export default defineAppConfig({
     defaults: {
         thumbnail: '/logo.jpg',
         logo: '/logo.jpg',
-        storeRoute: 'kedem-market'
     }
 })

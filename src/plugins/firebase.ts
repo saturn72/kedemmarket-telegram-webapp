@@ -29,7 +29,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             user: () => getAuth(app).currentUser,
 
             backend: {
-                async placeOrder(orderCarts: []): Promise<any> {
+                async placeOrder(cart: []): Promise<any> {
                     const functions = getFunctions();
 
                     if (process.env.NODE_ENV != 'production') {
@@ -37,7 +37,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                     }
 
                     const po = httpsCallable(functions, 'addOrder');
-                    return await po(orderCarts);
+                    return await po(cart);
                 },
                 updateCart() {
                     // const functions = getFunctions(app);

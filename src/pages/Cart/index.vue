@@ -1,5 +1,5 @@
 <template>
-    <CartEmpty v-if="carts.length == 0"></CartEmpty>
+    <CartEmpty v-if="cartItems == 0"></CartEmpty>
     <CartDetails v-else></CartDetails>
 </template>
 
@@ -8,8 +8,8 @@ import { useCartStore } from '@/stores/cart'
 import { usePageStore } from '@/stores/page'
 import { computed } from 'vue'
 
-const carts = computed(() => useCartStore().vendorCarts?.filter(c => c.items?.length > 0)) ?? [];
+const cartItems = computed(() => useCartStore().getCartItemCount);
 
-const header = useNuxtApp().$t(carts.length > 1 ? 'carts' : 'cart');
+const header = useNuxtApp().$t(cartItems > 1 ? 'carts' : 'cart');
 usePageStore().setHeader(header);
 </script>
