@@ -8,9 +8,9 @@
     </v-container>
     <v-container v-else>
         <v-card flat>
-            <v-autocomplete v-model="select" v-model:search="search" :loading="loading" :items="items" class="mx-4"
-                density="comfortable" hide-no-data hide-details :label="$t('productSearch')">
-            </v-autocomplete>
+            <v-text-field outlined prepend-inner-icon="mdi-magnify" :label="$t('productSearch')" clearable persistent-clear
+                v-model="search" :loading="loading" density="comfortable" hide-no-data hide-details>
+            </v-text-field>
             <v-card-text>
                 <v-row justify="center">
                     <v-col cols="6" v-for=" product  in  itemsToDisplay " :key="product.id">
@@ -34,52 +34,64 @@
   
 <script>
 import { useStoreStore } from '@/stores/store'
+import { useSearchStore } from '@/stores/search';
 import { computed } from 'vue'
 
 export default {
     setup() {
         const store = useStoreStore();
         store.setStore();
-
         const products = computed(() => store.getProducts);
-
         return {
-            products,
+            products
         }
+    },
+    mounted() {
+        this.search = useSearchStore().search;
     },
     watch: {
         search(val) {
-            if (!val || val.trim().length == 0) {
-                this.itemsToDisplay = this.products;
+            this.updateSearch(val);
+        },
+        products(newValue) {
+            this.updateSearch(this.search);
+        }
+    },
+    methods: {
+        textMatchTerm(text, term) {
+            return text && text.toLowerCase().indexOf(term) > -1;
+        },
+
+        tagsMatchTerm(tags, term) {
+            return tags && tags.some(t => t.toLowerCase().indexOf(term) > -1);
+        },
+
+        updateSearch(value) {
+            if (useSearchStore().search != value) {
+                useSearchStore().setSearch(value);
             }
 
             this.loading = true
-            const term = val.toLowerCase();
+            if (!value || value.trim().length == 0) {
+                this.itemsToDisplay = this.products;
+                this.loading = false
+                return;
+            }
+            const term = value.toLowerCase();
 
-            this.itemsToDisplay = this.products.filter(p => {
-                return p.name.toLowerCase().indexOf((term || '')) > -1
-                // ||
-                // p.description.toLowerCase().indexOf((term || '')) > -1 ||
-                // p.price.indexOf((term || '')) > -1;
-            })
-            // this.items = this.searchItems.filter(e => {
-            //     return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-            // })
+            this.itemsToDisplay = this.products.filter(p =>
+                this.textMatchTerm(p.name, term) ||
+                this.textMatchTerm(p.description, term) ||
+                this.tagsMatchTerm(p.tags, term));
+
             this.loading = false
-            // console.log(val)
-            // val && val !== this.select && this.querySelections(val)
-        },
-        products(newValue) {
-            this.searchItems = newValue.map(p => p.name);
         }
     },
     data() {
         return {
             loading: false,
-            items: [],
-            search: null,
-            select: null,
-            searchItems: []
+            search: undefined,
+            itemsToDisplay: []
         }
     }
 }
