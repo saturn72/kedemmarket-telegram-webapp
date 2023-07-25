@@ -1,5 +1,5 @@
 import { Product, Vendor } from "model";
-import { getMediaItemOrDefault, getMediaUrlOrDefault } from "@/services/media";
+import { getMediaItemOrDefault } from "@/services/media";
 
 const acquireVendor = async (key: string): Promise<Vendor | undefined | null> => {
     const url = await useNuxtApp().$storage.getDownloadUrl(`catalog/${key}.json`);
@@ -12,6 +12,7 @@ const acquireVendor = async (key: string): Promise<Vendor | undefined | null> =>
     if (v.products) {
         for (let index = 0; index < v.products.length; index++) {
             const p = v.products[index];
+
             const tn = p.media?.find((m: any) => m.type == "thumbs") ||
                 p.media?.find((m: any) => m.displayOrder == 0);
 
@@ -30,6 +31,7 @@ const acquireVendor = async (key: string): Promise<Vendor | undefined | null> =>
                 name: p.name,
                 description: p.shortDescription,
                 price: p.price,
+                tags: p.tags,
                 image
             });
         }

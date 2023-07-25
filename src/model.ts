@@ -9,7 +9,7 @@ export interface Product {
     id: any;
     name: string;
     description: string;
-    tags: string[],
+    tags?: string[],
     price: number;
     image: MediaItem;
 }

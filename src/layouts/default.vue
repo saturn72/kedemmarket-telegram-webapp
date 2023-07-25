@@ -14,7 +14,6 @@
 
 import { usePageStore } from '@/stores/page';
 const header = usePageStore().header;
-
 </script>
 
   
