@@ -17,5 +17,7 @@ export default {
     orderPlaced: "📃 ההזמנה נשלחה!",
     thankYouMessage: "🙏 תודה רבה",
     youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב",
-    productSearch: "🔎 חיפוש..."
+    productSearch: "🔎 חיפוש...",
+    loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓"
+
 }

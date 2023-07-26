@@ -10,11 +10,9 @@
                 </v-badge>
             </v-btn>
             <v-btn plain @click="$router.push('/account')">
-                <v-avatar v-if="$user.photoURL" size="55" :lazy-src="useAppConfig().defaults.thumbnail"
-                    :image="$user.photoURL"></v-avatar>
-                <v-icon v-else>mdi-account-outline</v-icon>
+                <v-icon>mdi-account-outline</v-icon>
             </v-btn>
-            <v-btn plain @click="onStoreClicked()">
+            <v-btn plain @click="$router.push('/')">
                 <v-icon>mdi-store-outline</v-icon>
             </v-btn>
         </v-bottom-navigation>
@@ -23,19 +21,15 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
+import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
 
 const cartItemCount = computed(() => useCartStore().getCartItemCount);
 const cartTotal = computed(() => useCartStore().getCartTotal);
+const user = useUserStore().user;
 </script>
 <script>
 export default {
-    methods: {
-        onStoreClicked() {
-            const route = useVendorStore().route ?? useAppConfig().defaults.storeRoute;
-            this.$router.push(route);
-        }
-    },
     data() {
         return {
             items: [{

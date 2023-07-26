@@ -86,7 +86,7 @@ export default {
         },
         async checkoutCart() {
             this.orderDialog = true;
-            await this.$backend.placeOrder(useCartStore());
+            await this.$backend.placeOrder(useCartStore().$state);
             this.orderPlaced = true;
 
             setTimeout(function () {

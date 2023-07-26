@@ -2,9 +2,22 @@ import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
+import { useUserStore } from "@/stores/user";
 
 export default defineNuxtPlugin((nuxtApp) => {
     const app: FirebaseApp = initializeApp(useAppConfig().firebase);
+    const auth = getAuth(app);
+    auth.useDeviceLanguage();
+    auth.currentUser;
+
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            useUserStore().setUser(user);
+        }
+        else {
+            useUserStore().$reset();
+        }
+    });
 
     return {
         provide: {
@@ -25,8 +38,6 @@ export default defineNuxtPlugin((nuxtApp) => {
                     }
                 }
             },
-
-            user: () => getAuth(app).currentUser,
 
             backend: {
                 async placeOrder(cart: []): Promise<any> {
