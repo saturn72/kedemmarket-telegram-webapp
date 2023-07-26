@@ -17,5 +17,7 @@ export default {
     thankYouMessage: "🙏 Thank you for placing it!",
     youAreRedirectedToTheStore: "🏎 You'll be redirected to the store soon",
     productSearch: "🔍 Search...",
-    loginIsRequiredToContinue: "Login is required to continue 🔓"
+    loginIsRequiredToContinue: "Login is required to continue 🔓",
+    failedToFindPage: "Failed to find page...",
+    cartTotal: "Cart Total:"
 }

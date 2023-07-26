@@ -5,8 +5,9 @@
                 <v-card @click="$router.push(item.route)">
                     <v-card-title class="d-flex justify-center">
                         <v-icon>{{ item.icon }}</v-icon>
-                        <v-spacer></v-spacer>
+                        &nbsp;
                         {{ $t(item.displayText) }}
+                        <v-spacer></v-spacer>
                     </v-card-title>
                 </v-card>
             </v-col>
@@ -19,18 +20,18 @@
 export default {
     data: () => {
         return {
-            items: []
-            // [{
-            //     name: "orders",
-            //     displayText: 'myOrders',
-            //     route: 'orders',
-            //     icon: 'mdi-shopping-outline'
-            // }, {
-            //     name: "profile",
-            //     displayText: 'profile',
-            //     route: 'profile',
-            //     icon: 'mdi-account-outline'
-            // }]
+            items:
+                [{
+                    name: "orders",
+                    displayText: 'myOrders',
+                    route: 'orders',
+                    icon: 'mdi-shopping-outline'
+                }, {
+                    name: "profile",
+                    displayText: 'profile',
+                    route: 'profile',
+                    icon: 'mdi-account-outline'
+                }]
         }
     }
 }

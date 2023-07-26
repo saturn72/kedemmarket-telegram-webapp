@@ -30,16 +30,20 @@
         </v-card>
     </v-dialog>
 
-    <v-container>
+    <v-card class="mx-3 mt-3">
         <p class="mb-3">
             <v-btn block size="small" :disabled="cartItems == 0" color="secondary" @click="checkoutCart()">{{
                 $t('checkoutCart')
             }}</v-btn>
         </p>
+        <v-card-title>
+            {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ useCartStore().getCartTotal }}
+        </v-card-title>
+
         <CartProductDetails v-for="item in cartItems" :cartItem="item" @removeFromCart="removeFromCart(item)"
             @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
         </CartProductDetails>
-    </v-container>
+    </v-card>
 </template>
 <script setup>
 import { useCartStore } from '@/stores/cart'

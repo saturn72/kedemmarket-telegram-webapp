@@ -12,12 +12,13 @@ export default {
     deleteFromCart: '🗑 להסיר את ##0## מהעגלה?',
     confirm: "אישור",
     cancel: "ביטול",
-    checkoutCart: "💸 תשלום",
+    checkoutCart: "💸 לתשלום",
     placingOrder: "מבצע הזמנה...",
     orderPlaced: "📃 ההזמנה נשלחה!",
     thankYouMessage: "🙏 תודה רבה",
     youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב",
     productSearch: "🔎 חיפוש...",
-    loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓"
-
+    loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓",
+    failedToFindPage: "הדף לא קיים...",
+    cartTotal: "סה\"כ לעגלה:"
 }
