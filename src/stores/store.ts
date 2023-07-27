@@ -24,9 +24,11 @@ const getAllStoresVendors = (stores: Store[] | undefined): Vendor[] | undefined 
 export const useStoreStore = defineStore('store', {
     state: (): StoreState => { return { stores: undefined } },
     getters: {
+
         getVendors(state): Vendor[] | undefined {
             return getAllStoresVendors(state.stores);
         },
+
         getProducts(state): Product[] | undefined {
             const vendors = getAllStoresVendors(state.stores);
             if (!vendors) {

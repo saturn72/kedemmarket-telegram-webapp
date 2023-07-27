@@ -9,7 +9,6 @@ type CartItem = {
 }
 
 type CartState = {
-    cartId?: any | undefined,
     items: CartItem[]
 }
 
@@ -23,7 +22,6 @@ const findItem = (items: CartItem[] | undefined, productId: any): CartItem | und
 export const useCartStore = defineStore('cart', {
     state: (): CartState => {
         return {
-            cartId: undefined,
             items: []
         };
     },
@@ -42,6 +40,7 @@ export const useCartStore = defineStore('cart', {
         }
     },
     actions: {
+
         incrementCartItem(product: Product): void {
             const existCartItem = findItem(this.$state.items, product.id);
 
@@ -54,6 +53,7 @@ export const useCartStore = defineStore('cart', {
             } else {
                 existCartItem.orderedQuantity++;
             };
+            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         decrementCartItem(product: Product): void {
@@ -68,6 +68,7 @@ export const useCartStore = defineStore('cart', {
                     _.remove(this.$state.items, (ci: CartItem) => ci.product.id === product.id);
                 }
             }
+            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         removeItemFromCart(product: Product): void {
@@ -76,15 +77,17 @@ export const useCartStore = defineStore('cart', {
                 return;
             }
             _.remove(this.$state.items, (ci: CartItem) => ci.product.id === product.id);
+            useNuxtApp().$backend.updateCart(this.$state);
+        },
+
+        clearCart(): void {
+            this.$reset();
+            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         getProductQuantity(productId: any): number {
             const ci = findItem(this.$state.items, productId);
             return ci?.orderedQuantity || 0;
-        },
-
-        clearCart(): void {
-            this.$reset();
         }
     },
     persist: {
