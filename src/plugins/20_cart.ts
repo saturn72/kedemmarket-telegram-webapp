@@ -22,7 +22,7 @@ export default defineNuxtPlugin(async ({ $backend, $pinia }: any) => {
 
     const cart = useCartStore().getUserCart;
 
-    if (cart?.items?.length == 0) {
+    if (!cart || cart?.items?.length == 0) {
         const serverCart = await $backend.getCart();
         useCartStore().setCart(serverCart)
     }

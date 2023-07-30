@@ -23,7 +23,7 @@ const findItem = (items: CartItem[] | undefined, productId: any): CartItem | und
     return items?.find((i: CartItem) => i.product.id === productId);
 }
 
-const getCurrentUserCart = (state: any): UserCart => {
+const getOrCreateCurrentUserCart = (state: any): UserCart => {
     const userId = useUserStore().getUser.uid;
 
     if (!state.usersCarts[userId]) {
@@ -39,13 +39,18 @@ export const useCartStore = defineStore('cart', {
         };
     },
     getters: {
-        getUserCart(state): UserCart {
-            return getCurrentUserCart(state);
+        getUserCart(state): UserCart | undefined {
+            const userId = useUserStore().getUser.uid;
+            if (!userId) {
+                return undefined;
+            }
+
+            return getOrCreateCurrentUserCart(state);
         },
 
         getCartItemCount(state): number {
             let t = 0;
-            const cart = getCurrentUserCart(state);
+            const cart = getOrCreateCurrentUserCart(state);
             cart?.items?.forEach((ci: CartItem) => t += ci.orderedQuantity);
             return t;
         },
@@ -53,7 +58,7 @@ export const useCartStore = defineStore('cart', {
         getCartTotal(state): number {
             let t = 0;
 
-            const cart = getCurrentUserCart(state);
+            const cart = getOrCreateCurrentUserCart(state);
             cart?.items?.forEach((ci: CartItem) => t += ci.orderedQuantity * ci.product.price);
             return t;
         }
@@ -66,7 +71,7 @@ export const useCartStore = defineStore('cart', {
         },
 
         incrementCartItem(product: Product): void {
-            const cart = getCurrentUserCart(this.$state);
+            const cart = getOrCreateCurrentUserCart(this.$state);
             const existCartItem = findItem(cart.items, product.id);
 
             if (!existCartItem) {
@@ -81,7 +86,7 @@ export const useCartStore = defineStore('cart', {
         },
 
         decrementCartItem(product: Product): void {
-            const cart = getCurrentUserCart(this.$state);
+            const cart = getOrCreateCurrentUserCart(this.$state);
             const ci = findItem(cart.items, product.id);
             if (!ci) {
                 return;
@@ -96,7 +101,7 @@ export const useCartStore = defineStore('cart', {
         },
 
         removeItemFromCart(product: Product): void {
-            const cart = getCurrentUserCart(this.$state)
+            const cart = getOrCreateCurrentUserCart(this.$state)
             const ci = findItem(cart.items, product.id);
             if (!ci) {
                 return;
@@ -109,7 +114,7 @@ export const useCartStore = defineStore('cart', {
         },
 
         getProductQuantity(productId: any): number {
-            const cart = getCurrentUserCart(this.$state)
+            const cart = getOrCreateCurrentUserCart(this.$state)
             const ci = findItem(cart.items, productId);
             return ci?.orderedQuantity || 0;
         }

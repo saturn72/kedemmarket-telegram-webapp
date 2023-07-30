@@ -15,7 +15,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             useUserStore().setUser(user);
         }
         else {
-            useUserStore().setUser(undefined);
+            useUserStore().setUser(null);
             useNuxtApp().$router.push(useAppConfig().routes.login);
         }
     });
