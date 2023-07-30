@@ -40,6 +40,9 @@ export const useCartStore = defineStore('cart', {
         }
     },
     actions: {
+        setCart({ items }: any) {
+            this.$state.items = items;
+        },
 
         incrementCartItem(product: Product): void {
             const existCartItem = findItem(this.$state.items, product.id);
@@ -53,7 +56,6 @@ export const useCartStore = defineStore('cart', {
             } else {
                 existCartItem.orderedQuantity++;
             };
-            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         decrementCartItem(product: Product): void {
@@ -68,7 +70,6 @@ export const useCartStore = defineStore('cart', {
                     _.remove(this.$state.items, (ci: CartItem) => ci.product.id === product.id);
                 }
             }
-            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         removeItemFromCart(product: Product): void {
@@ -77,12 +78,10 @@ export const useCartStore = defineStore('cart', {
                 return;
             }
             _.remove(this.$state.items, (ci: CartItem) => ci.product.id === product.id);
-            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         clearCart(): void {
             this.$reset();
-            useNuxtApp().$backend.updateCart(this.$state);
         },
 
         getProductQuantity(productId: any): number {

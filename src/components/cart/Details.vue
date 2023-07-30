@@ -32,7 +32,7 @@
 
     <v-card class="mx-3 mt-3">
         <p class="mb-3">
-            <v-btn block size="small" :disabled="cartItems == 0" color="secondary" @click="checkoutCart()">{{
+            <v-btn block size="small" :disabled="items == 0" color="secondary" @click="checkoutCart()">{{
                 $t('checkoutCart')
             }}</v-btn>
         </p>
@@ -40,7 +40,7 @@
             {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ useCartStore().getCartTotal }}
         </v-card-title>
 
-        <CartProductDetails v-for="item in cartItems" :cartItem="item" @removeFromCart="removeFromCart(item)"
+        <CartProductDetails v-for="item in items" :cartItem="item" @removeFromCart="removeFromCart(item)"
             @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
         </CartProductDetails>
     </v-card>
@@ -49,7 +49,7 @@
 import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
-const cartItems = computed(() => useCartStore().items?.filter(c => c.orderedQuantity > 0));
+const items = computed(() => useCartStore().items?.filter(c => c.orderedQuantity > 0));
 
 </script>
 <script>

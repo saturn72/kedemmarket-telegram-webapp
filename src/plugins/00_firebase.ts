@@ -40,6 +40,19 @@ export default defineNuxtPlugin((nuxtApp) => {
             },
 
             backend: {
+
+                async getCart(cart: {}): Promise<any> {
+                    const functions = getFunctions();
+
+                    if (process.env.NODE_ENV != 'production') {
+                        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+                    }
+
+                    const po = httpsCallable(functions, 'getOrCreateCart');
+                    const res = await po(cart);
+                    return res.data;
+                },
+
                 async placeOrder(cart: {}): Promise<any> {
                     const functions = getFunctions();
 
@@ -50,6 +63,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                     const po = httpsCallable(functions, 'submitOrder');
                     return await po(cart);
                 },
+
                 async updateCart(cart: {}) {
                     const functions = getFunctions();
 
@@ -59,10 +73,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
                     const po = httpsCallable(functions, 'updateCart');
                     return await po(cart);
-
-                    // const functions = getFunctions(app);
-                    // connectFunctionsEmulator(functions, "127.0.0.1", 5001)
-                    console.log("this should ineract with  cart update cloud function");
                 }
             }
         }
