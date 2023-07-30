@@ -12,5 +12,10 @@ export default defineAppConfig({
     defaults: {
         thumbnail: '/logo.jpg',
         logo: '/logo.jpg',
+    },
+    routes: {
+        home: "/",
+        postPurchaseRoute: "/",
+        login: "/login",
     }
 })

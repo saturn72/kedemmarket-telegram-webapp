@@ -15,7 +15,7 @@ export default {
     methods:
     {
         onClicked() {
-            const route = useVendorStore().route ?? useAppConfig().defaults.storeRoute;
+            const route = useVendorStore().route ?? useAppConfig().routes.postPurchaseRoute;
             this.$router.push(route);
         }
     }

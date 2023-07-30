@@ -1,24 +1,33 @@
 import { PiniaPluginContext } from 'pinia'
 import { useCartStore } from '@/stores/cart';
+import { useUserStore } from '@/stores/user';
 
 function CartPiniaPlugin({ store }: PiniaPluginContext) {
     store.$subscribe((mutation, state) => {
         if (mutation.storeId != 'cart') {
             return;
         }
-        useNuxtApp().$backend.updateCart(state);
+        const userCart = state.usersCarts[useUserStore().user.uid];
+        useNuxtApp().$backend.updateCart(userCart);
     })
 }
 
 export default defineNuxtPlugin(async ({ $backend, $pinia }: any) => {
     $pinia.use(CartPiniaPlugin);
 
-    const cart = useCartStore();
-    if (cart.$state.items.length == 0) {
+    const user = useUserStore().user;
+    if (!user || !user.uid) {
+        return;
+    }
+
+    const cart = useCartStore().getUserCart;
+
+    if (cart?.items?.length == 0) {
         const serverCart = await $backend.getCart();
-        cart.setCart(serverCart)
+        useCartStore().setCart(serverCart)
     }
     else {
-        await $backend.updateCart(cart.$state);
+
+        await $backend.updateCart(cart);
     }
 });

@@ -10,13 +10,13 @@
     </v-dialog>
 
     <v-dialog persistent v-model="orderDialog" class="text-center">
-        <v-card v-if="!orderPlaced">
+        <v-card v-if="!orderPlaced" height="80%">
             <v-card-title>{{ $t('placingOrder') }}</v-card-title>
             <v-col class="d-flex justify-center">
                 <v-progress-circular indeterminate :size="75" :width="5"></v-progress-circular>
             </v-col>
         </v-card>
-        <v-card v-else loading fixed>
+        <v-card v-else loading fixed height="80%">
             <v-card-title>{{ $t('orderPlaced') }}</v-card-title>
             <v-card-subtitle>
                 {{ $t('thankYouMessage') }}
@@ -49,7 +49,7 @@
 import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
-const items = computed(() => useCartStore().items?.filter(c => c.orderedQuantity > 0));
+const items = computed(() => useCartStore().getUserCart.items?.filter(c => c.orderedQuantity > 0));
 
 </script>
 <script>
@@ -90,12 +90,13 @@ export default {
         },
         async checkoutCart() {
             this.orderDialog = true;
-            await this.$backend.placeOrder(useCartStore().$state);
+            const cart = useCartStore().getUserCart
+            await this.$backend.placeOrder(cart);
             this.orderPlaced = true;
 
             setTimeout(function () {
-                useCartStore().$reset()
-                useRouter().push('/')
+                useCartStore().setCart({ items: [] });
+                useRouter().push(useAppConfig().routes.postPurchaseRoute)
             }, 3000);
         }
     }

@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-row>
-            <v-col cols="12" md="6" v-for="item in items" :key="item.name">
-                <v-card @click="$router.push(item.route)">
+            <v-col cols="12" md="6" v-for="item in items" :key="item.route">
+                <v-card @click="onClick(item)">
                     <v-card-title class="d-flex justify-center">
                         <v-icon>{{ item.icon }}</v-icon>
                         &nbsp;
@@ -16,22 +16,35 @@
 </template>
   
 <script>
+import { useUserStore } from '@/stores/user'
 
 export default {
     data: () => {
         return {
             items:
                 [{
-                    name: "orders",
                     displayText: 'myOrders',
                     route: 'orders',
                     icon: 'mdi-shopping-outline'
                 }, {
-                    name: "profile",
                     displayText: 'profile',
                     route: 'profile',
                     icon: 'mdi-account-outline'
+                }, {
+                    displayText: 'logout',
+                    onClick: () => { useUserStore().logout() },
+                    icon: 'mdi-logout'
                 }]
+        }
+    },
+    methods: {
+        onClick(item) {
+            if (item.onClick) {
+                item.onClick()
+            }
+            else {
+                this.$router.push(item.route)
+            }
         }
     }
 }

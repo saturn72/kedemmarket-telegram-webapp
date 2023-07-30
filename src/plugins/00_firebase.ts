@@ -15,12 +15,14 @@ export default defineNuxtPlugin((nuxtApp) => {
             useUserStore().setUser(user);
         }
         else {
-            useUserStore().$reset();
+            useUserStore().setUser(undefined);
+            useNuxtApp().$router.push(useAppConfig().routes.login);
         }
     });
 
     return {
         provide: {
+
             storage: {
                 getDownloadUrl: async (uri: string): Promise<string | null> => {
                     while (uri.startsWith('/')) {
@@ -38,7 +40,11 @@ export default defineNuxtPlugin((nuxtApp) => {
                     }
                 }
             },
-
+            user: {
+                async logout(): Promise<any> {
+                    await auth.signOut();
+                }
+            },
             backend: {
 
                 async getCart(cart: {}): Promise<any> {

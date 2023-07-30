@@ -44,7 +44,8 @@ export default {
     },
 
     mounted() {
-        firebase.initializeApp(useAppConfig().firebase);
+        const fb = useAppConfig().firebase;
+        firebase.initializeApp(fb);
 
         const rUrl = useRoute().query.returnUrl || "./";
         var uiConfig = {
