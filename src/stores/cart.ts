@@ -6,6 +6,7 @@ import { useUserStore } from './user';
 type CartItem = {
     product: Product;
     orderedQuantity: number;
+    price: number,
     addedOnUtc: Date
 }
 type UserCart = {
@@ -31,7 +32,22 @@ const getOrCreateCurrentUserCart = (state: any): UserCart => {
     }
     return state.usersCarts[userId];
 }
+const setCartItemPrice = (item: CartItem) => {
+    const p = item.product;
+    item.price = item.orderedQuantity * p.price;
 
+    if (p.tierPrices && p.tierPrices.length > 0) {
+        let lastQuantity: number = 0;
+        for (let idx = 0; idx < p.tierPrices.length; idx++) {
+            const curTier = p.tierPrices[idx];
+            if (lastQuantity < curTier.quantity && curTier.quantity <= item.orderedQuantity) {
+                lastQuantity = curTier.quantity;
+                item.price = item.orderedQuantity * curTier.price;
+            }
+        }
+    }
+    console.log("thisis curTier");
+}
 export const useCartStore = defineStore('cart', {
     state: (): CartState => {
         return {
@@ -65,9 +81,10 @@ export const useCartStore = defineStore('cart', {
     },
     actions: {
 
-        setCart(cart: any) {
+        setCart(cart: UserCart) {
             const userId = useUserStore().getUser.uid;
             this.$state.usersCarts[userId] = cart;
+            cart.items.forEach(ci => setCartItemPrice(ci));
         },
 
         incrementCartItem(product: Product): void {
@@ -76,12 +93,17 @@ export const useCartStore = defineStore('cart', {
 
             if (!existCartItem) {
                 const ci = {
-                    product, orderedQuantity: 1, addedOnUtc: new Date(),
+                    product,
+                    orderedQuantity: 1,
+                    addedOnUtc: new Date(),
+                    price: product.price
                 };
+                setCartItemPrice(ci);
                 cart.items.push(ci);
 
             } else {
                 existCartItem.orderedQuantity++;
+                setCartItemPrice(existCartItem);
             };
         },
 
@@ -97,6 +119,7 @@ export const useCartStore = defineStore('cart', {
                 if (ci.orderedQuantity === 0) {
                     _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
                 }
+                setCartItemPrice(ci);
             }
         },
 

@@ -28,11 +28,10 @@ export async function getMediaItemOrDefault(
     defaultValues: MediaItemSlim): Promise<MediaItem> {
 
     const url = await getMediaUrlOrDefault(mediaItem?.uri, mediaType);
-
     return {
-        alt: mediaItem.alt || defaultValues.alt,
-        src: mediaItem.uri,
-        title: mediaItem.title || defaultValues.title,
+        alt: mediaItem?.alt || defaultValues.alt,
+        src: mediaItem?.uri || defaultValues.src,
+        title: mediaItem?.title || defaultValues.title,
         url
     }
 }

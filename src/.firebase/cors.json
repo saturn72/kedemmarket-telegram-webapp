@@ -9,3 +9,4 @@
         "maxAgeSeconds": 3600
     }
 ]
+//https://cloud.google.com/storage/docs/using-cors#command-line

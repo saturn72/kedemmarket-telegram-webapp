@@ -4,13 +4,20 @@ export interface MediaItem {
     title: string;
     url: string;
 }
+export type TierPrice = {
+    quantity: number,
+    price: number,
+    startDateTimeUtc?: Date
+    endDateTimeUtc?: Date
 
+}
 export interface Product {
     id: any;
     name: string;
     description: string;
     tags?: string[],
     price: number;
+    tierPrices?: TierPrice[]
     image: MediaItem;
 }
 

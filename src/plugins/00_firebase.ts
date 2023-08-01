@@ -1,11 +1,11 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { getAuth } from "firebase/auth";
+import { Auth, getAuth } from "firebase/auth";
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
+import { AppCheck, initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
-export default defineNuxtPlugin((nuxtApp) => {
-    const app: FirebaseApp = initializeApp(useAppConfig().firebase);
+const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
     auth.useDeviceLanguage();
     auth.currentUser;
@@ -19,6 +19,26 @@ export default defineNuxtPlugin((nuxtApp) => {
             useNuxtApp().$router.push(useAppConfig().routes.login);
         }
     });
+    return auth;
+}
+
+const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
+    if (process.env.NODE_ENV != 'production') {
+        return undefined;
+    }
+
+    const k = useAppConfig().reCaptcha;
+    return initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(k),
+        isTokenAutoRefreshEnabled: true
+    });
+}
+
+export default defineNuxtPlugin((nuxtApp) => {
+    const app: FirebaseApp = initializeApp(useAppConfig().firebase);
+
+    const auth = configureAuth(app);
+    const appCheck = configureAppCheck(app);
 
     return {
         provide: {

@@ -32,7 +32,7 @@ const getUserCarts = async (uid: string):
 }
 
 export const submitOrder = onCall(async req => {
-    logger.debug("start addOrder", { structuredData: true });
+    logger.debug("start submitOrder", { structuredData: true });
 
     const { uid } = validateAuth(req);
     validateData(req);
@@ -40,6 +40,7 @@ export const submitOrder = onCall(async req => {
     const writeResult = await getFirestore()
         .collection("orders")
         .add({
+            utcTimestamp: new Date().getTime(),
             userId: uid,
             items: req.data,
             status: 'submitted'
@@ -53,7 +54,7 @@ export const submitOrder = onCall(async req => {
         });
     }
 
-    logger.debug("end addOrder", { structuredData: true });
+    logger.debug("end submitOrder", { structuredData: true });
     return { data: writeResult.id };
 });
 
