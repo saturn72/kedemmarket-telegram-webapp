@@ -48,5 +48,8 @@ export const useAlertStore = defineStore('alert', {
                 this.$state.text = undefined;
             }, duration)
         }
+    },
+    persist: {
+        storage: persistedState.localStorage
     }
 });
