@@ -4,8 +4,8 @@
             <ProductBadgedAvatar :product="product"></ProductBadgedAvatar>
         </v-card-title>
         <v-card-text>
-            {{ product.name }}<strong>&centerdot; {{ product.price }} {{
-                $t('currencySymbol') }}</strong></v-card-text>
+            <ProductPrice :product="product" />
+        </v-card-text>
         <v-card-actions>
             <ProductButtons :product="product"></ProductButtons>
         </v-card-actions>

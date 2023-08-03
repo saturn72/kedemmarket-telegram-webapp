@@ -20,5 +20,12 @@ export default {
     productSearch: "🔎 חיפוש...",
     loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓",
     failedToFindPage: "הדף לא קיים...",
-    cartTotal: "סה\"כ לעגלה:"
+    cartTotal: "סה\"כ לעגלה:",
+    for: "ב-",
+    perUnit: "ליח'",
+    toStore: "חנות",
+    toAccount: "חשבון",
+    toCart: "עגלת קניות",
+    priceUpdatesAtCheckout: "📝 מחיר לאחר הנחות/מבצעים יעודכן בקופה",
+    close: "סגירה"
 }

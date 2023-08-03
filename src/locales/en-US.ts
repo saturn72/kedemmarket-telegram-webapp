@@ -19,5 +19,12 @@ export default {
     productSearch: "🔍 Search...",
     loginIsRequiredToContinue: "Login is required to continue 🔓",
     failedToFindPage: "Failed to find page...",
-    cartTotal: "Cart Total:"
+    cartTotal: "Cart Total:",
+    for: "for",
+    perUnit: "per unit",
+    toStore: "Store",
+    toAccount: "Account",
+    toCart: "Shopping Cart",
+    priceUpdatesAtCheckout: "📝 Price Updates at Checkout",
+    close: "Close"
 }

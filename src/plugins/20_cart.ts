@@ -1,6 +1,27 @@
+import { UserCart } from 'model';
 import { PiniaPluginContext } from 'pinia'
 import { useCartStore } from '@/stores/cart';
 import { useUserStore } from '@/stores/user';
+import { useAlertStore } from '@/stores/alert';
+
+const showSnackbarIfRequired = (cart: UserCart): void => {
+    const enteredTier = cart.items.some(c => {
+        if (c.orderedQuantity == 1) {
+            return false;
+        }
+
+        const tp = c.product.tierPrices;
+        if (!tp || tp.length == 0) {
+            return false;
+        }
+        var tierQuantities = tp.map((t: { quantity: number }) => t.quantity)
+        return tierQuantities.includes(c.orderedQuantity);
+    });
+
+    if (enteredTier) {
+        useAlertStore().setAlarm('snackbar', useNuxtApp().$t("priceUpdatesAtCheckout"));
+    }
+}
 
 function CartPiniaPlugin({ store }: PiniaPluginContext) {
     store.$subscribe((mutation, state) => {
@@ -9,6 +30,8 @@ function CartPiniaPlugin({ store }: PiniaPluginContext) {
         }
         const userCart = state.usersCarts[useUserStore().user.uid];
         useNuxtApp().$backend.updateCart(userCart);
+
+        showSnackbarIfRequired(userCart);
     })
 }
 

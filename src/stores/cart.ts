@@ -1,18 +1,8 @@
 import { defineStore } from 'pinia'
-import { Product } from '~/model';
+import { CartItem, Product } from '~/model';
 import _ from 'lodash';
 import { useUserStore } from './user';
-
-type CartItem = {
-    product: Product;
-    orderedQuantity: number;
-    price: number,
-    addedOnUtc: Date
-}
-type UserCart = {
-    items: CartItem[]
-};
-
+import { UserCart } from 'model';
 type CartState = {
     usersCarts: [key: string, items: UserCart] | any
 }
@@ -32,22 +22,24 @@ const getOrCreateCurrentUserCart = (state: any): UserCart => {
     }
     return state.usersCarts[userId];
 }
+
 const setCartItemPrice = (item: CartItem) => {
     const p = item.product;
     item.price = item.orderedQuantity * p.price;
 
-    if (p.tierPrices && p.tierPrices.length > 0) {
-        let lastQuantity: number = 0;
-        for (let idx = 0; idx < p.tierPrices.length; idx++) {
-            const curTier = p.tierPrices[idx];
-            if (lastQuantity < curTier.quantity && curTier.quantity <= item.orderedQuantity) {
-                lastQuantity = curTier.quantity;
-                item.price = item.orderedQuantity * curTier.price;
-            }
-        }
-    }
-    console.log("thisis curTier");
+
+    // if (p.tierPrices && p.tierPrices.length > 0) {
+    //     let lastQuantity: number = 0;
+    //     for (let idx = 0; idx < p.tierPrices.length; idx++) {
+    //         const curTier = p.tierPrices[idx];
+    //         if (lastQuantity < curTier.quantity && curTier.quantity <= item.orderedQuantity) {
+    //             lastQuantity = curTier.quantity;
+    //             item.price = item.orderedQuantity * curTier.price;
+    //         }
+    //     }
+    // }
 }
+
 export const useCartStore = defineStore('cart', {
     state: (): CartState => {
         return {

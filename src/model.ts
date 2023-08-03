@@ -11,6 +11,17 @@ export type TierPrice = {
     endDateTimeUtc?: Date
 
 }
+export type CartItem = {
+    product: Product;
+    orderedQuantity: number;
+    price: number;
+    addedOnUtc: Date;
+}
+
+export type UserCart = {
+    items: CartItem[]
+};
+
 export interface Product {
     id: any;
     name: string;
