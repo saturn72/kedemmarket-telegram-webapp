@@ -9,7 +9,7 @@
         </v-main>
 
         <AppSnackbar />
-        <!-- <AppFooter /> -->
+        <AppFooter />
     </v-app>
 </template>
 
