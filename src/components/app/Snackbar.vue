@@ -2,8 +2,9 @@
     <v-snackbar v-model="show" :timeout="timeout">
         {{ text }}
         <template v-slot:actions>
-            <v-btn color="red" variant="text" @click="close">
-                {{ $t("close") }}
+            <v-btn color="red" variant="text" @click="close" icon>
+                <v-icon>mdi-close-circle-outline</v-icon>
+                <!-- {{ $t("close") }} -->
             </v-btn>
         </template>
     </v-snackbar>
