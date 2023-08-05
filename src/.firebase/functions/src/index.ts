@@ -31,6 +31,48 @@ const getUserCarts = async (uid: string):
     return userCarts.docs;
 }
 
+
+export const calculateCart = onCall(async req => {
+    logger.debug("start calculateCart", { structuredData: true });
+
+    const { uid } = validateAuth(req);
+    validateData(req);
+    const cart = req.data;
+
+    const productIds = cart.items.map((i: any) => i.product.id);
+    const dbProducts = await getFirestore()
+        .collection("products")
+        .where("id", "in", productIds)
+        .get();
+
+    for (let index = 0; index < cart.items.length; index++) {
+        const curItem = cart.items[index];
+        const db = dbProducts.docs.find(pt => pt.data().id == curItem.product.id);
+
+        const p = db?.data();
+        if (!p) {
+            curItem.error = "item not exist";
+            continue;
+        }
+
+        //only tier price is supportted at this point
+        if (p.tierPrices && p.tierPrices.length > 0) {
+            let lastQuantity: number = 0;
+            for (let idx = 0; idx < p.tierPrices.length; idx++) {
+                const curTier = p.tierPrices[idx];
+                if (lastQuantity < curTier.quantity && curTier.quantity <= curItem.orderedQuantity) {
+                    lastQuantity = curTier.quantity;
+                    curItem.price = curItem.orderedQuantity * curTier.price;
+                }
+            }
+        }
+
+    }
+
+    logger.debug("end calculateCart", { structuredData: true });
+    return { data: cart };
+});
+
 export const submitOrder = onCall(async req => {
     logger.debug("start submitOrder", { structuredData: true });
 

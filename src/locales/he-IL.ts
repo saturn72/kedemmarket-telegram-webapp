@@ -27,5 +27,7 @@ export default {
     toAccount: "חשבון",
     toCart: "עגלת קניות",
     priceUpdatesAtCheckout: "📝 מחיר לאחר הנחות/מבצעים יעודכן בקופה",
-    close: "סגירה"
+    close: "סגירה",
+    calculatingCart: "🧮 מחשב פרטי עגלה 🛒"
+
 }

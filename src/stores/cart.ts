@@ -26,18 +26,6 @@ const getOrCreateCurrentUserCart = (state: any): UserCart => {
 const setCartItemPrice = (item: CartItem) => {
     const p = item.product;
     item.price = item.orderedQuantity * p.price;
-
-
-    // if (p.tierPrices && p.tierPrices.length > 0) {
-    //     let lastQuantity: number = 0;
-    //     for (let idx = 0; idx < p.tierPrices.length; idx++) {
-    //         const curTier = p.tierPrices[idx];
-    //         if (lastQuantity < curTier.quantity && curTier.quantity <= item.orderedQuantity) {
-    //             lastQuantity = curTier.quantity;
-    //             item.price = item.orderedQuantity * curTier.price;
-    //         }
-    //     }
-    // }
 }
 
 export const useCartStore = defineStore('cart', {
@@ -47,6 +35,11 @@ export const useCartStore = defineStore('cart', {
         };
     },
     getters: {
+
+        async calculateCart(state): Promise<UserCart> {
+            console.log("this si calculate cart")
+        },
+
         getUserCart(state): UserCart | undefined {
             const userId = useUserStore().getUser.uid;
             if (!userId) {

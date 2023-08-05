@@ -1,7 +1,7 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Auth, getAuth } from "firebase/auth";
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
+import { Functions, connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
 import { AppCheck, initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
@@ -32,6 +32,17 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
         provider: new ReCaptchaV3Provider(k),
         isTokenAutoRefreshEnabled: true
     });
+}
+
+const executeFunction = async (functionName: string, payload: any): Promise<any> => {
+    const f = getFunctions();
+
+    if (process.env.NODE_ENV != 'production') {
+        connectFunctionsEmulator(f, "127.0.0.1", 5001);
+    }
+
+    const po = httpsCallable(f, functionName);
+    return await po(payload);
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -65,40 +76,25 @@ export default defineNuxtPlugin((nuxtApp) => {
                     await auth.signOut();
                 }
             },
+
             backend: {
 
+                async calculateCart(cart: {}): Promise<any> {
+                    const res = await executeFunction('calculateCart', cart);
+                    return res.data;
+                },
+
                 async getCart(cart: {}): Promise<any> {
-                    const functions = getFunctions();
-
-                    if (process.env.NODE_ENV != 'production') {
-                        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-                    }
-
-                    const po = httpsCallable(functions, 'getOrCreateCart');
-                    const res = await po(cart);
+                    const res = await executeFunction('getOrCreateCart', cart);
                     return res.data;
                 },
 
                 async placeOrder(cart: {}): Promise<any> {
-                    const functions = getFunctions();
-
-                    if (process.env.NODE_ENV != 'production') {
-                        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-                    }
-
-                    const po = httpsCallable(functions, 'submitOrder');
-                    return await po(cart);
+                    return await executeFunction('submitOrder', cart);
                 },
 
                 async updateCart(cart: {}) {
-                    const functions = getFunctions();
-
-                    if (process.env.NODE_ENV != 'production') {
-                        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-                    }
-
-                    const po = httpsCallable(functions, 'updateCart');
-                    return await po(cart);
+                    return executeFunction('updateCart', cart);
                 }
             }
         }

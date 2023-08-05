@@ -1,4 +1,12 @@
 <template>
+    <v-dialog v-model="cartCalculationDialog">
+        <v-card height="250">
+            <v-card-text align="center" justify="center">
+
+                <CartCalculatingCart />
+            </v-card-text>
+        </v-card>
+    </v-dialog>
     <v-dialog v-click-outside="resetRemoveFromCart" v-model="itemToDelete" width="auto" class="text-center"> <v-card>
             <v-card-text>{{ dialogText }}</v-card-text>
             <v-card-actions>
@@ -31,11 +39,6 @@
     </v-dialog>
 
     <v-card class="mx-3 mt-3">
-        <p class="mb-3">
-            <v-btn block size="small" :disabled="items == 0" color="secondary" @click="checkoutCart()">{{
-                $t('checkoutCart')
-            }}</v-btn>
-        </p>
         <v-card-title>
             {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ useCartStore().getCartTotal }}
         </v-card-title>
@@ -44,24 +47,41 @@
             @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
         </CartProductDetails>
     </v-card>
+    <v-spacer></v-spacer>
+    <p class="ma-6">
+        <v-btn block :disabled="items == 0" color="secondary" @click="checkoutCart()">{{
+            $t('checkoutCart')
+        }}</v-btn>
+    </p>
 </template>
+
 <script setup>
 import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
+const tttt = await useCartStore().calculateCart;
+console.log("tttt", tttt)
 const items = computed(() => useCartStore().getUserCart.items?.filter(c => c.orderedQuantity > 0));
 
-</script>
-<script>
+definePageMeta({
+    layout: 'blank'
+});
 
+</script>
+
+<script>
 import { useCartStore } from "@/stores/cart";
 
 export default {
+    mounted() {
+        setTimeout(() => this.cartCalculationDialog = false, 3000)
+    },
     data() {
         return {
             itemToDelete: null,
             orderDialog: false,
             orderPlaced: false,
+            cartCalculationDialog: true
         }
     },
     methods: {

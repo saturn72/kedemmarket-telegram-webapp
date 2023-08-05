@@ -26,5 +26,6 @@ export default {
     toAccount: "Account",
     toCart: "Shopping Cart",
     priceUpdatesAtCheckout: "📝 Price Updates at Checkout",
-    close: "Close"
+    close: "Close",
+    calculatingCart: "🧮 Calculating Cart... 🛒"
 }
