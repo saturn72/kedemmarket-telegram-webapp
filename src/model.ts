@@ -14,7 +14,7 @@ export type TierPrice = {
 export type CartItem = {
     product: Product;
     orderedQuantity: number;
-    price: number;
+    totalPrice?: number;
     addedOnUtc: Date;
 }
 

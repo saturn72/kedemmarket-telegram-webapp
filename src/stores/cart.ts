@@ -25,7 +25,7 @@ const getOrCreateCurrentUserCart = (state: any): UserCart => {
 
 const setCartItemPrice = (item: CartItem) => {
     const p = item.product;
-    item.price = item.orderedQuantity * p.price;
+    item.totalPrice = item.orderedQuantity * p.price;
 }
 
 export const useCartStore = defineStore('cart', {
@@ -77,7 +77,6 @@ export const useCartStore = defineStore('cart', {
                     product,
                     orderedQuantity: 1,
                     addedOnUtc: new Date(),
-                    price: product.price
                 };
                 setCartItemPrice(ci);
                 cart.items.push(ci);

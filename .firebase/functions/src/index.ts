@@ -42,6 +42,7 @@ export const prepareCartForCheckout = onCall(async (req) => {
 
   validateAuth(req);
   validateData(req);
+
   const userCart = req.data;
   const productIds = userCart.items.map((i: any) => i.product.id);
   const dbProducts = await getFirestore()
@@ -50,40 +51,51 @@ export const prepareCartForCheckout = onCall(async (req) => {
     .get();
 
   const docs = dbProducts.docs;
-  console.log("all", docs);
+
   const items = [];
+
   for (let index = 0; index < userCart.items.length; index++) {
     const curItem = userCart.items[index];
+
     const curDoc = docs.find((pt) => pt.id == curItem.product.id);
 
     const p = curDoc?.data();
     if (!p) {
       curItem.message = "item not found";
+      curItem.priceBeforeDiscounts = 0;
+      curItem.priceAfterDiscounts = 0;
+      curItem.numericDiscount = 0;
+      curItem.percentageDiscount = 0;
+
       continue;
     }
 
-    console.log("p.tierPrices", p.tierPrices)
+    curItem.priceBeforeDiscounts = curItem.orderedQuantity * curItem.product.price
+    curItem.priceAfterDiscounts = curItem.priceBeforeDiscounts;
+    curItem.numericDiscount = 0;
+    curItem.percentageDiscount = 0
 
     // only tier price is supportted at this point
     if (p.tierPrices && p.tierPrices.length > 0) {
       let lastQuantity = 0;
       for (let idx = 0; idx < p.tierPrices.length; idx++) {
         const curTier = p.tierPrices[idx];
-        console.log("curTier.quantity", curTier.quantity);
-        console.log("curItem.orderedQuantity", curItem.orderedQuantity);
 
-        if (lastQuantity < curTier.quantity &&
-          curTier.quantity <= curItem.orderedQuantity) {
+        if (lastQuantity < curItem.orderedQuantity && curItem.orderedQuantity >= curTier.quantity) {
           lastQuantity = curTier.quantity;
-          curItem.price = curItem.orderedQuantity * curTier.price;
+          curItem.priceAfterDiscounts = curItem.orderedQuantity * curTier.price;
+          curItem.percentageDiscount = 1 - (curItem.priceAfterDiscounts / curItem.priceBeforeDiscounts);
+          curItem.numericDiscount = curItem.priceBeforeDiscounts - curItem.priceAfterDiscounts;
         }
       }
     }
     items.push(curItem);
   }
 
+  const cartTotal = items.reduce((a, b) => a.priceAfterDiscounts + b.priceAfterDiscounts);
+  const totalDiscounts = items.reduce((a, b) => a.numericDiscount + b.numericDiscount);
   logger.debug("end prepareCartForCheckout", { structuredData: true });
-  return { data: { userCart, items } };
+  return { data: { userCart, items, cartTotal, totalDiscounts } };
 });
 
 export const submitOrder = onCall(async (req) => {
