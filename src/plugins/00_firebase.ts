@@ -1,9 +1,10 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Auth, getAuth } from "firebase/auth";
-import { Functions, connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
+import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
 import { AppCheck, initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import { CheckoutCart, UserCart } from "model";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
@@ -36,7 +37,6 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
 
 const executeFunction = async (functionName: string, payload: any): Promise<any> => {
     const f = getFunctions();
-
     if (process.env.NODE_ENV != 'production') {
         connectFunctionsEmulator(f, "127.0.0.1", 5001);
     }
@@ -79,21 +79,21 @@ export default defineNuxtPlugin((nuxtApp) => {
 
             backend: {
 
-                async calculateCart(cart: {}): Promise<any> {
-                    const res = await executeFunction('calculateCart', cart);
+                async prepareCartForCheckout(cart: UserCart): Promise<CheckoutCart> {
+                    const res = await executeFunction('prepareCartForCheckout', cart);
                     return res.data;
                 },
 
-                async getCart(cart: {}): Promise<any> {
+                async getCart(cart: UserCart): Promise<UserCart> {
                     const res = await executeFunction('getOrCreateCart', cart);
                     return res.data;
                 },
 
-                async placeOrder(cart: {}): Promise<any> {
+                async placeOrder(cart: UserCart): Promise<UserCart> {
                     return await executeFunction('submitOrder', cart);
                 },
 
-                async updateCart(cart: {}) {
+                async updateCart(cart: UserCart) {
                     return executeFunction('updateCart', cart);
                 }
             }

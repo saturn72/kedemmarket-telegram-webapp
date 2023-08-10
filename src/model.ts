@@ -22,6 +22,11 @@ export type UserCart = {
     items: CartItem[]
 };
 
+export type CheckoutCart = {
+    userCart: UserCart,
+    items: CartItem[]
+}
+
 export interface Product {
     id: any;
     name: string;

@@ -4,6 +4,8 @@
             <ProductBadgedAvatar :product="product"></ProductBadgedAvatar>
         </v-card-title>
         <v-card-text>
+            <strong> {{ product.name }}</strong>
+            <v-divider thickness="2"></v-divider>
             <ProductPrice :product="product" />
         </v-card-text>
         <v-card-actions>

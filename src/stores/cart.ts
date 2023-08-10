@@ -36,10 +36,6 @@ export const useCartStore = defineStore('cart', {
     },
     getters: {
 
-        async calculateCart(state): Promise<UserCart> {
-            console.log("this si calculate cart")
-        },
-
         getUserCart(state): UserCart | undefined {
             const userId = useUserStore().getUser.uid;
             if (!userId) {

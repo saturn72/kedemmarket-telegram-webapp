@@ -59,25 +59,33 @@
 import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
-const tttt = await useCartStore().calculateCart;
-console.log("tttt", tttt)
-const items = computed(() => useCartStore().getUserCart.items?.filter(c => c.orderedQuantity > 0));
-
 definePageMeta({
     layout: 'blank'
 });
+
+const items = computed(async () => await useCartStore().calculateCart);
 
 </script>
 
 <script>
 import { useCartStore } from "@/stores/cart";
-
 export default {
-    mounted() {
-        setTimeout(() => this.cartCalculationDialog = false, 3000)
+    async created() {
+        console.log("in details mounted START")
+        const cart = useCartStore().getUserCart;
+        if (!cart || cart.getCartItemCount == 0) {
+            return;
+        }
+
+        this.checkoutCart = await useNuxtApp().$backend.prepareCartForCheckout(cart);
+        console.log("this is the calculated cart", this.checkoutCart);
+
+        // p.then(res => cartStore.setCart(res));
+        // setTimeout(() => this.cartCalculationDialog = false, 3000)
     },
     data() {
         return {
+            checkoutCart: {},
             itemToDelete: null,
             orderDialog: false,
             orderPlaced: false,
