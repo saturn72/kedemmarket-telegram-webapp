@@ -1,5 +1,5 @@
 <template>
-    <v-btn ripple block variant="flat" color="success" @click="addToCart(product)">{{ $t('addButton')
+    <v-btn ripple block variant="flat" color="info" @click="addToCart(product)">{{ $t('addButton')
     }}</v-btn>
 </template>
 <script>
