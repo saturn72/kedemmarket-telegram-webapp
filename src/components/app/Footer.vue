@@ -1,7 +1,7 @@
 <template>
     <v-footer padless app>
         <v-bottom-navigation class="pt-1" grow fixed color="teal" height="70">
-            <v-btn plain @click="$router.push('/cart')">
+            <v-btn plain @click="$router.push('/checkout')">
                 <v-badge :content="cartItemCount" :model-value="cartItemCount > 0" color="green" floating
                     location="top start">
                     <v-icon>mdi-cart-outline</v-icon>
@@ -28,7 +28,7 @@ import { useCartStore } from '@/stores/cart'
 import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
 
-const cartItemCount = computed(() => useCartStore().getCartItemCount);
+const cartItemCount = computed(() => useCartStore().getTotalCartItemsCount);
 const cartTotal = computed(() => useCartStore().getCartTotal);
 const user = useUserStore().user;
 </script>
@@ -39,8 +39,8 @@ export default {
             items: [{
                 icon: 'mdi-cart',
                 isCart: true,
-                path: '/cart',
-                title: 'Cart',
+                path: '/checkout',
+                title: 'Checkout',
             }, {
                 icon: 'mdi-account-outline',
                 path: '/account',

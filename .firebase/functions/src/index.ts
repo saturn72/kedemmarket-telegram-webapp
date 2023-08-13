@@ -77,14 +77,15 @@ export const prepareCartForCheckout = onCall(async (req) => {
 
     // only tier price is supportted at this point
     if (p.tierPrices && p.tierPrices.length > 0) {
-      let lastQuantity = 0;
+      let lastTier = { quantity: 0 };
       for (let idx = 0; idx < p.tierPrices.length; idx++) {
         const curTier = p.tierPrices[idx];
 
-        if (lastQuantity < curItem.orderedQuantity && curItem.orderedQuantity >= curTier.quantity) {
-          lastQuantity = curTier.quantity;
+        if (lastTier.quantity < curTier.quantity &&
+          curItem.orderedQuantity >= curTier.quantity) {
+          lastTier = { ...curTier };
           curItem.priceAfterDiscounts = curItem.orderedQuantity * curTier.price;
-          curItem.percentageDiscount = 1 - (curItem.priceAfterDiscounts / curItem.priceBeforeDiscounts);
+          curItem.percentageDiscount = curItem.priceAfterDiscounts / curItem.priceBeforeDiscounts;
           curItem.numericDiscount = curItem.priceBeforeDiscounts - curItem.priceAfterDiscounts;
         }
       }
@@ -92,10 +93,16 @@ export const prepareCartForCheckout = onCall(async (req) => {
     items.push(curItem);
   }
 
-  const cartTotal = items.reduce((a, b) => a.priceAfterDiscounts + b.priceAfterDiscounts);
-  const totalDiscounts = items.reduce((a, b) => a.numericDiscount + b.numericDiscount);
-  logger.debug("end prepareCartForCheckout", { structuredData: true });
-  return { data: { userCart, items, cartTotal, totalDiscounts } };
+  let cartTotal = 0
+  let totalDiscounts = 0;
+  items.map(x => {
+    cartTotal += x.priceAfterDiscounts;
+    totalDiscounts += x.numericDiscount;
+  });
+
+  const o = { userCart, items, cartTotal, totalDiscounts };
+  logger.debug("end prepareCartForCheckout. output object: ", o, { structuredData: true });
+  return o;
 });
 
 export const submitOrder = onCall(async (req) => {

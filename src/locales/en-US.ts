@@ -27,5 +27,6 @@ export default {
     toCart: "Shopping Cart",
     priceUpdatesAtCheckout: "📝 Price Updates at Checkout",
     close: "Close",
-    calculatingCart: "🧮 Calculating Cart... 🛒"
+    calculatingCart: "🧮 Calculating Cart... 🛒",
+    pricesAfterDiscounts: "(Prices are after discount)"
 }

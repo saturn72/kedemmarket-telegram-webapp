@@ -45,7 +45,7 @@ export const useCartStore = defineStore('cart', {
             return getOrCreateCurrentUserCart(state);
         },
 
-        getCartItemCount(state): number {
+        getTotalCartItemsCount(state): number {
             let t = 0;
             const cart = getOrCreateCurrentUserCart(state);
             cart?.items?.forEach((ci: CartItem) => t += ci.orderedQuantity);

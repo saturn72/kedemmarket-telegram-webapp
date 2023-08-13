@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export interface MediaItem {
     alt: string;
     src: string;
@@ -22,9 +24,20 @@ export type UserCart = {
     items: CartItem[]
 };
 
+export type CheckoutCartItem = CartItem & {
+    itemPrice: number;
+    cartTotal: number;
+    numericDiscount: number;
+    percentageDiscount: number;
+    priceAfterDiscounts: number;
+    priceBeforeDiscounts: number;
+};
+
 export type CheckoutCart = {
-    userCart: UserCart,
-    items: CartItem[]
+    userCart: UserCart | undefined,
+    items: CheckoutCartItem[]
+    cartTotal: number;
+    totalDiscounts: number;
 }
 
 export interface Product {
