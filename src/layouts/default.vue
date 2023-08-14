@@ -1,5 +1,5 @@
 <template>
-    <v-app dir="rtl">
+    <v-app>
         <AppHeader />
 
         <v-main>

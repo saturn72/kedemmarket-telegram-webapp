@@ -1,13 +1,15 @@
 <template>
     <v-footer padless app>
         <v-bottom-navigation class="pt-1" grow fixed color="teal" height="70">
-            <v-btn plain @click="$router.push('/checkout')">
+            <v-btn plain @click="$router.push(useAppConfig().routes.checkout)">
                 <v-badge :content="cartItemCount" :model-value="cartItemCount > 0" color="green" floating
                     location="top start">
                     <v-icon>mdi-cart-outline</v-icon>
-                    <h2 v-if="cartTotal > 0">
-                        {{ $t('currencySymbol') }}{{ cartTotal }}
-                    </h2>
+                    <v-slide-x-transition>
+                        <h2 v-if="cartTotal > 0 && !isCheckout">
+                            {{ $t('currencySymbol') }}{{ cartTotal }}
+                        </h2>
+                    </v-slide-x-transition>
                 </v-badge>
                 {{ $t('toCart') }}
             </v-btn>
@@ -25,29 +27,10 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
-import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
 
 const cartItemCount = computed(() => useCartStore().getTotalCartItemsCount);
 const cartTotal = computed(() => useCartStore().getCartTotal);
-const user = useUserStore().user;
-</script>
-<script>
-export default {
-    data() {
-        return {
-            items: [{
-                icon: 'mdi-cart',
-                isCart: true,
-                path: '/checkout',
-                title: 'Checkout',
-            }, {
-                icon: 'mdi-account-outline',
-                path: '/account',
-                title: 'Account',
-            },
-            ]
-        }
-    }
-}
+const isCheckout = computed(() => useRoute().path.startsWith(useAppConfig().routes.checkout))
+console.log("ssss", isCheckout)
 </script>

@@ -18,5 +18,6 @@ export default defineAppConfig({
         home: "/",
         postPurchaseRoute: "/",
         login: "/login",
+        checkout: "/checkout"
     }
 })

@@ -68,10 +68,6 @@ import { useCartStore } from "@/stores/cart";
 
 export default {
     setup() {
-        definePageMeta({
-            layout: 'blank'
-        });
-
         const store = computed(() => useCheckoutCartStore());
 
         const loading = computed(() => {
