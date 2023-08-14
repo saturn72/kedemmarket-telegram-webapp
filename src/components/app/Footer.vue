@@ -1,7 +1,7 @@
 <template>
     <v-footer padless app>
         <v-bottom-navigation class="pt-1" grow fixed color="teal" height="70">
-            <v-btn plain @click="$router.push(useAppConfig().routes.checkout)">
+            <v-btn plain @click="toRoute(checkout)">
                 <v-badge :content="cartItemCount" :model-value="cartItemCount > 0" color="green" floating
                     location="top start">
                     <v-icon>mdi-cart-outline</v-icon>
@@ -13,11 +13,11 @@
                 </v-badge>
                 {{ $t('toCart') }}
             </v-btn>
-            <v-btn plain @click="$router.push('/account')">
+            <v-btn plain @click="toRoute(account)">
                 <v-icon>mdi-account-outline</v-icon>
                 {{ $t('toAccount') }}
             </v-btn>
-            <v-btn plain @click="$router.push('/')">
+            <v-btn plain @click="toRoute(home)">
                 <v-icon>mdi-store-outline</v-icon>
                 {{ $t('toStore') }}
             </v-btn>
@@ -32,5 +32,15 @@ import { computed } from 'vue'
 const cartItemCount = computed(() => useCartStore().getTotalCartItemsCount);
 const cartTotal = computed(() => useCartStore().getCartTotal);
 const isCheckout = computed(() => useRoute().path.startsWith(useAppConfig().routes.checkout))
-console.log("ssss", isCheckout)
+const { account, checkout, home, } = useAppConfig().routes;
+
+</script>
+<script>
+export default {
+    methods: {
+        toRoute(route) {
+            useRouter().push(route)
+        }
+    }
+}
 </script>
