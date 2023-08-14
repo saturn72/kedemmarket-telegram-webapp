@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useCartStore } from './cart';
 import { CheckoutCart } from 'model';
 
-type CheckoutCartState = CheckoutCart;
+type CheckoutCartState = CheckoutCart & { calculating: boolean };
 
 let timoutRef: NodeJS.Timeout;
 
@@ -15,7 +15,8 @@ const calculateInternal = async (): Promise<CheckoutCartState> => {
             userCart: undefined,
             cartTotal: 0,
             totalDiscounts: 0,
-            items: []
+            items: [],
+            calculating: false
         };
     }
 
@@ -28,18 +29,21 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
             userCart: undefined,
             cartTotal: 0,
             totalDiscounts: 0,
-            items: []
+            items: [],
+            calculating: false
         };
     },
     actions: {
         async calculate(timeout: number = 2000): Promise<void> {
+            this.$state.calculating = true;
             this.$state.userCart = useCartStore().getUserCart;
             if (timoutRef) {
                 clearTimeout(timoutRef);
             }
+
             timoutRef = setTimeout(async () => {
                 this.$state = await calculateInternal();
-                clearTimeout(timoutRef);
+                this.$state.calculating = false;
             }, timeout)
         }
     }

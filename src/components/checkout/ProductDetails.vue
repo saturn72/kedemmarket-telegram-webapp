@@ -13,13 +13,17 @@
                 <v-progress-circular v-if="cartItem.loading" size="15" width="1" indeterminate></v-progress-circular>
                 <strong v-else>{{ cartItem.priceAfterDiscounts }}</strong>
             </v-col>
-            <v-col cols="3" class="d-flex flex-column justify-center">
+            <v-col cols="3" class="d-flex justify-center">
                 <v-card-actions>
-                    <v-icon @click="$emit('removeFromCart')">mdi-delete-outline</v-icon>
-                    <v-spacer></v-spacer>
-                    <v-icon @click="$emit('decrement')">mdi-minus</v-icon>
-                    <v-spacer></v-spacer>
-                    <v-icon @click="$emit('increment')">mdi-plus</v-icon>
+                    <v-row>
+                        <v-col>
+                            <!-- <v-icon @click="$emit('removeFromCart')">mdi-delete-outline</v-icon> -->
+                            <v-icon @click="$emit('decrement')">mdi-minus</v-icon>
+                        </v-col>
+                        <v-col>
+                            <v-icon @click="$emit('increment')">mdi-plus</v-icon>
+                        </v-col>
+                    </v-row>
                 </v-card-actions>
             </v-col>
         </v-row>

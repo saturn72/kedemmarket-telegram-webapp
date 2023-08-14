@@ -1,11 +1,11 @@
 <template>
-    <v-dialog v-model="cartCalculationDialog">
+    <!-- <v-dialog v-model="cartCalculationDialog">
         <v-card height="250">
             <v-card-text align="center" justify="center">
                 <CheckoutCalculatingCart />
             </v-card-text>
         </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <v-dialog v-click-outside="resetRemoveFromCart" v-model="itemToDelete" width="auto" class="text-center"> <v-card>
             <v-card-text>{{ dialogText }}</v-card-text>
@@ -16,7 +16,6 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-
     <v-dialog persistent v-model="orderDialog" class="text-center">
         <v-card v-if="!orderPlaced" height="80%">
             <v-card-title>{{ $t('placingOrder') }}</v-card-title>
@@ -37,8 +36,12 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
     <v-card class="mx-3 mt-3">
-        <v-card-title>
+        <v-card-title v-if="loading || calculating" class="d-flex flex-column align-center justify-center">
+            <v-progress-circular indeterminate width="1"></v-progress-circular>
+        </v-card-title>
+        <v-card-title v-else>
             {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ store.cartTotal }}
             <v-card-subtitle>
                 {{ $t('pricesAfterDiscounts') }}
@@ -50,9 +53,11 @@
     </v-card>
     <v-spacer></v-spacer>
     <p class="ma-6">
-        <v-btn block :disabled="store.items.length == 0" color="secondary" @click="checkoutCart()">{{
-            $t('checkoutCart')
-        }}</v-btn>
+        <v-btn block :loading="loading || calculating" :disabled="loading || store.items.length == 0" color="secondary"
+            @click="checkoutCart()">{{
+                $t('checkoutCart')
+            }}
+        </v-btn>
     </p>
 </template>
 
@@ -68,27 +73,32 @@ export default {
         });
 
         const store = computed(() => useCheckoutCartStore());
+
+        const loading = computed(() => {
+            const items = useCheckoutCartStore().items;
+            return items && items.some(i => i.loading);
+        });
+
+        const calculating = computed(() => useCheckoutCartStore().calculating || false);
+
         useCheckoutCartStore().calculate(0);
 
         return {
-            store
+            store,
+            loading,
+            calculating
         };
     },
-    async created() {
-        this.cartCalculationDialog = true;
-        this.cartCalculationDialog = false;
-    },
+
     data() {
         return {
             itemToDelete: null,
             orderDialog: false,
             orderPlaced: false,
-            cartCalculationDialog: false
         }
     },
     methods: {
         removeFromCart(item) {
-
             const t = this.$t('deleteFromCart');
             this.dialogText = t.replace("##0##", item.product.name)
             this.itemToDelete = item;
@@ -98,28 +108,31 @@ export default {
             userCart.removeItemFromCart(this.itemToDelete.product);
             _.remove(useCheckoutCartStore().items,
                 i => i.product.id == this.itemToDelete.product.id);
+
             this.resetRemoveFromCart();
+            useCheckoutCartStore().calculate(2000);
         },
         resetRemoveFromCart() {
             this.itemToDelete = null;
         },
         incrementCartItem(item) {
-            const userCart = useCartStore();
-            userCart.incrementCartItem(item.product);
-            item.orderedQuantity = userCart.getProductQuantity(item.product.id)
-            item.loading = true;
+            useCartStore().incrementCartItem(item.product);
+            this.updateCheckoutCart(item);
         },
         decrementCartItem(item) {
             if (item.orderedQuantity == 1) {
                 this.removeFromCart(item)
             }
             else {
-                const userCart = useCartStore();
-                userCart.decrementCartItem(item.product);
-                item.orderedQuantity = userCart.getProductQuantity(item.product.id)
+                useCartStore().decrementCartItem(item.product);
+                this.updateCheckoutCart(item);
             }
-            item.loading = true;
         },
+        updateCheckoutCart(item) {
+            item.orderedQuantity = useCartStore().getProductQuantity(item.product.id)
+            item.loading = true;
+            useCheckoutCartStore().calculate(2000);
+        }
     }
 }
 </script>

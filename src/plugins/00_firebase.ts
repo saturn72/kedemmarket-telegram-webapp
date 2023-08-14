@@ -79,7 +79,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
             backend: {
 
-                async prepareCartForCheckout(cart: UserCart): Promise<CheckoutCart> {
+                async prepareCartForCheckout(cart: UserCart): Promise<CheckoutCart & any> {
                     const res = await executeFunction('prepareCartForCheckout', cart);
                     return res.data;
                 },
