@@ -16,12 +16,13 @@ export default defineAppConfig({
         whatsappPhone: '972542204119'
     },
     routes: {
-        store: "kedemmarket.co.il",
-        orders: "/orders",
-        home: "/",
-        postPurchaseRoute: "/checkout/order-placed",
-        login: "/login",
-        checkout: "/checkout",
         account: "/account",
+        accountOrders: "/account/orders",
+        accountProfile: "/account/profile",
+        checkout: "/checkout",
+        home: "/",
+        login: "/login",
+        postPurchaseRoute: "/checkout/order-placed",
+        store: "kedemmarket.co.il",
     }
 })

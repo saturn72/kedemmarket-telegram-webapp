@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import _ from 'lodash';
 import { useCartStore } from './cart';
 import { CheckoutCart, UserCart } from 'model';
+import { getOrdersCacheKeyPrefix } from '@/services/order';
 
 type CheckoutCartState = CheckoutCart & { calculating: boolean };
 
@@ -28,6 +29,9 @@ const calculateInternal = async (): Promise<CheckoutCartState> => {
 export const useCheckoutCartStore = defineStore('checkoutCart', {
     state: (): CheckoutCartState => defaultValue,
     actions: {
+        clear(): void {
+            this.$state = defaultValue
+        },
         async calculate(timeout: number = 2000): Promise<void> {
             this.$state.calculating = true;
             this.$state.userCart = useCartStore().getUserCart;
@@ -40,14 +44,5 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
                 this.$state.calculating = false;
             }, timeout)
         },
-
-        async submitOrder(): Promise<UserCart | undefined> {
-            if (this.$state.items.length == 0) {
-                return;
-            }
-            const res = await useNuxtApp().$backend.placeOrder(this.$state);
-            this.$state = defaultValue;
-            return res;
-        }
     }
 })

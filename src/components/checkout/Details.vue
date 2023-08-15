@@ -49,6 +49,7 @@
 import _ from "lodash";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
+import { submitOrder } from "@/services/checkout";
 
 export default {
     setup() {
@@ -78,7 +79,7 @@ export default {
     methods: {
         async checkout() {
             this.orderDialog = true;
-            const order = await useCheckoutCartStore().submitOrder();
+            const order = await submitOrder();
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
             useRouter().push(r)

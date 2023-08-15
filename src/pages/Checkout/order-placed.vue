@@ -45,8 +45,8 @@ export default {
             o.items.forEach(x => {
                 text += `${i++}.\t${x.product.name}\t${x.orderedQuantity} ${this.$t('units')}\t${this.$t('itemTotal')} ${x.priceAfterDiscounts}\n`
             });
-            const { store, orders } = useAppConfig().routes;
-            text += `\n\n*${this.$t('orderLink')}:* ${store + orders}/${o.orderId}`
+            const { store, account, orders } = useAppConfig().routes;
+            text += `\n\n*${this.$t('orderLink')}:* ${store}${account}${orders}/${o.orderId}`
 
             const te = encodeURIComponent(text);
             const link = `https://wa.me/${useAppConfig().defaults.whatsappPhone}?text=${te}`

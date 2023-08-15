@@ -35,14 +35,15 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
     });
 }
 
-const executeFunction = async (functionName: string, payload: any): Promise<any> => {
+const executeFunction = async (functionName: string, payload?: any): Promise<any> => {
     const f = getFunctions();
     if (process.env.NODE_ENV != 'production') {
         connectFunctionsEmulator(f, "127.0.0.1", 5001);
     }
 
     const po = httpsCallable(f, functionName);
-    return await po(payload);
+    const res = await po(payload);
+    return res.data;
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -79,23 +80,24 @@ export default defineNuxtPlugin((nuxtApp) => {
 
             backend: {
 
+                async getOrders(): Promise<Order[]> {
+                    return await executeFunction('getOrders');
+                },
+
                 async prepareCartForCheckout(cart: UserCart): Promise<CheckoutCart & any> {
-                    const res = await executeFunction('prepareCartForCheckout', cart);
-                    return res.data;
+                    return await executeFunction('prepareCartForCheckout', cart);
                 },
 
                 async getCart(cart: UserCart): Promise<UserCart> {
-                    const res = await executeFunction('getOrCreateCart', cart);
-                    return res.data;
+                    return await executeFunction('getOrCreateCart', cart);
                 },
 
                 async placeOrder(cart: CheckoutCart): Promise<Order> {
-                    const res = await executeFunction('submitOrder', cart);
-                    return res.data;
+                    return await executeFunction('submitOrder', cart);
                 },
 
-                async updateCart(cart: UserCart) {
-                    return executeFunction('updateCart', cart);
+                async updateCart(cart: UserCart): Promise<void> {
+                    executeFunction('updateCart', cart);
                 }
             }
         }

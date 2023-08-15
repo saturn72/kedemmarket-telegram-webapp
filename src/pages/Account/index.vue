@@ -24,11 +24,11 @@ export default {
             items:
                 [{
                     displayText: 'myOrders',
-                    route: 'orders',
+                    route: useAppConfig().routes.accountOrders,
                     icon: 'mdi-shopping-outline'
                 }, {
                     displayText: 'profile',
-                    route: 'profile',
+                    route: useAppConfig().routes.accountProfile,
                     icon: 'mdi-account-outline'
                 }, {
                     displayText: 'logout',
@@ -43,7 +43,7 @@ export default {
                 item.onClick()
             }
             else {
-                this.$router.push(item.route)
+                navigateTo(item.route);
             }
         }
     }

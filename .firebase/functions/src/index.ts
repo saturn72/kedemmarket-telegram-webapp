@@ -1,5 +1,7 @@
+import * as orders from "./orders";
+import { validateAuth, validateData } from "./requestUtils";
 
-import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import {
@@ -10,20 +12,6 @@ import {
 } from "firebase-admin/firestore";
 
 initializeApp();
-
-const validateAuth = (req: { auth?: any }): { uid: string } => {
-  if (!req.auth) {
-    throw new HttpsError("unauthenticated", "user not authenticated");
-  }
-
-  return req.auth;
-};
-
-const validateData = (req: { data?: any }) => {
-  if (!req.data) {
-    throw new HttpsError("failed-precondition", "missing payload");
-  }
-};
 
 const getUserCarts = async (uid: string):
   Promise<QueryDocumentSnapshot<DocumentData>[]> => {
@@ -104,6 +92,9 @@ export const prepareCartForCheckout = onCall(async (req) => {
   logger.debug("end prepareCartForCheckout. output object: ", o, { structuredData: true });
   return o;
 });
+
+export const getOrders = orders.getOrders;
+export const getOrderById = orders.getOrderById;
 
 export const submitOrder = onCall(async (req) => {
   logger.debug("start submitOrder", { structuredData: true });
