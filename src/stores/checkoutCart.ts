@@ -1,38 +1,32 @@
 import { defineStore } from 'pinia'
 import _ from 'lodash';
 import { useCartStore } from './cart';
-import { CheckoutCart } from 'model';
+import { CheckoutCart, UserCart } from 'model';
 
 type CheckoutCartState = CheckoutCart & { calculating: boolean };
 
 let timoutRef: NodeJS.Timeout;
 
+const defaultValue = {
+    userCart: undefined,
+    cartTotal: 0,
+    totalDiscounts: 0,
+    items: [],
+    calculating: false
+};
+
 const calculateInternal = async (): Promise<CheckoutCartState> => {
     const userCart = useCartStore().getUserCart;
 
     if (!userCart || useCartStore().getTotalCartItemsCount == 0) {
-        return {
-            userCart: undefined,
-            cartTotal: 0,
-            totalDiscounts: 0,
-            items: [],
-            calculating: false
-        };
+        return defaultValue;
     }
 
     return await useNuxtApp().$backend.prepareCartForCheckout(userCart);
 }
 
 export const useCheckoutCartStore = defineStore('checkoutCart', {
-    state: (): CheckoutCartState => {
-        return {
-            userCart: undefined,
-            cartTotal: 0,
-            totalDiscounts: 0,
-            items: [],
-            calculating: false
-        };
-    },
+    state: (): CheckoutCartState => defaultValue,
     actions: {
         async calculate(timeout: number = 2000): Promise<void> {
             this.$state.calculating = true;
@@ -45,6 +39,15 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
                 this.$state = await calculateInternal();
                 this.$state.calculating = false;
             }, timeout)
+        },
+
+        async submitOrder(): Promise<UserCart | undefined> {
+            if (this.$state.items.length == 0) {
+                return;
+            }
+            const res = await useNuxtApp().$backend.placeOrder(this.$state);
+            this.$state = defaultValue;
+            return res;
         }
     }
 })

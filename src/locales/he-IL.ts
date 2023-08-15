@@ -1,6 +1,7 @@
 
 export default {
     currencySymbol: "₪",
+    kedemmarket: "קדם מרקט",
     addButton: "הוספה",
     myOrders: "ההזמנות שלי",
     profile: "פרופיל",
@@ -23,12 +24,16 @@ export default {
     cartTotal: "סה\"כ לעגלה:",
     for: "ב-",
     perUnit: "ליח'",
+    unit: "יח'",
+    itemTotal: "סה\"כ לפריט",
     toStore: "חנות",
     toAccount: "חשבון",
     toCart: "עגלת קניות",
     priceUpdatesAtCheckout: "📝 מחיר לאחר הנחות/מבצעים יעודכן בקופה",
     close: "סגירה",
     calculatingCart: "🧮 מחשב פרטי עגלה 🛒",
-    pricesAfterDiscounts: "(מחיר לאחר הנחות)"
-
+    pricesAfterDiscounts: "(מחיר לאחר הנחות)",
+    sendToWhatsapp: "שליחה לוואטסאפ",
+    orderNumber: "הזמנה #",
+    orderLink: "קישור להזמנה"
 }

@@ -16,26 +16,8 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-dialog persistent v-model="orderDialog" class="text-center">
-        <v-card v-if="!orderPlaced" height="80%">
-            <v-card-title>{{ $t('placingOrder') }}</v-card-title>
-            <v-col class="d-flex justify-center">
-                <v-progress-circular indeterminate :size="75" :width="5"></v-progress-circular>
-            </v-col>
-        </v-card>
-        <v-card v-else loading fixed height="80%">
-            <v-card-title>{{ $t('orderPlaced') }}</v-card-title>
-            <v-card-subtitle>
-                {{ $t('thankYouMessage') }}
-            </v-card-subtitle>
-            <v-card-text>
-                {{ $t('youAreRedirectedToTheStore') }}
-            </v-card-text>
-            <v-card-actions>
-                <AppBackToStoreButton block />
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+
+    <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
 
     <v-card class="mx-3 mt-3">
         <v-card-title v-if="loading || calculating" class="d-flex flex-column align-center justify-center">
@@ -51,10 +33,12 @@
             @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
         </CheckoutProductDetails>
     </v-card>
+
     <v-spacer></v-spacer>
+
     <p class="ma-6">
         <v-btn block :loading="loading || calculating" :disabled="loading || store.items.length == 0" color="secondary"
-            @click="checkoutCart()">{{
+            @click="checkout()">{{
                 $t('checkoutCart')
             }}
         </v-btn>
@@ -76,7 +60,6 @@ export default {
         });
 
         const calculating = computed(() => useCheckoutCartStore().calculating || false);
-
         useCheckoutCartStore().calculate(0);
 
         return {
@@ -90,10 +73,18 @@ export default {
         return {
             itemToDelete: null,
             orderDialog: false,
-            orderPlaced: false,
         }
     },
     methods: {
+        async checkout() {
+            this.orderDialog = true;
+            const order = await useCheckoutCartStore().submitOrder();
+            const ro = encodeURIComponent(JSON.stringify(order));
+            const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
+            useRouter().push(r)
+            useCartStore().clearCart();
+        },
+
         removeFromCart(item) {
             const t = this.$t('deleteFromCart');
             this.dialogText = t.replace("##0##", item.product.name)

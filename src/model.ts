@@ -20,6 +20,11 @@ export type CartItem = {
     addedOnUtc: Date;
 }
 
+export type Order = {
+    orderId: any,
+    items: CartItem[]
+}
+
 export type UserCart = {
     items: CartItem[]
 };

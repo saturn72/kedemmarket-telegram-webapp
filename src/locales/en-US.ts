@@ -1,5 +1,6 @@
 export default {
     currencySymbol: "$",
+    kedemmarket: "Kedem Market",
     addButton: "Add",
     myOrders: "My Orders",
     profile: "Profile",
@@ -22,11 +23,16 @@ export default {
     cartTotal: "Cart Total:",
     for: "for",
     perUnit: "per unit",
+    unit: "units",
+    itemTotal: "item's total",
     toStore: "Store",
     toAccount: "Account",
     toCart: "Shopping Cart",
     priceUpdatesAtCheckout: "📝 Price Updates at Checkout",
     close: "Close",
     calculatingCart: "🧮 Calculating Cart... 🛒",
-    pricesAfterDiscounts: "(Prices are after discount)"
+    pricesAfterDiscounts: "(Prices are after discount)",
+    sendToWhatsapp: "Send to Whatsapp",
+    orderNumber: "Order #",
+    orderLink: "link to the order"
 }

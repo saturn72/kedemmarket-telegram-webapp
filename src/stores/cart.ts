@@ -27,13 +27,13 @@ const setCartItemPrice = (item: CartItem) => {
     const p = item.product;
     item.totalPrice = item.orderedQuantity * p.price;
 }
+const defaultValue = {
+    usersCarts: {}
+};
 
 export const useCartStore = defineStore('cart', {
-    state: (): CartState => {
-        return {
-            usersCarts: {}
-        };
-    },
+    state: (): CartState => defaultValue
+    ,
     getters: {
 
         getUserCart(state): UserCart | undefined {
@@ -65,7 +65,7 @@ export const useCartStore = defineStore('cart', {
         setCart(cart: UserCart) {
             const userId = useUserStore().getUser.uid;
             this.$state.usersCarts[userId] = cart;
-            cart.items.forEach(ci => setCartItemPrice(ci));
+            cart.items?.forEach(ci => setCartItemPrice(ci));
         },
 
         incrementCartItem(product: Product): void {
@@ -113,7 +113,8 @@ export const useCartStore = defineStore('cart', {
         },
 
         clearCart(): void {
-            this.$reset();
+            const userId = useUserStore().getUser.uid;
+            this.$state.usersCarts[userId] = undefined;
         },
 
         getProductQuantity(productId: any): number {

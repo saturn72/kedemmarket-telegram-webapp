@@ -1,11 +1,7 @@
 <template>
-    <v-row>
-        <v-col justify-center>
-            <v-btn @click="onClicked()" variant="outlined">
-                {{ $t('backToStore') }}
-            </v-btn>
-        </v-col>
-    </v-row>
+    <v-btn @click="onClicked()" variant="outlined">
+        {{ $t('backToStore') }}
+    </v-btn>
 </template>
 
 <script>
@@ -15,7 +11,7 @@ export default {
     methods:
     {
         onClicked() {
-            const route = useVendorStore().route ?? useAppConfig().routes.postPurchaseRoute;
+            const route = useVendorStore().route ?? useAppConfig().routes.home;
             this.$router.push(route);
         }
     }

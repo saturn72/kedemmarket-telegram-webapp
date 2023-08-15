@@ -29,6 +29,9 @@ function CartPiniaPlugin({ store }: PiniaPluginContext) {
             return;
         }
         const userCart = state.usersCarts[useUserStore().user.uid];
+        if (!userCart) {
+            return;
+        }
         useNuxtApp().$backend.updateCart(userCart);
 
         showSnackbarIfRequired(userCart);
@@ -43,14 +46,13 @@ export default defineNuxtPlugin(async ({ $backend, $pinia }: any) => {
         return;
     }
 
-    const cart = useCartStore().getUserCart;
+    const userCart = useCartStore().getUserCart;
 
-    if (!cart || cart?.items?.length == 0) {
+    if (!userCart || !userCart?.items || userCart?.items.length == 0) {
         const serverCart = await $backend.getCart();
         useCartStore().setCart(serverCart)
     }
     else {
-
-        await $backend.updateCart(cart);
+        await $backend.updateCart(userCart);
     }
 });

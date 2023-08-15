@@ -129,7 +129,10 @@ export const submitOrder = onCall(async (req) => {
   }
 
   logger.debug("end submitOrder", { structuredData: true });
-  return { data: writeResult.id };
+  return {
+    orderId: writeResult.id,
+    items: req.data.items
+  };
 });
 
 export const getOrCreateCart = onCall(async (req): Promise<any> => {
