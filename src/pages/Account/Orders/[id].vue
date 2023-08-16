@@ -52,7 +52,7 @@ export default {
     },
     computed: {
         reordered() {
-            return this.order.items.every(x => x.reordered);
+            return this.order?.items?.every(x => x.reordered);
         }
     },
     data() {
