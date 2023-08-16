@@ -2,7 +2,7 @@ export default defineAppConfig({
     reCaptcha: '6LeGYmwnAAAAAHATMfKr91nVJKL53CDLjYPXRcto',
     firebase: {
         apiKey: "AIzaSyA-511ETL_Jy7jNGC-TNxpD2Dc5Zo883Dg",
-        authDomain: "kedem-market.web.app",
+        authDomain: "kedem-market.firebaseapp.com",
         projectId: "kedem-market",
         appId: "1:157042094760:web:9cbf91abe34cf03ce4489d",
         measurementId: "G-N9B0KZT7QR"
