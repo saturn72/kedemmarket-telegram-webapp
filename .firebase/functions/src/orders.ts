@@ -36,11 +36,11 @@ export const submitOrder = onCall(async (req) => {
   };
 });
 
-
 export const getOrders = onCall(async (req): Promise<any> => {
   logger.debug("start getOrderById", {structuredData: true});
 
   const {uid} = validateAuth(req);
+
   const pageSize = req.data?.pageSize || 10;
   const skip = req.data?.skip || 0;
 
