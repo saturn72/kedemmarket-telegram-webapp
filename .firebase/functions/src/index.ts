@@ -1,6 +1,6 @@
 import * as orders from "./orders";
 import * as cart from "./cart";
-import { initializeApp } from "firebase-admin/app";
+import {initializeApp} from "firebase-admin/app";
 
 initializeApp();
 
