@@ -37,5 +37,9 @@ export default {
     pricesAfterDiscounts: "(מחיר לאחר הנחות)",
     sendToWhatsapp: "שליחה לוואטסאפ",
     orderNumber: "הזמנה #",
-    orderLink: "קישור להזמנה"
+    orderTotal: "סה\"כ להזמנה",
+    orderItems: "פריטים",
+    orderLink: "קישור להזמנה",
+    repurchaseOrder: "רכישת ההזמנה מחדש",
+    repurchaseItem: "רכישת פריט מחדש",
 }

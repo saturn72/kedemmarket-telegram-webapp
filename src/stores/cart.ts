@@ -68,21 +68,21 @@ export const useCartStore = defineStore('cart', {
             cart.items?.forEach(ci => setCartItemPrice(ci));
         },
 
-        incrementCartItem(product: Product): void {
+        incrementCartItem(product: Product, quantity: number = 1): void {
             const cart = getOrCreateCurrentUserCart(this.$state);
             const existCartItem = findItem(cart.items, product.id);
 
             if (!existCartItem) {
                 const ci = {
                     product,
-                    orderedQuantity: 1,
+                    orderedQuantity: quantity,
                     addedOnUtc: new Date(),
                 };
                 setCartItemPrice(ci);
                 cart.items.push(ci);
 
             } else {
-                existCartItem.orderedQuantity++;
+                existCartItem.orderedQuantity += quantity;
                 setCartItemPrice(existCartItem);
             };
         },

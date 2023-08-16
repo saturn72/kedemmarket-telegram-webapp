@@ -6,7 +6,7 @@
                     <v-card-title class="d-flex justify-center">
                         {{ $t('date') }} {{ item.date }}
                         <v-spacer></v-spacer>
-                        {{ $t('total') }} {{ item.cartTotalDisplay }}
+                        {{ $t('total') }} {{ item.orderTotalToDisplay }}
                     </v-card-title>
                 </v-card>
             </v-col>
@@ -27,13 +27,11 @@ export default {
                 pageSize: this.pageSize,
                 skip: this.skip
             });
-
             this.orders = res.map(o => {
                 return {
                     ...o,
                     date: (new Date(o.utcTimestamp)).toLocaleDateString(),
-                    cartTotal: o.cartTotal,
-                    cartTotalDisplay: `${o.cartTotal} ${this.$t('currencySymbol')}`
+                    orderTotalToDisplay: `${o.orderTotal} ${this.$t('currencySymbol')}`
                 }
             })
         },

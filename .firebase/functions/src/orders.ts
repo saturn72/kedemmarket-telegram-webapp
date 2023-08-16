@@ -5,7 +5,7 @@ import {
     getFirestore,
 } from "firebase-admin/firestore";
 
-import { getUserCarts } from "./cart";
+import { deleteUserCarts, getCheckoutCart } from "./cart";
 
 export const submitOrder = onCall(async (req) => {
 
@@ -14,25 +14,21 @@ export const submitOrder = onCall(async (req) => {
     const { uid } = validateAuth(req);
     validateData(req);
 
-    const items = req.data.items;
+    const checkoutCart = await getCheckoutCart(req.data);
     const o = {
         utcTimestamp: new Date().getTime(),
         userId: uid,
         status: "submitted",
-        items,
+        items: checkoutCart.items,
+        totalDiscounts: checkoutCart.totalDiscounts,
+        sentItems: checkoutCart.userCart,
+        orderTotal: checkoutCart.cartTotal
     };
 
     const orders = getFirestore()
         .collection("orders");
     const writeResult = await orders.add(o);
-
-    const userCarts = await getUserCarts(uid);
-
-    if (userCarts.length > 0) {
-        await userCarts.forEach(async (doc) => {
-            await doc.ref.delete();
-        });
-    }
+    await deleteUserCarts(uid);
 
     logger.debug("end submitOrder", { structuredData: true });
     return {

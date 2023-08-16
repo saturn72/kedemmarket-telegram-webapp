@@ -34,7 +34,6 @@ let timoutTimer = undefined;
 export default {
     setup() {
         onBeforeUnmount(() => {
-            console.log("hete")
             if (intervalTimer) {
                 clearInterval(intervalTimer);
             }
@@ -53,7 +52,6 @@ export default {
         const interval = 100;
         const totalDelay = 10000;
         const bufferStep = (interval / totalDelay) * 100;
-        console.log(bufferStep);
 
         intervalTimer = setInterval(() => {
             this.bufferValue += bufferStep;

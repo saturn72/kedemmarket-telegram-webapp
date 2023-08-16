@@ -36,5 +36,9 @@ export default {
     pricesAfterDiscounts: "(Prices are after discount)",
     sendToWhatsapp: "Send to Whatsapp",
     orderNumber: "Order #",
-    orderLink: "link to the order"
+    orderTotal: "Order Total",
+    orderItems: "Items",
+    orderLink: "link to the order",
+    repurchaseOrder: "Repurchase Order",
+    repurchaseItem: "Repurchase Item",
 }

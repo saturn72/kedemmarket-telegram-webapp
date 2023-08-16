@@ -21,8 +21,10 @@ export type CartItem = {
 }
 
 export type Order = {
-    orderId: any,
-    items: CartItem[]
+    orderId: any;
+    items: CartItem[];
+    orderTotal: number;
+    totalDiscounts: number;
 }
 
 export type UserCart = {

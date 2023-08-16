@@ -94,6 +94,16 @@ type UserCart = {
     items: CartItem[]
 }
 
+export async function deleteUserCarts(uid: string) {
+
+    const userCarts = await getUserCarts(uid);
+
+    if (userCarts.length > 0) {
+        await userCarts.forEach(async (doc) => {
+            await doc.ref.delete();
+        });
+    }
+}
 export async function getCheckoutCart(userCart: UserCart) {
 
     const productIds = userCart.items.map((i: any) => i.product.id);
