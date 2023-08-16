@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import _ from 'lodash';
 import { useCartStore } from './cart';
-import { CheckoutCart, UserCart } from 'model';
-import { getOrdersCacheKeyPrefix } from '@/services/order';
+import { CheckoutCart } from 'model';
 
 type CheckoutCartState = CheckoutCart & { calculating: boolean };
 

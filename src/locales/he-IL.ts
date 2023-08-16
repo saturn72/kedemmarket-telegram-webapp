@@ -21,6 +21,8 @@ export default {
     productSearch: "🔎 חיפוש...",
     loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓",
     failedToFindPage: "הדף לא קיים...",
+    date: "תאריך",
+    total: "סה\"כ",
     cartTotal: "סה\"כ לעגלה:",
     for: "ב-",
     perUnit: "ליח'",

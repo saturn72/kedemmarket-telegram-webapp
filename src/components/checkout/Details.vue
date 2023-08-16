@@ -19,7 +19,7 @@
 
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
 
-    <v-card class="mx-3 mt-3">
+    <v-card height="100%" flat class="d-flex flex-column justify-center">
         <v-card-title v-if="loading || calculating" class="d-flex flex-column align-center justify-center">
             <v-progress-circular indeterminate width="1"></v-progress-circular>
         </v-card-title>
@@ -29,20 +29,21 @@
                 {{ $t('pricesAfterDiscounts') }}
             </v-card-subtitle>
         </v-card-title>
-        <CheckoutProductDetails v-for="item in store.items" :cartItem="item" @removeFromCart="removeFromCart(item)"
-            @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
-        </CheckoutProductDetails>
+
+        <v-card-text>
+            <CheckoutProductDetails v-for="item in store.items" :cartItem="item" @removeFromCart="removeFromCart(item)"
+                @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
+            </CheckoutProductDetails>
+        </v-card-text>
+
+        <v-card-actions>
+            <v-btn block variant="flat" :loading="loading || calculating" :disabled="loading || store.items.length == 0"
+                color="secondary" @click="checkout()">{{
+                    $t('checkoutCart')
+                }}
+            </v-btn>
+        </v-card-actions>
     </v-card>
-
-    <v-spacer></v-spacer>
-
-    <p class="ma-6">
-        <v-btn block :loading="loading || calculating" :disabled="loading || store.items.length == 0" color="secondary"
-            @click="checkout()">{{
-                $t('checkoutCart')
-            }}
-        </v-btn>
-    </p>
 </template>
 
 <script>
@@ -83,7 +84,6 @@ export default {
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
             useRouter().push(r)
-            useCartStore().clearCart();
         },
 
         removeFromCart(item) {
@@ -103,10 +103,12 @@ export default {
         resetRemoveFromCart() {
             this.itemToDelete = null;
         },
+
         incrementCartItem(item) {
             useCartStore().incrementCartItem(item.product);
             this.updateCheckoutCart(item);
         },
+
         decrementCartItem(item) {
             if (item.orderedQuantity == 1) {
                 this.removeFromCart(item)
@@ -116,6 +118,7 @@ export default {
                 this.updateCheckoutCart(item);
             }
         },
+
         updateCheckoutCart(item) {
             item.orderedQuantity = useCartStore().getProductQuantity(item.product.id)
             item.loading = true;

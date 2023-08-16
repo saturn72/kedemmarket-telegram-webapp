@@ -4,7 +4,7 @@ import { Auth, getAuth } from "firebase/auth";
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
 import { AppCheck, initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { CheckoutCart, Order, UserCart } from "model";
+import { CartItem, CheckoutCart, Order, UserCart } from "model";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
@@ -92,8 +92,8 @@ export default defineNuxtPlugin((nuxtApp) => {
                     return await executeFunction('getOrCreateCart', cart);
                 },
 
-                async placeOrder(cart: CheckoutCart): Promise<Order> {
-                    return await executeFunction('submitOrder', cart);
+                async placeOrder(order: { items: CartItem[] }): Promise<Order> {
+                    return await executeFunction('submitOrder', order);
                 },
 
                 async updateCart(cart: UserCart): Promise<void> {
