@@ -5,6 +5,7 @@ export default defineAppConfig({
         authDomain: "kedemmarket.co.il",
         projectId: "kedem-market",
         appId: "1:157042094760:web:9cbf91abe34cf03ce4489d",
+        storageBucket: "kedem-market.appspot.com",
         measurementId: "G-N9B0KZT7QR"
     },
     defaults: {
