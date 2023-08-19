@@ -67,6 +67,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                         const r = ref(s, uri);
                         return await getDownloadURL(r);
                     } catch (error) {
+                        console.debug(error);
                         createError({ data: error });
                         return null;
                     }
