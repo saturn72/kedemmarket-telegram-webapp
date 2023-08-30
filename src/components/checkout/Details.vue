@@ -1,12 +1,4 @@
 <template>
-    <!-- <v-dialog v-model="cartCalculationDialog">
-        <v-card height="250">
-            <v-card-text align="center" justify="center">
-                <CheckoutCalculatingCart />
-            </v-card-text>
-        </v-card>
-    </v-dialog> -->
-
     <v-dialog v-click-outside="resetRemoveFromCart" v-model="itemToDelete" width="auto" class="text-center"> <v-card>
             <v-card-text>{{ dialogText }}</v-card-text>
             <v-card-actions>
