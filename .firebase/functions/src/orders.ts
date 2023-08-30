@@ -17,9 +17,9 @@ export const submitOrder = onCall(async (req) => {
   const o = {
     utcTimestamp: new Date().getTime(),
     userInfo: {
+      ...req.auth?.token,
       userId: uid,
       ipAddress: req.rawRequest.ip,
-      token: req.auth?.token,
     },
     status: "submitted",
     items: checkoutCart.items,
