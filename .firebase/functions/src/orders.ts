@@ -1,26 +1,23 @@
-import { onCall } from "firebase-functions/v2/https";
+import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import { validateAuth, validateData } from "./requestUtils";
+import {validateAuth, validateData} from "./requestUtils";
 import {
   getFirestore,
 } from "firebase-admin/firestore";
 
-import { deleteUserCarts, getCheckoutCart } from "./cart";
+import {deleteUserCarts, getCheckoutCart} from "./cart";
 
 export const submitOrder = onCall(async (req) => {
-  logger.debug("start submitOrder", { structuredData: true });
+  logger.debug("start submitOrder", {structuredData: true});
 
-  const { uid } = validateAuth(req);
+  const {uid} = validateAuth(req);
   validateData(req);
 
   const checkoutCart = await getCheckoutCart(req.data);
   const o = {
     utcTimestamp: new Date().getTime(),
-    userInfo: {
-      ...req.auth?.token,
-      userId: uid,
-      ipAddress: req.rawRequest.ip,
-    },
+    ipAddress: req.rawRequest.ip,
+    userId: req.auth?.uid,
     status: "submitted",
     items: checkoutCart.items,
     totalDiscounts: checkoutCart.totalDiscounts,
@@ -33,7 +30,7 @@ export const submitOrder = onCall(async (req) => {
   const writeResult = await orders.add(o);
   await deleteUserCarts(uid);
 
-  logger.debug("end submitOrder", { structuredData: true });
+  logger.debug("end submitOrder", {structuredData: true});
   return {
     orderId: writeResult.id,
     items: req.data.items,
@@ -41,9 +38,9 @@ export const submitOrder = onCall(async (req) => {
 });
 
 export const getOrders = onCall(async (req): Promise<any> => {
-  logger.debug("start getOrderById", { structuredData: true });
+  logger.debug("start getOrderById", {structuredData: true});
 
-  const { uid } = validateAuth(req);
+  const {uid} = validateAuth(req);
 
   const pageSize = req.data?.pageSize || 10;
   const skip = req.data?.skip || 0;
@@ -66,9 +63,9 @@ export const getOrders = onCall(async (req): Promise<any> => {
 });
 
 export const getOrderById = onCall(async (req): Promise<any> => {
-  logger.debug("start getOrderById", { structuredData: true });
+  logger.debug("start getOrderById", {structuredData: true});
 
-  const { uid } = validateAuth(req);
+  const {uid} = validateAuth(req);
 
   console.log(uid, req);
 
@@ -85,7 +82,7 @@ export const getOrderById = onCall(async (req): Promise<any> => {
   //         });
   // }
 
-  logger.debug("start getOrderById", { structuredData: true });
+  logger.debug("start getOrderById", {structuredData: true});
 
   // return {
   //     items,

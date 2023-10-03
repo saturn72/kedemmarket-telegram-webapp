@@ -6,6 +6,8 @@ export default {
     myOrders: "ההזמנות שלי",
     profile: "פרופיל",
     ooops: "אופפס 🤔",
+    back: "חזרה",
+    retry: "לנסות שוב 🤞",
     yourCartIsEmpty: "🛒 עגלת הקניות ריקה",
     backToStore: "חזרה לחנות 🏬",
     cart: "🛒 עגלת קניות",
@@ -21,6 +23,7 @@ export default {
     productSearch: "🔎 חיפוש...",
     loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓",
     failedToFindPage: "הדף לא קיים...",
+    failedToPerformAction: "נכשלתי לבצע את הפעולה...🤦‍♂️",
     date: "תאריך",
     total: "סה\"כ",
     cartTotal: "סה\"כ לעגלה:",
@@ -42,4 +45,5 @@ export default {
     orderLink: "קישור להזמנה",
     repurchaseOrder: "רכישת ההזמנה מחדש",
     repurchaseItem: "רכישת פריט מחדש",
+    billingAddress: "כתובת לחיוב"
 }

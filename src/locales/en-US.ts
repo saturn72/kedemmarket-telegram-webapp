@@ -5,6 +5,8 @@ export default {
     myOrders: "My Orders",
     profile: "Profile",
     ooops: "Ooops 🤔",
+    back: "Back",
+    retry: "Retry",
     yourCartIsEmpty: "Your Cart is Empty 🛒",
     backToStore: "Back to Store 🏬",
     cart: "Cart 🛒",
@@ -20,6 +22,7 @@ export default {
     productSearch: "🔍 Search...",
     loginIsRequiredToContinue: "Login is required to continue 🔓",
     failedToFindPage: "Failed to find page...",
+    failedToPerformAction: "Failed to perform action...🤦‍♂️",
     total: "Total",
     cartTotal: "Cart Total:",
     date: "Date",
@@ -41,4 +44,5 @@ export default {
     orderLink: "link to the order",
     repurchaseOrder: "Repurchase Order",
     repurchaseItem: "Repurchase Item",
+    billingAddress: "Billing Address"
 }

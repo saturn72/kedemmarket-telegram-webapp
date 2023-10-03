@@ -1,5 +1,3 @@
-import { type } from "os";
-
 export interface MediaItem {
     alt: string;
     src: string;
@@ -32,8 +30,8 @@ export type UserCart = {
 };
 
 export type CheckoutCartItem = CartItem & {
-    itemPrice: number;
     cartTotal: number;
+    itemPrice: number;
     numericDiscount: number;
     percentageDiscount: number;
     priceAfterDiscounts: number;

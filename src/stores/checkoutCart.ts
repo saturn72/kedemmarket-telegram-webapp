@@ -1,9 +1,11 @@
-import { defineStore } from 'pinia'
 import _ from 'lodash';
+import { CheckoutCart, CheckoutCartItem } from 'model';
+import { defineStore } from 'pinia'
 import { useCartStore } from './cart';
-import { CheckoutCart } from 'model';
+import { useUserStore } from './user';
+import { useBackendFetch } from '../services/backend';
 
-type CheckoutCartState = CheckoutCart & { calculating: boolean };
+type CheckoutCartState = CheckoutCart & { calculating: boolean, error: boolean };
 
 let timoutRef: NodeJS.Timeout;
 
@@ -12,17 +14,66 @@ const defaultValue = {
     cartTotal: 0,
     totalDiscounts: 0,
     items: [],
-    calculating: false
+    calculating: false,
+    error: false
 };
 
-const calculateInternal = async (): Promise<CheckoutCartState> => {
+const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
     const userCart = useCartStore().getUserCart;
-
     if (!userCart || useCartStore().getTotalCartItemsCount == 0) {
-        return defaultValue;
+        state = defaultValue;
+        return;
     }
 
-    return await useNuxtApp().$backend.prepareCartForCheckout(userCart);
+    const items = userCart.items.map(p => {
+        return {
+            productId: p.product.id,
+            orderedQuantity: p.orderedQuantity,
+        }
+    });
+
+    const { data, error } = await useBackendFetch("shopping-cart", {
+        method: "POST",
+        body: {
+            storeId: 1,
+            userId: useUserStore().getUser.uid,
+            items,
+        }
+    });
+    if (error) {
+        state.error = true;
+        return;
+    }
+
+    state.userCart = userCart;
+
+    const stateItems: CheckoutCartItem[] = [];
+    state.totalDiscounts = 0;
+    state.cartTotal = 0;
+
+    for (let index = 0; index < data.Items.length; index++) {
+        const cur = data.Items[index];
+
+        const p = state.userCart?.items.find(x => x.product.id == cur.ProductId);
+        const cp = _.cloneDeep(p);
+        if (!cp) {
+            continue;
+        }
+
+        cp.orderedQuantity = cur.Quantity;
+        stateItems.push({
+            cartTotal: cur.SubTotalValue,
+            itemPrice: cur.UnitPriceValue,
+            numericDiscount: cur.DiscountValue,
+            percentageDiscount: 1 - (cur.DiscountValue / cur.UnitPriceValue),
+            priceAfterDiscounts: cur.UnitPriceValue - cur.DiscountValue,
+            priceBeforeDiscounts: cur.UnitPriceValue,
+            ...cp,
+        });
+        state.cartTotal += cur.SubTotalValue;
+        state.totalDiscounts += cur.numericDiscount;
+    }
+    state.items = stateItems;
 }
 
 export const useCheckoutCartStore = defineStore('checkoutCart', {
@@ -39,7 +90,8 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
             }
 
             timoutRef = setTimeout(async () => {
-                this.$state = await calculateInternal();
+                this.$state.calculating = true;
+                await calculateInternal(this.$state);
                 this.$state.calculating = false;
             }, timeout)
         },

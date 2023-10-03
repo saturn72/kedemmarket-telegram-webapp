@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  //  devtools: { enabled: true },
+
   app: {
     head: {
       titleTemplate: '%s - kedemmarket-cart',
@@ -16,6 +16,11 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
     }
+  },
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BACKEND_URL || 'https://kedemmarket.co.il/api',
+    },
   },
   components: [
     {

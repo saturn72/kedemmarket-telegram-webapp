@@ -1,7 +1,7 @@
 [
     {
         "origin": [
-            "https://kedemmarket.co.il"
+            "https://kedemmarket.co.il", "http://localhost:3000"
         ],
         "method": [
             "GET"
@@ -10,3 +10,4 @@
     }
 ]
 //https://cloud.google.com/storage/docs/using-cors#command-line
+//gcloud storage buckets update gs://kedem-market.appspot.com --cors-file=cors.json

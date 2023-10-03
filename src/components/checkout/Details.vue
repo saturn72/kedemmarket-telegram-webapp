@@ -9,7 +9,9 @@
         </v-card>
     </v-dialog>
 
+    <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog>
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
+    <CheckoutBillingAddress :show="billingAddressDialog"></CheckoutBillingAddress>
 
     <v-card height="100%" flat class="d-flex flex-column justify-center">
         <v-card-title v-if="loading || calculating" class="d-flex flex-column align-center justify-center">
@@ -30,7 +32,7 @@
 
         <v-card-actions>
             <v-btn block variant="flat" :loading="loading || calculating" :disabled="loading || store.items.length == 0"
-                color="secondary" @click="checkout()">{{
+                color="secondary" @click="checkout_submitOrder()">{{
                     $t('checkoutCart')
                 }}
             </v-btn>
@@ -53,13 +55,15 @@ export default {
             return items && items.some(i => i.loading);
         });
 
+        const error = computed(() => useCheckoutCartStore().error || false);
         const calculating = computed(() => useCheckoutCartStore().calculating || false);
         useCheckoutCartStore().calculate(0);
 
         return {
             store,
             loading,
-            calculating
+            calculating,
+            error
         };
     },
 
@@ -70,7 +74,10 @@ export default {
         }
     },
     methods: {
-        async checkout() {
+        errorRetry() {
+            setupWorker()
+        },
+        async checkout_submitOrder() {
             this.orderDialog = true;
             const order = await submitOrder();
             const ro = encodeURIComponent(JSON.stringify(order));

@@ -37,10 +37,6 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
 
 const executeFunction = async (functionName: string, payload?: any): Promise<any> => {
     const f = getFunctions();
-    if (process.env.NODE_ENV != 'production') {
-        connectFunctionsEmulator(f, "127.0.0.1", 5001);
-    }
-
     const po = httpsCallable(f, functionName);
     const res = await po(payload);
     return res.data;

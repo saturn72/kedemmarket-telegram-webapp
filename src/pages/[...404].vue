@@ -10,7 +10,7 @@
         </p>
         <p class="mt-7">
             <v-btn @click="$router.back()">
-                {{ $t('Back') }}
+                {{ $t('back') }}
             </v-btn>
         </p>
     </div>

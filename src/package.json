@@ -25,6 +25,7 @@
     "firebaseui": "^6.0.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "p-retry": "^6.1.0",
     "vuetify": "^3.3.7"
   }
 }
