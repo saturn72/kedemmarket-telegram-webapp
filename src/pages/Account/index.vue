@@ -16,25 +16,15 @@
 </template>
   
 <script>
-import { useUserStore } from '@/stores/user'
+import account from './account';
 
 export default {
+    mounted() {
+        this.items = Object.values(account);
+    },
     data: () => {
         return {
-            items:
-                [{
-                    displayText: 'myOrders',
-                    route: useAppConfig().routes.accountOrders,
-                    icon: 'mdi-shopping-outline'
-                }, {
-                    displayText: 'profile',
-                    route: useAppConfig().routes.accountProfile,
-                    icon: 'mdi-account-outline'
-                }, {
-                    displayText: 'logout',
-                    onClick: () => { useUserStore().logout() },
-                    icon: 'mdi-logout'
-                }]
+            items: []
         }
     },
     methods: {

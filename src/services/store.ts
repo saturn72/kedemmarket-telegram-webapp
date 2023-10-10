@@ -1,4 +1,4 @@
-import { Store, Vendor } from "model";
+import { Store, Vendor } from "models/catalog";
 import { getVendorByRoute } from "./vendor";
 
 const acquireStore = async (): Promise<Store[] | undefined | null> => {

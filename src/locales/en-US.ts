@@ -2,6 +2,7 @@ export default {
     currencySymbol: "$",
     kedemmarket: "Kedem Market",
     addButton: "Add",
+    save: "Save",
     myOrders: "My Orders",
     profile: "Profile",
     ooops: "Ooops 🤔",
@@ -44,5 +45,8 @@ export default {
     orderLink: "link to the order",
     repurchaseOrder: "Repurchase Order",
     repurchaseItem: "Repurchase Item",
-    billingAddress: "Billing Address"
+    billingAddress: "Billing Address",
+    ownsFirearm: "owns a firearm?",
+    iOwnFirearm: "I own a firearm",
+    iDoNotOwnFirearm: "I DO NOT own a firearm",
 }

@@ -1,10 +1,11 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Auth, getAuth } from "firebase/auth";
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
 import { AppCheck, initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { CartItem, CheckoutCart, Order, UserCart } from "model";
+import { UserProfile } from "models/account";
+import { CartItem, CheckoutCart, Order, UserCart } from "models/cart";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
@@ -95,6 +96,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 
                 async updateCart(cart: UserCart): Promise<void> {
                     executeFunction('updateCart', cart);
+                },
+
+                async getUserProfile(): Promise<UserProfile> {
+                    return await executeFunction('getUserProfile');
                 }
             }
         }

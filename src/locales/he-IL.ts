@@ -3,6 +3,7 @@ export default {
     currencySymbol: "₪",
     kedemmarket: "קדם מרקט",
     addButton: "הוספה",
+    save: "שמירה",
     myOrders: "ההזמנות שלי",
     profile: "פרופיל",
     ooops: "אופפס 🤔",
@@ -45,5 +46,8 @@ export default {
     orderLink: "קישור להזמנה",
     repurchaseOrder: "רכישת ההזמנה מחדש",
     repurchaseItem: "רכישת פריט מחדש",
-    billingAddress: "כתובת לחיוב"
+    billingAddress: "כתובת לחיוב",
+    ownsFirearm: "בעלים של נשק חם?",
+    iOwnFirearm: "מחזיק נשק חם",
+    iDoNotOwnFirearm: "איני מחזיק נשק חם",
 }

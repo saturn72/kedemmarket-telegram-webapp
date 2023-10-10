@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CheckoutCart, CheckoutCartItem } from 'model';
+import { CheckoutCart, CheckoutCartItem } from 'models/cart';
 import { defineStore } from 'pinia'
 import { useCartStore } from './cart';
 import { useUserStore } from './user';

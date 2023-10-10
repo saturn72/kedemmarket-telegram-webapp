@@ -1,4 +1,4 @@
-import { Order } from "model";
+import { Order } from "models/cart";
 import { useUserStore } from "@/stores/user";
 
 function getOrdersCacheKeyPrefixInternal(): string {

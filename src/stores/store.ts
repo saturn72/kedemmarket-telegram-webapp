@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Product, Store, Vendor } from '~/model';
+import { Product, Store, Vendor } from 'models/catalog';
 import { getStores } from "@/services/store";
 import _ from 'lodash';
 

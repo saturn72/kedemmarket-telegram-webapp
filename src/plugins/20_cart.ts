@@ -1,4 +1,4 @@
-import { UserCart } from 'model';
+import { UserCart } from 'models/cart';
 import { PiniaPluginContext } from 'pinia'
 import { useCartStore } from '@/stores/cart';
 import { useUserStore } from '@/stores/user';

@@ -1,4 +1,4 @@
-import { MediaItem } from "model";
+import { MediaItem } from "models/common";
 
 type MediaType = "thumbnail" | "image";
 type MediaItemSlim = { alt: string, src: string, title: string };
