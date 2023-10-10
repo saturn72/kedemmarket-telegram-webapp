@@ -50,4 +50,5 @@ export default {
     ownsFirearm: "בעלים של נשק חם?",
     iOwnFirearm: "מחזיק נשק חם",
     iDoNotOwnFirearm: "איני מחזיק נשק חם",
+    requiredField: "שדה חובה"
 }

@@ -14,3 +14,4 @@ export const getOrderById = orders.getOrderById;
 export const submitOrder = orders.submitOrder;
 
 export const getUserProfile = userProfile.getUserProfile;
+export const saveUserProfile = userProfile.saveUserProfile;

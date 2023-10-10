@@ -1,11 +1,32 @@
 import { useUserStore } from "@/stores/user";
+import defu from "defu";
 import { UserProfile } from "models/account";
 
-export async function getProfile(): Promise<UserProfile | null | undefined> {
-    const userId = useUserStore().getUser.uid;
-    const key = `userprofile:${userId}`.toLocaleLowerCase();
+const profileDefaults = {
+    ownsFirearm: undefined,
+};
 
-    return await useNuxtApp().$cache.getOrAcquire(key,
+const cachingTime = 10 * 60;
+
+const userProfileCacheKey = (): string => {
+    const userId = useUserStore().getUser.uid;
+    return `userprofile:${userId}`.toLocaleLowerCase();
+}
+
+export async function getUserProfile(): Promise<UserProfile | null | undefined> {
+    const key = userProfileCacheKey();
+    const p = await useNuxtApp().$cache.getOrAcquire(key,
         async () => await useNuxtApp().$backend.getUserProfile(),
-        10 * 60);
+        cachingTime);
+    return defu(p, profileDefaults);
+}
+
+export async function saveUserProfile(profile: UserProfile): Promise<UserProfile | null | undefined> {
+    const key = userProfileCacheKey();
+    await useNuxtApp().$cache.remove(key);
+    const p = await useNuxtApp().$backend.saveUserProfile(profile);
+    const res = defu(p, profileDefaults);
+
+    await useNuxtApp().$cache.set(key, res, cachingTime);
+    return res;
 }

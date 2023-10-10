@@ -16,12 +16,33 @@ const getItemFromLocalStorage = <T>(key: any): T | undefined => {
     return entry.data as T;
 }
 
+const prepareCacheKey = (key: string): string => key.replaceAll(' ', '-').toLowerCase();
+
+const setItemInternal = <T>(key: string,
+    data: T,
+    expiration: number): void => {
+    const k = prepareCacheKey(key);
+    const entry: CacheEntry =
+    {
+        data: data,
+        expiration: moment.utc().add(expiration, 'seconds')
+    }
+    localStorage.setItem(k, JSON.stringify(entry))
+}
+
 export default defineNuxtPlugin((nuxtApp) => {
     return {
         provide: {
             cache: {
+                set: async<T>(key: string,
+                    data: T,
+                    expiration: number): Promise<void> => {
 
-                remove: (key: string): void => {
+                    if (data) {
+                        setItemInternal<T>(key, data, expiration);
+                    }
+                },
+                remove: async (key: string): Promise<void> => {
                     localStorage.removeItem(key)
                 },
 
@@ -45,7 +66,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 getOrAcquire: async<T>(key: string,
                     acquire: () => Promise<T>,
                     expiration: number): Promise<T | undefined | null> => {
-                    const k = key.replaceAll(' ', '-').toLowerCase();
+                    const k = prepareCacheKey(key);
 
                     var item = getItemFromLocalStorage<T>(k);
                     if (item) {
@@ -54,12 +75,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
                     const av = await acquire();
                     if (av) {
-                        const entry: CacheEntry =
-                        {
-                            data: av,
-                            expiration: moment.utc().add(expiration, 'seconds')
-                        }
-                        localStorage.setItem(k, JSON.stringify(entry))
+                        setItemInternal<T>(key, av, expiration);
                         return av;
                     }
                     return null;

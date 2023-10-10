@@ -21,6 +21,7 @@
   "dependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.2.20",
     "@pinia/nuxt": "^0.4.11",
+    "defu": "^6.1.2",
     "firebase": "^9.23.0",
     "firebaseui": "^6.0.2",
     "lodash": "^4.17.21",

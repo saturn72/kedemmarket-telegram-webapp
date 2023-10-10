@@ -100,6 +100,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 
                 async getUserProfile(): Promise<UserProfile> {
                     return await executeFunction('getUserProfile');
+                },
+
+                async saveUserProfile(profile: UserProfile): Promise<UserProfile> {
+                    return await executeFunction('saveUserProfile', profile);
                 }
             }
         }

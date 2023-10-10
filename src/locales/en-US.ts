@@ -49,4 +49,5 @@ export default {
     ownsFirearm: "owns a firearm?",
     iOwnFirearm: "I own a firearm",
     iDoNotOwnFirearm: "I DO NOT own a firearm",
+    requiredField: "Value is required"
 }
