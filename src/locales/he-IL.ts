@@ -47,8 +47,6 @@ export default {
     repurchaseOrder: "רכישת ההזמנה מחדש",
     repurchaseItem: "רכישת פריט מחדש",
     billingAddress: "כתובת לחיוב",
-    ownsFirearm: "בעלים של נשק חם?",
-    iOwnFirearm: "מחזיק נשק חם",
-    iDoNotOwnFirearm: "איני מחזיק נשק חם",
+    shippingAddress: "כתובת למשלוח",
     requiredField: "שדה חובה"
 }

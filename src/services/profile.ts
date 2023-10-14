@@ -3,7 +3,6 @@ import defu from "defu";
 import { UserProfile } from "models/account";
 
 const profileDefaults = {
-    ownsFirearm: undefined,
 };
 
 const cachingTime = 10 * 60;

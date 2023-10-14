@@ -23,6 +23,7 @@ export const submitOrder = onCall(async (req) => {
     totalDiscounts: checkoutCart.totalDiscounts,
     sentItems: checkoutCart.userCart,
     orderTotal: checkoutCart.cartTotal,
+    paymentMethod: req.data.paymentMethod || "cash",
   };
 
   const orders = getFirestore()
@@ -53,7 +54,7 @@ export const getOrders = onCall(async (req): Promise<any> => {
     .startAt(skip)
     .get();
 
-  console.log("this is data:", orders.docs);
+  logger.debug("this is data:", orders.docs);
   return orders.docs.map((d) => {
     return {
       orderId: d.id,

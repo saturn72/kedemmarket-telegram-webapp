@@ -59,6 +59,7 @@ export default {
         const calculating = computed(() => useCheckoutCartStore().calculating || false);
         useCheckoutCartStore().calculate(0);
 
+
         return {
             store,
             loading,
@@ -66,7 +67,6 @@ export default {
             error
         };
     },
-
     data() {
         return {
             itemToDelete: null,
@@ -79,6 +79,7 @@ export default {
         },
         async checkout_submitOrder() {
             this.orderDialog = true;
+
             const order = await submitOrder();
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
@@ -123,6 +124,6 @@ export default {
             item.loading = true;
             useCheckoutCartStore().calculate(2000);
         }
-    }
+    },
 }
 </script>

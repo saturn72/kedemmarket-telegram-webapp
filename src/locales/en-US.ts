@@ -46,8 +46,6 @@ export default {
     repurchaseOrder: "Repurchase Order",
     repurchaseItem: "Repurchase Item",
     billingAddress: "Billing Address",
-    ownsFirearm: "owns a firearm?",
-    iOwnFirearm: "I own a firearm",
-    iDoNotOwnFirearm: "I DO NOT own a firearm",
+    shippingAddress: "Shipping Address",
     requiredField: "Value is required"
 }

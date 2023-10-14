@@ -23,7 +23,6 @@ export const useUserStore = defineStore('user', {
         }
     },
     actions: {
-
         setUser(user: any): void {
             this.$state.user = user;
         },

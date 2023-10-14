@@ -12,9 +12,9 @@
         <v-card-text v-if="!loading">
             <v-form v-model="valid">
                 <v-card>
-                    <v-radio-group v-model="profile.ownsFirearm" :rules="ownsFirearmRules">
+                    <v-radio-group v-model="profile.shippingAddress" :rules="shippingAddressRules">
                         <template v-slot:label>
-                            <div> <v-icon>mdi-pistol</v-icon>{{ $t('ownsFirearm') }}</div>
+                            <div> <v-icon>mdi-map-market-outline</v-icon>{{ $t('shippingAddress') }}</div>
                         </template>
                         <v-radio value="true">
                             <template v-slot:label>

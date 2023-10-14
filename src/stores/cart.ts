@@ -35,7 +35,6 @@ export const useCartStore = defineStore('cart', {
     state: (): CartState => defaultValue
     ,
     getters: {
-
         getUserCart(state): UserCart | undefined {
             const userId = useUserStore().getUser.uid;
             if (!userId) {
@@ -112,9 +111,9 @@ export const useCartStore = defineStore('cart', {
             _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
         },
 
-        clearCart(): void {
+        clear(): void {
             const userId = useUserStore().getUser.uid;
-            this.$state.usersCarts[userId] = undefined;
+            this.$state.usersCarts[userId] = { items: [] };
         },
 
         getProductQuantity(productId: any): number {

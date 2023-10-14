@@ -19,8 +19,8 @@ export async function submitOrder(): Promise<Order | undefined> {
     const prefix = getOrdersCacheKeyPrefix();
     useNuxtApp().$cache.removeByPrefix(prefix);
 
-    checoutCart.clear();
-    useCartStore().clearCart();
+    useCartStore().clear();
+    checoutCart.clearUserCart();
 
     return res;
 }

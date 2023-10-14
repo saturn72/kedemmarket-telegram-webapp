@@ -9,8 +9,8 @@ import { usePageStore } from '@/stores/page'
 import { computed } from 'vue'
 
 const items = computed(() => useCartStore().getTotalCartItemsCount);
-
 const header = useNuxtApp().$t(items > 1 ? 'carts' : 'cart');
 usePageStore().setHeader(header);
+
 
 </script>

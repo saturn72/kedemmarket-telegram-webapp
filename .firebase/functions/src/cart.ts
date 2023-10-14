@@ -13,7 +13,6 @@ export async function getUserCarts(uid: string):
   const userCarts = await getFirestore()
     .collection("carts")
     .where("userId", "==", uid)
-    .limit(1)
     .get();
 
   return userCarts.docs;
@@ -92,7 +91,8 @@ type CartItem = {
 }
 
 type UserCart = {
-  items: CartItem[]
+  items: CartItem[],
+  paymentMethod: string;
 }
 
 export async function deleteUserCarts(uid: string) {

@@ -24,7 +24,6 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         state = defaultValue;
         return;
     }
-
     const items = userCart.items.map(p => {
         return {
             productId: p.product.id,
@@ -79,9 +78,11 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
 export const useCheckoutCartStore = defineStore('checkoutCart', {
     state: (): CheckoutCartState => defaultValue,
     actions: {
-        clear(): void {
-            this.$state = defaultValue
+
+        clearUserCart(): void {
+            this.$state.userCart = useCartStore().getUserCart;
         },
+
         async calculate(timeout: number = 2000): Promise<void> {
             this.$state.calculating = true;
             this.$state.userCart = useCartStore().getUserCart;

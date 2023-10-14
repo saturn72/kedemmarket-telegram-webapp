@@ -6,6 +6,7 @@ import {
   QueryDocumentSnapshot,
   getFirestore,
 } from "firebase-admin/firestore";
+import * as _ from "lodash";
 
 const USER_PROFILE_COLLECTION_NAME = "user-profiles";
 
@@ -26,7 +27,9 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
   const {uid} = validateAuth(req);
 
   const profiles = await getUserProfiles(uid);
-  const profile = profiles[0] || {};
+  const profile = profiles.length == 0 ?
+    {} :
+    _.omit(profiles[0].data, ["userId"]);
   logger.debug("this is user profile:", profile);
   return profile;
 });
