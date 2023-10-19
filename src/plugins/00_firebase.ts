@@ -1,4 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
+import { Messaging, getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Auth, getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -36,6 +37,25 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
     });
 }
 
+const getCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefined> => {
+    const messaging = getMessaging(app);
+    const permission = await Notification.requestPermission();
+
+    if (permission != 'granted') {
+        return undefined;
+    }
+
+    const token = await getToken(messaging, {
+        vapidKey: useAppConfig().firebase.vapidKey,
+    });
+
+    if (!token) {
+        return undefined;
+    }
+    executeFunction('subscribeToTopics', { tokens: [token], topics: ["catalog"] });
+    return messaging;
+}
+
 const executeFunction = async (functionName: string, payload?: any): Promise<any> => {
     const f = getFunctions();
     const po = httpsCallable(f, functionName);
@@ -43,15 +63,27 @@ const executeFunction = async (functionName: string, payload?: any): Promise<any
     return res.data;
 }
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
     const app: FirebaseApp = initializeApp(useAppConfig().firebase);
 
     const auth = configureAuth(app);
-    const appCheck = configureAppCheck(app);
+    configureAppCheck(app);
+
+    const messaging = (await getCloudMessaging(app)) as Messaging;
+    if (messaging) {
+        onMessage(messaging, (payload) => {
+            try {
+
+                console.log('Message received. ', payload);
+                // ...
+            } catch (err) {
+                console.log('Message received. with error', err);
+            }
+        });
+    }
 
     return {
         provide: {
-
             storage: {
                 getDownloadUrl: async (uri: string): Promise<string | null> => {
                     while (uri.startsWith('/')) {
@@ -105,7 +137,8 @@ export default defineNuxtPlugin((nuxtApp) => {
                 async saveUserProfile(profile: UserProfile): Promise<UserProfile> {
                     return await executeFunction('saveUserProfile', profile);
                 }
-            }
+            },
+            messaging,
         }
     }
 });

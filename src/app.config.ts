@@ -6,7 +6,9 @@ export default defineAppConfig({
         projectId: "kedem-market",
         appId: "1:157042094760:web:9cbf91abe34cf03ce4489d",
         storageBucket: "kedem-market.appspot.com",
-        measurementId: "G-N9B0KZT7QR"
+        messagingSenderId: "157042094760",
+        measurementId: "G-N9B0KZT7QR",
+        vapidKey: "BMp01e3CFwhlO7uq6EEegvZcf3pev0l88SQVVtWGKomGWB1MlUB_ysPHbze1lNusB3QlwO7OSf1WqDif9-9hg3g"
     },
     defaults: {
         thumbnail: '/logo.jpg',
