@@ -22,7 +22,9 @@ const getAllStoresVendors = (stores: Store[] | undefined): Vendor[] | undefined 
 }
 
 export const useStoreStore = defineStore('store', {
+
     state: (): StoreState => { return { stores: undefined } },
+
     getters: {
 
         getVendors(state): Vendor[] | undefined {
@@ -44,6 +46,7 @@ export const useStoreStore = defineStore('store', {
             return _.flatten(vendorProductArray) as Product[];
         }
     },
+
     actions: {
         async setStore(): Promise<void> {
             const data = await getStores();

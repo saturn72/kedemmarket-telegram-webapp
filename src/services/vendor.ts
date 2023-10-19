@@ -60,7 +60,7 @@ const acquireVendor = async (key: string): Promise<Vendor | undefined | null> =>
 }
 
 export async function getVendorByRoute(route: string): Promise<Vendor | null | undefined> {
-    return await useNuxtApp().$cache.getOrAcquire(
+    return await useNuxtApp().$sessionCache.getOrAcquire(
         `vandor:${route}`,
         () => acquireVendor(route), 10 * 60);
 

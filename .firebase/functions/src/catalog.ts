@@ -1,9 +1,9 @@
 import {
   onDocumentWritten,
 } from "firebase-functions/v2/firestore";
-import {getMessaging} from "firebase-admin/messaging";
-import {logger} from "firebase-functions/v1";
-import {App} from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
+import { logger } from "firebase-functions/v1";
+import { App } from "firebase-admin/app";
 
 let _app: App | undefined = undefined;
 export const init = (app: App): void => {

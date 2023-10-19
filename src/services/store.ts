@@ -32,7 +32,14 @@ const acquireStore = async (): Promise<Store[] | undefined | null> => {
     return res;
 }
 
+const expiration = 10 * 60;
+export async function reload(): Promise<Store[] | null | undefined> {
+    const stores = acquireStore();
+    await useNuxtApp().$sessionCache.set(`kedem-market-store`, stores, expiration);
+    return stores;
+}
+
 export async function getStores(): Promise<Store[] | null | undefined> {
-    return await useNuxtApp().$cache.getOrAcquire(`kedem-market-store`,
-        () => acquireStore(), 10 * 60);
+    return await useNuxtApp().$sessionCache.getOrAcquire(`kedem-market-store`,
+        () => acquireStore(), expiration);
 }

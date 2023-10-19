@@ -37,7 +37,7 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
     });
 }
 
-const getCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefined> => {
+const initCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefined> => {
     const messaging = getMessaging(app);
     const permission = await Notification.requestPermission();
 
@@ -69,18 +69,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const auth = configureAuth(app);
     configureAppCheck(app);
 
-    const messaging = (await getCloudMessaging(app)) as Messaging;
-    if (messaging) {
-        onMessage(messaging, (payload) => {
-            try {
-
-                console.log('Message received. ', payload);
-                // ...
-            } catch (err) {
-                console.log('Message received. with error', err);
-            }
-        });
-    }
+    const messaging = await initCloudMessaging(app);
+    // if (messaging) {
+    //     onMessage(getMessaging(), (payload) => console.log('Message received in plugin. ', payload));
+    // }
 
     return {
         provide: {
@@ -137,8 +129,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 async saveUserProfile(profile: UserProfile): Promise<UserProfile> {
                     return await executeFunction('saveUserProfile', profile);
                 }
-            },
-            messaging,
+            }
         }
     }
 });
