@@ -21,15 +21,14 @@
 </template>
   
 <script>
-import { useStoreStore } from '@/stores/store'
+import { useCatalogStore } from '@/stores/catalog'
 import { useSearchStore } from '@/stores/search'
 import { computed } from 'vue'
 
 export default {
     setup() {
-        const store = useStoreStore();
-        store.setStore();
-        const products = computed(() => store.getProducts);
+        useCatalogStore().loadCatalog();
+        const products = computed(() => useCatalogStore().getProducts);
         return {
             products
         }
@@ -66,4 +65,4 @@ export default {
         }
     }
 }
-</script>
+</script>stores/catalog

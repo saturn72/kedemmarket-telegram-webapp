@@ -3,11 +3,12 @@ import { Product, Store, Vendor } from 'models/catalog';
 import { getStores } from "@/services/store";
 import _ from 'lodash';
 
-type StoreState = {
+type CatalogState = {
     stores?: Store[] | undefined;
+    vendors?: Vendor[] | undefined;
 }
 
-const getAllStoresVendors = (stores: Store[] | undefined): Vendor[] | undefined => {
+const getAllVendors = (stores: Store[] | undefined): Vendor[] | undefined => {
     if (!stores) {
         return undefined;
     }
@@ -21,18 +22,23 @@ const getAllStoresVendors = (stores: Store[] | undefined): Vendor[] | undefined 
     return _.uniqBy(f, x => x?.id) as Vendor[];
 }
 
-export const useStoreStore = defineStore('store', {
+export const useCatalogStore = defineStore('catalog', {
 
-    state: (): StoreState => { return { stores: undefined } },
+    state: (): CatalogState => {
+        return {
+            stores: undefined,
+            vendors: undefined,
+        }
+    },
 
     getters: {
 
         getVendors(state): Vendor[] | undefined {
-            return getAllStoresVendors(state.stores);
+            return getAllVendors(state.stores);
         },
 
         getProducts(state): Product[] | undefined {
-            const vendors = getAllStoresVendors(state.stores);
+            const vendors = getAllVendors(state.stores);
             if (!vendors) {
                 return undefined;
             }
@@ -44,17 +50,17 @@ export const useStoreStore = defineStore('store', {
             });
 
             return _.flatten(vendorProductArray) as Product[];
-        }
+        },
     },
-
     actions: {
-        async setStore(): Promise<void> {
+        async loadCatalog(): Promise<void> {
             const data = await getStores();
             if (data) {
                 this.stores = data;
             }
         },
     },
+
     persist: {
         storage: persistedState.sessionStorage
     }

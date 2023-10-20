@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.2.20",
+    "@microsoft/signalr": "^7.0.12",
     "@pinia/nuxt": "^0.4.11",
     "defu": "^6.1.2",
     "firebase": "^9.23.0",

@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Messaging, getMessaging, getToken, onMessage } from "firebase/messaging";
+//import { Messaging, getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Auth, getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -37,24 +37,25 @@ const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
     });
 }
 
-const initCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefined> => {
-    const messaging = getMessaging(app);
-    const permission = await Notification.requestPermission();
+// const initCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefined> => {
+//     const messaging = getMessaging(app);
+//     const permission = await Notification.requestPermission();
 
-    if (permission != 'granted') {
-        return undefined;
-    }
+//     if (permission != 'granted') {
+//         return undefined;
+//     }
 
-    const token = await getToken(messaging, {
-        vapidKey: useAppConfig().firebase.vapidKey,
-    });
+//     const token = await getToken(messaging, {
+//         vapidKey: useAppConfig().firebase.vapidKey,
+//     });
 
-    if (!token) {
-        return undefined;
-    }
-    executeFunction('subscribeToTopics', { tokens: [token], topics: ["catalog"] });
-    return messaging;
-}
+//     if (!token) {
+//         return undefined;
+//     }
+//     executeFunction('subscribeToTopics', { tokens: [token], topics: ["catalog"] });
+
+//     return messaging;
+// }
 
 const executeFunction = async (functionName: string, payload?: any): Promise<any> => {
     const f = getFunctions();
@@ -69,9 +70,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const auth = configureAuth(app);
     configureAppCheck(app);
 
-    const messaging = await initCloudMessaging(app);
+    // const messaging = await initCloudMessaging(app);
     // if (messaging) {
-    //     onMessage(getMessaging(), (payload) => console.log('Message received in plugin. ', payload));
+    //     onMessage(getMessaging(), (payload) => {
+    //         console.log("this is onMessage with payload:", payload);
+    //         useNuxtApp().$sessionCache.removeByPrefix("catalog:");
+    //     });
     // }
 
     return {

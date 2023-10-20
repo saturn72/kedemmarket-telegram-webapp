@@ -6,6 +6,7 @@ const acquireStore = async (): Promise<Store[] | undefined | null> => {
     if (!url) {
         return undefined;
     }
+
     const all = await $fetch<any>(url);
     const res: Store[] = []
 
@@ -29,17 +30,13 @@ const acquireStore = async (): Promise<Store[] | undefined | null> => {
             });
         }
     }
+
     return res;
 }
 
 const expiration = 10 * 60;
-export async function reload(): Promise<Store[] | null | undefined> {
-    const stores = acquireStore();
-    await useNuxtApp().$sessionCache.set(`kedem-market-store`, stores, expiration);
-    return stores;
-}
 
 export async function getStores(): Promise<Store[] | null | undefined> {
-    return await useNuxtApp().$sessionCache.getOrAcquire(`kedem-market-store`,
+    return await useNuxtApp().$sessionCache.getOrAcquire(`catalog:kedem-market-store`,
         () => acquireStore(), expiration);
 }
