@@ -12,11 +12,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         useNuxtApp().$sessionCache.removeByPrefix("catalog");
         await useCatalogStore().loadCatalog();
     });
+
     await connection.start();
 
     return {
-        provide: {
-            connection
-        }
+
     }
 });

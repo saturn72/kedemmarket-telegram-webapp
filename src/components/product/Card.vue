@@ -5,6 +5,8 @@
         </v-card-title>
         <v-card-text>
             <strong> {{ product.name }}</strong>
+            <!-- <strong>&centerdot; {{ product.price }} {{ $t('currencySymbol') }}</strong> -->
+
             <v-divider thickness="2"></v-divider>
             <ProductPrice :product="product" />
         </v-card-text>
