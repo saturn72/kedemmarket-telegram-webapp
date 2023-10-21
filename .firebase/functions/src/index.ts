@@ -1,7 +1,7 @@
 import * as orders from "./orders";
 import * as cart from "./cart";
 import * as orderNotifications from "./order-notifications";
-import * as core from "./core";
+import * as token from "./token";
 import * as userProfile from "./userProfile";
 import {initializeApp} from "firebase-admin/app";
 
@@ -19,6 +19,6 @@ export const submitOrder = orders.submitOrder;
 export const getUserProfile = userProfile.getUserProfile;
 export const saveUserProfile = userProfile.saveUserProfile;
 
-export const subscribeToNotifications = core.subscribeToNotifications;
+export const subscribeToNotifications = token.subscribeToNotifications;
 // on cloud firestore update
 export const onOrderUpdated = orderNotifications.onOrderUpdated;

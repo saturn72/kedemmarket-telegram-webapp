@@ -1,12 +1,14 @@
 import {
   onDocumentUpdated,
 } from "firebase-functions/v2/firestore";
-import {logger} from "firebase-functions/v1";
-import {App} from "firebase-admin/app";
+import { logger } from "firebase-functions/v1";
+import { App } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import { Message, getMessaging } from "firebase-admin/messaging";
 
-// let _app: App | undefined = undefined;
+let _app: App | undefined = undefined;
 export const init = (app: App): void => {
-  // _app = app;
+  _app = app;
 };
 
 export const onOrderUpdated = onDocumentUpdated("orders/{docId}",
@@ -18,20 +20,40 @@ export const onOrderUpdated = onDocumentUpdated("orders/{docId}",
       return;
     }
 
-    // const token =
-    //   logger.debug("doc:", doc.userId);
+    const userId = doc.userId;
+    if (!userId) {
+      return;
+    }
 
+    const ut = await getFirestore()
+      .collection("tokens")
+      .where("userId", "==", userId)
+      .get();
 
-    // const messaging = getMessaging(_app);
+    const tokens = ut.docs;
+    if (!tokens || tokens.length == 0) {
+      return;
+    }
 
-    // const message = {
-    //   topic: "order",
-    //   data: {
-    //     action: "updated",
-    //   },
-    // };
+    const messaging = getMessaging(_app);
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i].data().token;
 
-    // const sendResult = await messaging.send(message);
-    // logger.debug("this is send message result:", sendResult);
+      const message: Message = {
+        token,
+        notification: {
+          title: "Kedem Market",
+          body: "Order updated",
+        },
+        webpush: {
+          fcmOptions: {
+            link: `https://kedemmarket.co.il/account/orders/${doc.id}`,
+          },
+        },
+      };
+
+      const sendResult = await messaging.send(message);
+      logger.debug("Notify user on order update:", sendResult);
+    }
   });
 

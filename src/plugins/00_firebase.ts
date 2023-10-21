@@ -70,12 +70,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const auth = configureAuth(app);
     configureAppCheck(app);
     await initCloudMessaging(app);
-    // if (messaging) {
-    //     onMessage(getMessaging(), (payload) => {
-    //         console.log("this is onMessage with payload:", payload);
-    //         useNuxtApp().$sessionCache.removeByPrefix("catalog:");
-    //     });
-    // }
 
     return {
         provide: {
