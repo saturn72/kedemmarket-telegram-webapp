@@ -1,25 +1,23 @@
-// import { onMessage } from "firebase/messaging";
-// import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
+//see: https://github.com/firebase/quickstart-js/blob/master/messaging/firebase-messaging-sw.js
+importScripts('/__/firebase/9.23.0/firebase-app-compat.js');
+importScripts('/__/firebase/9.23.0/firebase-messaging-compat.js');
+importScripts('/__/firebase/init.js');
 
+const messaging = firebase.messaging();
 
-// const fcm = getMessaging();
-// console.log("this is fcm", fcm)
-// onMessage(fcm, (payload) => {
-//     console.log('[firebase-messaging-sw.js] NOT IN PUBLIC Received message ', payload);
-//     console.log('onMessage. ', payload);
-//     // ...
-// });
+messaging.onMessage(function (payload) {
+    console.log("this is onMEssage", payload)
+});
 
-// onBackgroundMessage(fcm, (payload) => {
+messaging.onBackgroundMessage(function (payload) {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    // Customize notification here
+    const notificationTitle = 'Background Message Title';
+    const notificationOptions = {
+        body: 'Background Message body.',
+        icon: '/firebase-logo.png'
+    };
 
-//     console.log('[firebase-messaging-sw.js] NOT IN PUBLIC  Received background message ', payload);
-//     // Customize notification here
-//     // const notificationTitle = 'Background Message Title';
-//     // const notificationOptions = {
-//     //     body: 'Background Message body.',
-//     //     icon: '/firebase-logo.png'
-//     // };
-
-//     // self.registration.showNotification(notificationTitle,
-//     //     notificationOptions);
-// });
+    self.registration.showNotification(notificationTitle,
+        notificationOptions);
+});
