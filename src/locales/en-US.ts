@@ -47,5 +47,7 @@ export default {
     repurchaseItem: "Repurchase Item",
     billingAddress: "Billing Address",
     shippingAddress: "Shipping Address",
-    requiredField: "Value is required"
+    requiredField: "Value is required",
+    orderId: "Order ID",
+    page: "Page"
 }

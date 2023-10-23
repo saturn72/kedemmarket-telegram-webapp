@@ -48,5 +48,7 @@ export default {
     repurchaseItem: "רכישת פריט מחדש",
     billingAddress: "כתובת לחיוב",
     shippingAddress: "כתובת למשלוח",
-    requiredField: "שדה חובה"
+    requiredField: "שדה חובה",
+    orderId: "מספר הזמנה",
+    page: "דף"
 }
