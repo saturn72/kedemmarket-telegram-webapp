@@ -1,13 +1,13 @@
 <template>
-    <v-card :loading="loading" :disabled="loading">
+    <v-card :loading="loading" :disabled="loading" height="100%" flat class="d-flex flex-column justify-center">
         <v-card-text>
             <v-row>
                 <v-col cols="2">
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
                     {{ $t('date') }}
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="4">
                     {{ $t('status') }}
                 </v-col>
                 <v-col cols="3">
@@ -19,10 +19,10 @@
                 <v-col cols="2">
                     <v-icon>mdi-open-in-app</v-icon>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
                     {{ item.date }}
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="4">
                     <OrderStatus :order="item"></OrderStatus>
                 </v-col>
                 <v-col cols="3">
@@ -52,12 +52,13 @@ const pageSize = 10;
 
 export default {
     async created() {
+        this.filter = this.$route.query["status"];
         await this.fetchOrders(pageSize, this.skip)
     },
     methods: {
         async fetchOrders(pageSize, skip) {
             this.loading = true;
-            const res = await getOrders({ pageSize, skip });
+            const res = await getOrders({ pageSize, skip }, this.filter);
             this.orders = res.orders.map(o => {
                 return {
                     ...o,

@@ -16,17 +16,18 @@ export function getOrdersCacheKeyPrefix() {
 export async function getOrders(options: Pagination = {
     pageSize: 10,
     skip: 0
-}): Promise<Order[] | null | undefined> {
-    const key = `${getOrdersCacheKeyPrefix()}_pagesize:${options.pageSize}_skip:${options.skip}`;
+}, status: string[]): Promise<Order[] | null | undefined> {
+    const s = status ? `_status:${status.toString().toLowerCase()}` : '';
+    const key = `${getOrdersCacheKeyPrefix()}_pagesize:${options.pageSize}_skip:${options.skip}${s}`;
 
     return await useNuxtApp().$cache.getOrAcquire(key,
-        async () => await useNuxtApp().$backend.getOrders(options),
+        async () => await useNuxtApp().$backend.getOrders(options, status),
         expiration);
 }
 
-export async function getOrderById(orderId: any): Promise<Order | null | undefined> {
+export async function getOrderById(orderId: string): Promise<Order | null | undefined> {
     const key = `${getOrdersCacheKeyPrefix()}_orderid:${orderId}`;
     return await useNuxtApp().$cache.getOrAcquire(key,
-        async () => await useNuxtApp().$backend.getOrderById({ orderId }),
+        async () => await useNuxtApp().$backend.getOrderById(orderId),
         expiration);
 }

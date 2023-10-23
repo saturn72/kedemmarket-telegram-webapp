@@ -3,6 +3,7 @@ export default {
     kedemmarket: "Kedem Market",
     addButton: "Add",
     save: "Save",
+    myOpenOrders: "My Open Orders",
     myOrders: "My Orders",
     profile: "Profile",
     ooops: "Ooops 🤔",
@@ -51,5 +52,7 @@ export default {
     shippingAddress: "Shipping Address",
     requiredField: "Value is required",
     orderId: "Order ID",
-    page: "Page"
+    page: "Page",
+    next: "Next",
+    previous: "Previous",
 }

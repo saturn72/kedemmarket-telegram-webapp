@@ -4,6 +4,7 @@ export default {
     kedemmarket: "קדם מרקט",
     addButton: "הוספה",
     save: "שמירה",
+    myOpenOrders: "ההזמנות הפתוחות שלי",
     myOrders: "ההזמנות שלי",
     profile: "פרופיל",
     ooops: "אופפס 🤔",
@@ -52,5 +53,7 @@ export default {
     shippingAddress: "כתובת למשלוח",
     requiredField: "שדה חובה",
     orderId: "מספר הזמנה",
-    page: "דף"
+    page: "דף",
+    next: "הבא",
+    previous: "הקודם",
 }

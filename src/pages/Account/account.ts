@@ -1,6 +1,11 @@
 import { useUserStore } from '@/stores/user'
 
 export default {
+    myOpenOrders: {
+        displayText: 'myOpenOrders',
+        route: useAppConfig().routes.accountOpenOrders,
+        icon: 'mdi-shopping-outline'
+    },
     orders: {
         displayText: 'myOrders',
         route: useAppConfig().routes.accountOrders,

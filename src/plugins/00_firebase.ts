@@ -104,7 +104,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 },
 
                 async getOrderById(orderId: string): Promise<Order> {
-                    return await executeFunction('getOrderById', orderId);
+                    return await executeFunction('getOrderById', { orderId });
                 },
 
                 async prepareCartForCheckout(cart: UserCart): Promise<CheckoutCart & any> {
