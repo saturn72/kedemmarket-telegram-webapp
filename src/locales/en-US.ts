@@ -24,6 +24,8 @@ export default {
     loginIsRequiredToContinue: "Login is required to continue 🔓",
     failedToFindPage: "Failed to find page...",
     failedToPerformAction: "Failed to perform action...🤦‍♂️",
+    failedToLocateOrder: "Failed to locate order...📃",
+    browsingToOrders: "Browsing to Orders",
     total: "Total",
     cartTotal: "Cart Total:",
     date: "Date",

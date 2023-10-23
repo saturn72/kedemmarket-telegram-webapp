@@ -25,6 +25,8 @@ export default {
     loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓",
     failedToFindPage: "הדף לא קיים...",
     failedToPerformAction: "נכשלתי לבצע את הפעולה...🤦‍♂️",
+    failedToLocateOrder: "לא מצאתי את ההזמנה...📃",
+    browsingToOrders: "עובר לדף הזמנות",
     date: "תאריך",
     total: "סה\"כ",
     cartTotal: "סה\"כ לעגלה:",
