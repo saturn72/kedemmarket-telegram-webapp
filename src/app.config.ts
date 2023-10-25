@@ -18,7 +18,7 @@ export default defineAppConfig({
     routes: {
         account: "/account",
         accountOrders: "/account/orders",
-        accountOpenOrders: "/account/orders?status=pending&status=submitted&status=processing",
+        accountOpenOrders: "/account/orders/open",
         accountProfile: "/account/profile",
         checkout: "/checkout",
         home: "/",

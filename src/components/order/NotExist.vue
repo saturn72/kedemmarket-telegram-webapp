@@ -40,7 +40,7 @@ export default {
         show: { type: Boolean },
     },
     mounted() {
-        timoutTimer = setTimeout(() => this.$router.back(), 5000)
+        timoutTimer = setTimeout(() => this.$router.push(useAppConfig().routes.accountOrders), 5000)
     }
 }
 </script>

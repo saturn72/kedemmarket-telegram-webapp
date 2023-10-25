@@ -99,8 +99,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
             backend: {
 
-                async getOrders(options: { pageSize: number, skip: number }): Promise<Order[]> {
-                    return await executeFunction('getOrders', options);
+                async getOrders(options: { pageSize: number, skip: number }, status: string[]): Promise<Order[]> {
+                    return await executeFunction('getOrders', { ...options, status });
                 },
 
                 async getOrderById(orderId: string): Promise<Order> {

@@ -28,6 +28,7 @@ export default {
     failedToLocateOrder: "Failed to locate order...📃",
     browsingToOrders: "Browsing to Orders",
     total: "Total",
+    orderStatus: "Order Status",
     cartTotal: "Cart Total:",
     date: "Date",
     for: "for",
@@ -53,6 +54,7 @@ export default {
     requiredField: "Value is required",
     orderId: "Order ID",
     page: "Page",
+    of: "of",
     next: "Next",
     previous: "Previous",
 }

@@ -30,6 +30,7 @@ export default {
     browsingToOrders: "עובר לדף הזמנות",
     date: "תאריך",
     total: "סה\"כ",
+    orderStatus: "מצב הזמנה",
     cartTotal: "סה\"כ לעגלה:",
     for: "ב-",
     perUnit: "ליח'",
@@ -54,6 +55,7 @@ export default {
     requiredField: "שדה חובה",
     orderId: "מספר הזמנה",
     page: "דף",
+    of: "מתוך",
     next: "הבא",
     previous: "הקודם",
 }

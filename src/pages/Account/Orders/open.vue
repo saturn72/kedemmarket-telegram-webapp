@@ -49,16 +49,16 @@
 import { getOrders } from "@/services/order";
 
 const pageSize = 10;
+const filter = ["pending", "submitted", "processing"];
 
 export default {
     async created() {
-        this.filter = this.$route.query["status"];
         await this.fetchOrders(pageSize, this.skip)
     },
     methods: {
         async fetchOrders(pageSize, skip) {
             this.loading = true;
-            const res = await getOrders({ pageSize, skip }, this.filter);
+            const res = await getOrders({ pageSize, skip }, filter);
             this.orders = res.orders.map(o => {
                 return {
                     ...o,

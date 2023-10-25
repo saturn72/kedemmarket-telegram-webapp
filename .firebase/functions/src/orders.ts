@@ -39,21 +39,28 @@ export const submitOrder = onCall(async (req) => {
   };
 });
 
-const getOrdersInternal = (uid: string) => {
-  return getFirestore()
-    .collection("orders")
-    .where("userId", "==", uid)
-    .orderBy("utcTimestamp");
-};
+const getOrdersInternal =
+  (uid: string, status: string[] | undefined = undefined) => {
+    const col = getFirestore()
+      .collection("orders");
+
+    const f = status ?
+      col.where("status", "in", status)
+        .where("userId", "==", uid) :
+      col.where("userId", "==", uid);
+
+    return f.orderBy("utcTimestamp");
+  };
+
 
 export const getOrders = onCall(async (req): Promise<any> => {
   logger.debug("start getOrderById", {structuredData: true});
 
   const {uid} = validateAuth(req);
-  const {pageSize = 10, skip = 0} = req.data;
-  logger.debug("pageSize, skip", pageSize, skip);
+  const {pageSize = 10, skip = 0, status = []} = req.data;
+  logger.debug("pageSize, skip, status", pageSize, skip, status);
 
-  const t = await getOrdersInternal(uid)
+  const t = await getOrdersInternal(uid, status)
     .count()
     .get();
 
@@ -70,7 +77,7 @@ export const getOrders = onCall(async (req): Promise<any> => {
   }
 
   let tmpOrders;
-  const prev = getOrdersInternal(uid);
+  const prev = getOrdersInternal(uid, status);
 
   if (skip == 0) {
     tmpOrders = prev.limit(pageSize);
@@ -78,7 +85,7 @@ export const getOrders = onCall(async (req): Promise<any> => {
     logger.debug("this is the total records: ", total);
     const g = await prev.limit(skip).get();
     const startAfter = g.docs[skip - 1];
-    tmpOrders = getOrdersInternal(uid)
+    tmpOrders = getOrdersInternal(uid, status)
       .startAfter(startAfter)
       .limit(pageSize);
   }
