@@ -41,17 +41,16 @@ export const submitOrder = onCall(async (req) => {
 
 const getOrdersInternal =
   (uid: string, status: string[] | undefined = undefined) => {
-    const col = getFirestore()
-      .collection("orders");
+    let f = getFirestore()
+      .collection("orders")
+      .where("userId", "==", uid);
 
-    const f = status ?
-      col.where("status", "in", status)
-        .where("userId", "==", uid) :
-      col.where("userId", "==", uid);
+    if (status) {
+      f = f.where("status", "in", status);
+    }
 
     return f.orderBy("utcTimestamp");
   };
-
 
 export const getOrders = onCall(async (req): Promise<any> => {
   logger.debug("start getOrderById", {structuredData: true});
