@@ -49,7 +49,7 @@ const getOrdersInternal =
       f = f.where("status", "in", status);
     }
 
-    return f.orderBy("utcTimestamp");
+    return f.orderBy("utcTimestamp", "desc");
   };
 
 export const getOrders = onCall(async (req): Promise<any> => {

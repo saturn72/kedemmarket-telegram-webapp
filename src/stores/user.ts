@@ -20,7 +20,7 @@ export const useUserStore = defineStore('user', {
     getters: {
         getUser(state): any {
             return state.user
-        }
+        },
     },
     actions: {
         setUser(user: any): void {
@@ -28,7 +28,7 @@ export const useUserStore = defineStore('user', {
         },
         logout() {
             useNuxtApp().$user.logout();
-        }
+        },
     },
     persist: {
         storage: persistedState.localStorage

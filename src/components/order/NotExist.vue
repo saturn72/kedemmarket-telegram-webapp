@@ -39,8 +39,12 @@ export default {
     props: {
         show: { type: Boolean },
     },
-    mounted() {
-        timoutTimer = setTimeout(() => this.$router.push(useAppConfig().routes.accountOrders), 5000)
+    watch: {
+        show(val) {
+            if (val) {
+                timoutTimer = setTimeout(() => this.$router.push(useAppConfig().routes.accountOrders), 5000)
+            }
+        }
     }
 }
 </script>
