@@ -30,22 +30,24 @@
                 </v-col>
             </v-row>
         </v-card-text>
-        <v-card-actions class="mb-6">
-            <v-btn variant="text" prepend-icon="mdi-chevron-right" :disabled="isLastPage || loading" @click="next()"> {{
-                $t('next')
-            }}
+        <v-card-actions class="mb-6 text-subtitle-2">
+            <v-btn size="small" variant="text" prepend-icon="mdi-chevron-right" :disabled="isLastPage || loading"
+                @click="next()"> {{
+                    $t('next')
+                }}
             </v-btn>
             <v-spacer></v-spacer>
             {{ $t('page') }}#&nbsp;{{ page }} {{ $t('of') }} &nbsp;{{ totalPages }}
             <v-spacer></v-spacer>
-            <v-btn variant="text" append-icon="mdi-chevron-left" :disabled="page == 1 || loading" @click="previous()">
+            <v-btn size="small" variant="text" append-icon="mdi-chevron-left" :disabled="page == 1 || loading"
+                @click="previous()">
                 {{ $t('previous') }}
             </v-btn>
         </v-card-actions>
     </v-card>
 </template>
-
 <script>
+
 import { getOrders } from "@/services/order";
 
 const pageSize = 10;

@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Messaging, getMessaging, getToken, onMessage } from "firebase/messaging";
+import { Messaging, getMessaging, getToken } from "firebase/messaging";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Auth, getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -134,3 +134,4 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         }
     }
 });
+

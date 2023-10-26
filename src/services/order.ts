@@ -8,6 +8,7 @@ type Pagination = {
     skip: number
 };
 
+
 export function getOrdersCacheKeyPrefix() {
     const userId = useUserStore().getUser.uid;
     return `orders:${userId}`.toLocaleLowerCase();
@@ -20,14 +21,20 @@ export async function getOrders(options: Pagination = {
     const s = status ? `_status:${status.toString().toLowerCase()}` : '';
     const key = `${getOrdersCacheKeyPrefix()}_pagesize:${options.pageSize}_skip:${options.skip}${s}`;
 
-    return await useNuxtApp().$cache.getOrAcquire(key,
+    return await useNuxtApp().$sessionCache.getOrAcquire(key,
         async () => await useNuxtApp().$backend.getOrders(options, status),
         expiration);
 }
 
-export async function getOrderById(orderId: string): Promise<Order | null | undefined> {
+export async function getOrderById(orderId: string, force: boolean = false): Promise<Order | null | undefined> {
     const key = `${getOrdersCacheKeyPrefix()}_orderid:${orderId}`;
-    return await useNuxtApp().$cache.getOrAcquire(key,
+    const sc = useNuxtApp().$sessionCache;
+
+    if (force) {
+        sc.remove(key);
+    }
+
+    return await sc.getOrAcquire(key,
         async () => await useNuxtApp().$backend.getOrderById(orderId),
         expiration);
 }

@@ -5,9 +5,6 @@ importScripts('/__/firebase/init.js');
 
 const messaging = firebase.messaging();
 
-messaging.onMessage(function (payload) {
-    console.log("this is onMEssage", payload)
-});
 
 messaging.onBackgroundMessage(function (payload) {
     const { body, link, title, } = payload.notification;

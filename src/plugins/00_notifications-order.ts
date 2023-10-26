@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import { useUserStore } from "@/stores/user";
-import { getOrderById, getOrdersCacheKeyPrefix } from '@/services/order';
+import { getOrderById } from '@/services/order';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
 
@@ -12,8 +12,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         .build();
 
     connection.on("updated", async (orderId: string) => {
-        useNuxtApp().$cache.removeByPrefix(getOrdersCacheKeyPrefix());
-        await getOrderById(orderId);
+        await getOrderById(orderId, true);
     });
 
     await connection.start();
