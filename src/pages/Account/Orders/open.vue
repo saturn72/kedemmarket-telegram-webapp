@@ -2,9 +2,9 @@
     <v-card :loading="loading" :disabled="loading" height="100%" flat class="d-flex flex-column justify-center">
         <v-card-text>
             <v-row>
-                <v-col cols="2">
+                <v-col cols="1">
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="4">
                     {{ $t('date') }}
                 </v-col>
                 <v-col cols="4">
@@ -16,11 +16,11 @@
             </v-row>
 
             <v-row v-for="item in orders" :key="item.orderId" @click="onClick(item)">
-                <v-col cols="2">
+                <v-col cols="1">
                     <v-icon>mdi-open-in-app</v-icon>
                 </v-col>
-                <v-col cols="3">
-                    {{ item.date }}
+                <v-col cols="4">
+                    {{ displayDate(item) }}
                 </v-col>
                 <v-col cols="4">
                     <OrderStatus :order="item"></OrderStatus>
@@ -47,6 +47,7 @@
 
 <script>
 import { getOrders } from "@/services/order";
+import moment from "moment";
 
 const pageSize = 10;
 const filter = ["pending", "submitted", "processing"];
@@ -56,6 +57,10 @@ export default {
         await this.fetchOrders(pageSize, this.skip)
     },
     methods: {
+        displayDate(item) {
+            const d = new Date(item.date);
+            return moment(d).format("DD/MM/YY");
+        },
         async fetchOrders(pageSize, skip) {
             this.loading = true;
             const res = await getOrders({ pageSize, skip }, filter);
