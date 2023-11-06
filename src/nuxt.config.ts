@@ -30,6 +30,7 @@ export default defineNuxtConfig({
     }
   ],
   modules: [
+    "nuxt-gtag",
     // '@nuxtjs/i18n',
     '@invictus.codes/nuxt-vuetify',
     '@pinia/nuxt',
@@ -42,5 +43,8 @@ export default defineNuxtConfig({
         fallback: 'he'
       }
     }
+  },
+  gtag: {
+    id: "G-N9B0KZT7QR"
   }
 })

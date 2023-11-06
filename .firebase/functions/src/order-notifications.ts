@@ -1,10 +1,10 @@
 import {
   onDocumentUpdated,
 } from "firebase-functions/v2/firestore";
-import { logger } from "firebase-functions/v1";
-import { App } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import { Message, getMessaging } from "firebase-admin/messaging";
+import {logger} from "firebase-functions/v1";
+import {App} from "firebase-admin/app";
+import {getFirestore} from "firebase-admin/firestore";
+import {Message, getMessaging} from "firebase-admin/messaging";
 
 let _app: App | undefined = undefined;
 export const init = (app: App): void => {
@@ -43,7 +43,7 @@ export const onOrderUpdated = onDocumentUpdated("orders/{docId}",
         token,
         notification: {
           title: "Kedem Market",
-          body: "yourOrderHasUpdated"
+          body: "yourOrderHasUpdated",
         },
         webpush: {
           fcmOptions: {
