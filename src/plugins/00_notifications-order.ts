@@ -6,17 +6,19 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     const url = `${useRuntimeConfig().public.wsURL}order`
     const accessToken = await useUserStore().user.accessToken;
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl(url, { accessTokenFactory: () => accessToken })
-        .withAutomaticReconnect()
-        .build();
+    try {
 
-    connection.on("updated", async (orderId: string) => {
-        await getOrderById(orderId, true);
-    });
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl(url, { accessTokenFactory: () => accessToken })
+            .withAutomaticReconnect()
+            .build();
 
-    await connection.start();
+        connection.on("updated", async (orderId: string) => {
+            await getOrderById(orderId, true);
+        });
 
+        await connection.start();
+    } catch { }
     return {
     }
 });
