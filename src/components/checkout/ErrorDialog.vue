@@ -11,11 +11,16 @@
                         {{ $t('failedToPerformAction') }}
                     </h2>
                     </p>
-                    <p class="mt-7">
-                        <v-btn @click="$emit('retry')">
-                            {{ $t('retry') }}
-                        </v-btn>
-                    </p>
+                    <v-row>
+                        <v-col>
+                            <v-btn @click="$emit('retry')">
+                                {{ $t('retry') }}
+                            </v-btn>
+                        </v-col>
+                        <v-col>
+                            <AppBackToStoreButton />
+                        </v-col>
+                    </v-row>
                 </div>
             </v-col>
         </v-card>

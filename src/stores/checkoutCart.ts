@@ -1,11 +1,15 @@
 import _ from 'lodash';
-import { CheckoutCart, CheckoutCartItem } from 'models/cart';
+import { CartItem, CheckoutCart, CheckoutCartItem } from 'models/cart';
 import { defineStore } from 'pinia'
 import { useCartStore } from './cart';
 import { useUserStore } from './user';
 import { useBackendFetch } from '../services/backend';
 
-type CheckoutCartState = CheckoutCart & { calculating: boolean, error: boolean };
+type CheckoutCartState = CheckoutCart & {
+    notAvailableItems: CartItem[]
+    calculating: boolean,
+    error: boolean
+};
 
 let timoutRef: NodeJS.Timeout;
 
@@ -14,6 +18,7 @@ const defaultValue = {
     cartTotal: 0,
     totalDiscounts: 0,
     items: [],
+    notAvailableItems: [],
     calculating: false,
     error: false
 };
@@ -39,6 +44,7 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
             items,
         }
     });
+
     if (error) {
         state.error = true;
         return;
@@ -50,29 +56,58 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
     state.totalDiscounts = 0;
     state.cartTotal = 0;
 
-    for (let index = 0; index < data.Items.length; index++) {
-        const cur = data.Items[index];
+    const scis = state.userCart?.items ?? [];
+    for (let index = 0; index < scis.length; index++) {
+        const cur = scis[index];
+        const di = data.Items.find((t: any) => t.ProductId == cur.product.id);
+        if (!di) {
+            state.notAvailableItems.push({ ...di });
+        }
 
-        const p = state.userCart?.items.find(x => x.product.id == cur.ProductId);
-        const cp = _.cloneDeep(p);
+        const cp = _.cloneDeep(cur);
         if (!cp) {
             continue;
         }
 
-        cp.orderedQuantity = cur.Quantity;
+
+        cp.orderedQuantity = di.Quantity;
         stateItems.push({
-            cartTotal: cur.SubTotalValue,
-            itemPrice: cur.UnitPriceValue,
-            numericDiscount: cur.DiscountValue,
-            percentageDiscount: 1 - (cur.DiscountValue / cur.UnitPriceValue),
-            priceAfterDiscounts: cur.UnitPriceValue - cur.DiscountValue,
-            priceBeforeDiscounts: cur.UnitPriceValue,
+            cartTotal: di.SubTotalValue,
+            itemPrice: di.UnitPriceValue,
+            numericDiscount: di.DiscountValue,
+            percentageDiscount: 1 - (di.DiscountValue / di.UnitPriceValue),
+            priceAfterDiscounts: di.UnitPriceValue - di.DiscountValue,
+            priceBeforeDiscounts: di.UnitPriceValue,
             ...cp,
         });
-        state.cartTotal += cur.SubTotalValue;
-        state.totalDiscounts += cur.numericDiscount;
+        state.cartTotal += di.SubTotalValue;
+        state.totalDiscounts += di.numericDiscount;
     }
     state.items = stateItems;
+
+    // for (let index = 0; index < data.Items.length; index++) {
+    //     const cur = data.Items[index];
+
+    //     const p = state.userCart?.items.find(x => x.product.id == cur.ProductId);
+    //     const cp = _.cloneDeep(p);
+    //     if (!cp) {
+    //         continue;
+    //     }
+
+    //     cp.orderedQuantity = cur.Quantity;
+    //     stateItems.push({
+    //         cartTotal: cur.SubTotalValue,
+    //         itemPrice: cur.UnitPriceValue,
+    //         numericDiscount: cur.DiscountValue,
+    //         percentageDiscount: 1 - (cur.DiscountValue / cur.UnitPriceValue),
+    //         priceAfterDiscounts: cur.UnitPriceValue - cur.DiscountValue,
+    //         priceBeforeDiscounts: cur.UnitPriceValue,
+    //         ...cp,
+    //     });
+    //     state.cartTotal += cur.SubTotalValue;
+    //     state.totalDiscounts += cur.numericDiscount;
+    // }
+    // state.items = stateItems;
 }
 
 export const useCheckoutCartStore = defineStore('checkoutCart', {
@@ -83,6 +118,7 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
             this.$state.userCart = useCartStore().getUserCart;
         },
 
+        //builds the checout cart, and sort items by availalbility etc.
         async calculate(timeout: number = 2000): Promise<void> {
             this.$state.calculating = true;
             this.$state.userCart = useCartStore().getUserCart;

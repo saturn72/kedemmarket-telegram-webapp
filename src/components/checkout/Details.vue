@@ -18,21 +18,21 @@
             <v-progress-circular indeterminate width="1"></v-progress-circular>
         </v-card-title>
         <v-card-title v-else>
-            {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ store.cartTotal }}
+            {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ checkoutCartStore.cartTotal }}
             <v-card-subtitle>
                 {{ $t('pricesAfterDiscounts') }}
             </v-card-subtitle>
         </v-card-title>
 
         <v-card-text>
-            <CheckoutProductDetails v-for="item in store.items" :cartItem="item" @removeFromCart="removeFromCart(item)"
-                @increment="incrementCartItem(item)" @decrement="decrementCartItem(item)">
-            </CheckoutProductDetails>
+            <CheckoutAvailableItems @removeFromCart="removeFromCart"></CheckoutAvailableItems>
+            <CheckoutNotAvailableItems></CheckoutNotAvailableItems>
         </v-card-text>
 
         <v-card-actions>
-            <v-btn block variant="flat" :loading="loading || calculating" :disabled="loading || store.items.length == 0"
-                color="secondary" @click="checkout_submitOrder()">{{
+            <v-btn block variant="flat" :loading="loading || calculating"
+                :disabled="loading || checkoutCartStore.items.length == 0" color="secondary"
+                @click="checkout_submitOrder()">{{
                     $t('checkoutCart')
                 }}
             </v-btn>
@@ -48,7 +48,7 @@ import { submitOrder } from "@/services/checkout";
 
 export default {
     setup() {
-        const store = computed(() => useCheckoutCartStore());
+        const checkoutCartStore = computed(() => useCheckoutCartStore());
 
         const loading = computed(() => {
             const items = useCheckoutCartStore().items;
@@ -61,7 +61,7 @@ export default {
 
 
         return {
-            store,
+            checkoutCartStore,
             loading,
             calculating,
             error
@@ -87,10 +87,12 @@ export default {
         },
 
         removeFromCart(item) {
+            console.log(item)
             const t = this.$t('deleteFromCart');
             this.dialogText = t.replace("##0##", item.product.name)
             this.itemToDelete = item;
         },
+
         onConfirmRemoveFromCart() {
             const userCart = useCartStore();
             userCart.removeItemFromCart(this.itemToDelete.product);
@@ -103,27 +105,6 @@ export default {
         resetRemoveFromCart() {
             this.itemToDelete = null;
         },
-
-        incrementCartItem(item) {
-            useCartStore().incrementCartItem(item.product);
-            this.updateCheckoutCart(item);
-        },
-
-        decrementCartItem(item) {
-            if (item.orderedQuantity == 1) {
-                this.removeFromCart(item)
-            }
-            else {
-                useCartStore().decrementCartItem(item.product);
-                this.updateCheckoutCart(item);
-            }
-        },
-
-        updateCheckoutCart(item) {
-            item.orderedQuantity = useCartStore().getProductQuantity(item.product.id)
-            item.loading = true;
-            useCheckoutCartStore().calculate(2000);
-        }
     },
 }
 </script>
