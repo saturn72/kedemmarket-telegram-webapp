@@ -87,7 +87,6 @@ export default {
         },
 
         removeFromCart(item) {
-            console.log(item)
             const t = this.$t('deleteFromCart');
             this.dialogText = t.replace("##0##", item.product.name)
             this.itemToDelete = item;
