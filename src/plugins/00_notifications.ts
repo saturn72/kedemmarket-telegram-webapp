@@ -1,5 +1,5 @@
 import * as signalR from "@microsoft/signalr";
-import { useCatalogStore } from "@/stores/catalog";
+import { getCatalog } from "@/services/catalog";
 import { HubConnection } from "@microsoft/signalr";
 import { useUserStore } from "@/stores/user";
 import { getOrderById } from "@/services/order";
@@ -26,13 +26,13 @@ const connectToSignalR = async (
         await c.start();
     }
     catch (err: any) {
-        if (retryCount++ < maxRetries) {
-            console.error(`Failed to connect to \'${url}\', retrying in ${delay}. number of retries: ${retryCount}, total retries allowed: ${maxRetries}`);
-            setTimeout(() => connectToSignalR(url, useAccessToken, hubConnectionConfig, retryCount),
-                delay);
-        } else {
-            console.error(err)
-        }
+        // if (retryCount++ < maxRetries) {
+        //     console.error(`Failed to connect to \'${url}\', retrying in ${delay}. number of retries: ${retryCount}, total retries allowed: ${maxRetries}`);
+        //     setTimeout(() => connectToSignalR(url, useAccessToken, hubConnectionConfig, retryCount),
+        //         delay);
+        // } else {
+        //     console.error(err)
+        // }
     }
 }
 
@@ -40,7 +40,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     connectToSignalR(`${useRuntimeConfig().public.wsURL}catalog`, false, hcc => {
         hcc.on("updated", async () => {
             useNuxtApp().$sessionCache.removeByPrefix("catalog");
-            await useCatalogStore().loadCatalog();
+            await getCatalog();
         });
 
     });

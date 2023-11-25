@@ -1,67 +1,84 @@
-import { defineStore } from 'pinia'
-import { Product, Store, Vendor } from 'models/catalog';
-import { getStores } from "@/services/store";
-import _ from 'lodash';
+// import { defineStore } from 'pinia'
+// import { Product, Store, Vendor } from 'models/catalog';
+// import { getStores } from "services/catalog";
+// import _ from 'lodash';
 
-type CatalogState = {
-    stores?: Store[] | undefined;
-    vendors?: Vendor[] | undefined;
-}
+// type CatalogState = {
+//     stores?: Store[] | undefined;
+//     vendors?: Vendor[] | undefined;
+// }
 
-const getAllVendors = (stores: Store[] | undefined): Vendor[] | undefined => {
-    if (!stores) {
-        return undefined;
-    }
-    const vendorArray = stores.map(s => {
-        if (s.vendors) {
-            return s.vendors;
-        }
-    });
 
-    const f = _.flatten(vendorArray);
-    return _.uniqBy(f, x => x?.id) as Vendor[];
-}
+// const getAllProducts = (stores: Store[] | undefined): Stores[] | undefined => {
+//     // if (!stores) {
+//     //     return undefined;
+//     // }
+//     // const vendorArray = stores.map(s => {
+//     //     if (s.vendors) {
+//     //         return s.vendors;
+//     //     }
+//     // });
 
-export const useCatalogStore = defineStore('catalog', {
+//     // const f = _.flatten(vendorArray);
+//     // return _.uniqBy(f, x => x?.id) as Vendor[];
+// }
 
-    state: (): CatalogState => {
-        return {
-            stores: undefined,
-            vendors: undefined,
-        }
-    },
+// const getAllVendors = (stores: Store[] | undefined): Vendor[] | undefined => {
+//     if (!stores) {
+//         return undefined;
+//     }
+//     const vendorArray = stores.map(s => {
+//         if (s.vendors) {
+//             return s.vendors;
+//         }
+//     });
 
-    getters: {
+//     const f = _.flatten(vendorArray);
+//     return _.uniqBy(f, x => x?.id) as Vendor[];
+// }
 
-        getVendors(state): Vendor[] | undefined {
-            return getAllVendors(state.stores);
-        },
+// export const useCatalogStore = defineStore('catalog', {
 
-        getProducts(state): Product[] | undefined {
-            const vendors = getAllVendors(state.stores);
-            if (!vendors) {
-                return undefined;
-            }
+//     state: (): CatalogState => {
+//         return {
+//             stores: undefined,
+//             vendors: undefined,
+//         }
+//     },
 
-            const vendorProductArray = vendors.map(v => {
-                if (v.products) {
-                    return v.products;
-                }
-            });
+//     getters: {
 
-            return _.flatten(vendorProductArray) as Product[];
-        },
-    },
-    actions: {
-        async loadCatalog(): Promise<void> {
-            const data = await getStores();
-            if (data) {
-                this.stores = data;
-            }
-        },
-    },
+//         getVendors(state): Vendor[] | undefined {
+//             return getAllVendors(state.stores);
+//         },
 
-    persist: {
-        storage: persistedState.sessionStorage
-    }
-})
+//         getProducts(state): Product[] | undefined {
+//             const products = getAllProducts(state.stores);
+
+//             const vendors = getAllVendors(state.stores);
+//             if (!vendors) {
+//                 return undefined;
+//             }
+
+//             const vendorProductArray = vendors.map(v => {
+//                 if (v.products) {
+//                     return v.products;
+//                 }
+//             });
+
+//             return _.flatten(vendorProductArray) as Product[];
+//         },
+//     },
+//     actions: {
+//         async loadCatalog(): Promise<void> {
+//             const data = await getStores();
+//             if (data) {
+//                 this.stores = data;
+//             }
+//         },
+//     },
+
+//     persist: {
+//         storage: persistedState.sessionStorage
+//     }
+// })

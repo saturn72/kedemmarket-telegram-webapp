@@ -21,14 +21,14 @@
 </template>
   
 <script>
-import { useCatalogStore } from '@/stores/catalog'
+import { getCatalog } from '@/services/catalog'
 import { useSearchStore } from '@/stores/search'
-import { computed } from 'vue'
 
 export default {
-    setup() {
-        useCatalogStore().loadCatalog();
-        const products = computed(() => useCatalogStore().getProducts);
+    async setup() {
+        const catalog = await getCatalog();
+        const products = catalog.stores[0].products;
+
         return {
             products
         }
