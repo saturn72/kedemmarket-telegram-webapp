@@ -1,4 +1,6 @@
-import { Catalog, Store } from "models/catalog";
+import { Catalog } from "models/catalog";
+import { useCartStore } from "@/stores/cart";
+import _ from "lodash";
 
 const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
     const url = await useNuxtApp().$storage.getDownloadUrl(`catalog/index.json`);
@@ -36,6 +38,12 @@ const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
 const expiration = 10 * 60;
 
 export async function getCatalog(): Promise<Catalog | null | undefined> {
-    return await useNuxtApp().$sessionCache.getOrAcquire(`catalog:index`,
+    const catalog = await useNuxtApp().$cache.getOrAcquire(`catalog:index`,
         () => acquireCatalog(), expiration);
+
+    const allProducts = _.flatMap(catalog?.stores, "products");
+    const activeProducts = _.uniqBy(allProducts, "id");
+
+    useCartStore().updateProductsAvailability(activeProducts);
+    return catalog
 }

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { Product } from 'models/catalog';
-import _ from 'lodash';
+import _, { forEach } from 'lodash';
 import { useUserStore } from './user';
 import { CartItem, UserCart } from 'models/cart';
 type CartState = {
@@ -32,8 +32,7 @@ const defaultValue = {
 };
 
 export const useCartStore = defineStore('cart', {
-    state: (): CartState => defaultValue
-    ,
+    state: (): CartState => defaultValue,
     getters: {
         getUserCart(state): UserCart | undefined {
             const userId = useUserStore().getUser.uid;
@@ -111,6 +110,19 @@ export const useCartStore = defineStore('cart', {
             _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
         },
 
+        updateProductsAvailability(activeProducts: Product[]): void {
+            const cart = getOrCreateCurrentUserCart(this.$state);
+
+            for (let idx = 0; idx < cart.items.length; idx++) {
+                const ci = cart.items[idx];
+                const exist = activeProducts.some(ap => ap.id == ci.product.id);
+
+                if (exist) {
+                    continue;
+                }
+                _.remove(cart.items, (i: CartItem) => i.product.id === ci.product.id);
+            }
+        },
         clear(): void {
             const userId = useUserStore().getUser.uid;
             this.$state.usersCarts[userId] = { items: [] };
