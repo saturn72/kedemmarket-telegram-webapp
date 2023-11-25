@@ -3,7 +3,7 @@ export interface MediaItem {
     displayOrder: number;
     src: string;
     title: string;
-    type: string;
+    type: "image" | "thumbnail" | "video";
     url: string;
 }
 
