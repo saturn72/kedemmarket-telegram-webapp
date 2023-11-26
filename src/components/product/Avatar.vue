@@ -1,24 +1,42 @@
 <template>
-    <v-avatar size="75" :image="src" :lazy-src="useAppConfig().defaults.thumbnail"></v-avatar>
+    <v-avatar size="75" :image="src" :lazy-src="useAppConfig().defaults.thumbnail">
+        <v-img>
+            <template #sources>
+                <source :srcset="srcset">
+            </template>
+        </v-img>
+    </v-avatar>
 </template>
 
 <script>
-
 import { getMediaUrlOrDefault } from "@/services/media";
 
 export default {
     props: {
-        product: { type: Object, default: {} },
+        product: { type: Object, default: undefined },
     },
-    async mounted() {
-        this.src = await this.getThumbnailUrlAsync();
+    mounted() {
+        this.setSrc();
+        this.setSrcset();
     },
     data: () => {
-        src: ''
+        return {
+            src: useAppConfig().defaults.thumbnail,
+            srcset: [useAppConfig().defaults.thumbnail]
+        };
     },
     methods: {
-        async getThumbnailUrlAsync() {
-            const allThumbs = this.product.media.filter(m => m.type == "thumbnail");
+        async setSrc() {
+            this.src = await this.getProductImage("thumbnail");
+        },
+        async setSrcset() {
+            this.srcset = [this.src, await this.getProductImage("image")];
+        },
+        async getProductImage(type) {
+            if (!this.product) {
+                return useAppConfig().defaults.thumbnail;
+            }
+            const allThumbs = this.product.media.filter(m => m.type == type);
             if (allThumbs.length == 0) {
                 return useAppConfig().defaults.thumbnail;
             }
@@ -30,7 +48,7 @@ export default {
                     primayThumb = c;
                 }
             }
-            return await getMediaUrlOrDefault(primayThumb.uri, "thumbnail");
+            return await getMediaUrlOrDefault(primayThumb.uri, type);
         }
     }
 }
