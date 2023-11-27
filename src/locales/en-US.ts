@@ -41,6 +41,8 @@ export default {
     priceUpdatesAtCheckout: "📝 Price Updates at Checkout",
     close: "Close",
     calculatingCart: "🧮 Calculating Cart... 🛒",
+    price: "price",
+    unitPrice: "Unit Price'",
     pricesAfterDiscounts: "(Prices are after discount)",
     sendToWhatsapp: "Send to Whatsapp",
     orderNumber: "Order #",

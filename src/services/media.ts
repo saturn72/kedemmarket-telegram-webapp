@@ -2,24 +2,12 @@ import { MediaItem } from "models/common";
 
 type MediaItemSlim = { alt: string, src: string, title: string };
 
-export async function getMediaUrlOrDefault(src: string, type: "thumbnail" | "image"): Promise<string> {
-
+export async function getMediaUrlOrDefault(src: string, defaultMedia: string): Promise<string> {
     if (!src) {
-        return useAppConfig().defaults.thumbnail;
+        return defaultMedia;
     }
-
     const url = await useNuxtApp().$storage.getDownloadUrl(src);
-
-    if (!url) {
-        switch (type) {
-            case "thumbnail":
-                return useAppConfig().defaults.thumbnail;
-
-            default:
-                break;
-        }
-    }
-    return url as string;
+    return url ? url as string : defaultMedia;
 }
 
 export async function getMediaItemOrDefault(

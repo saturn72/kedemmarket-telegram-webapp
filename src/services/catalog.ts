@@ -1,6 +1,7 @@
-import { Catalog } from "models/catalog";
+import { Catalog, Product } from "models/catalog";
 import { useCartStore } from "@/stores/cart";
 import _ from "lodash";
+import { getMediaUrlOrDefault } from "./media";
 
 const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
     const url = await useNuxtApp().$storage.getDownloadUrl(`catalog/index.json`);
@@ -9,33 +10,34 @@ const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
     }
 
     return await $fetch<Catalog>(url);
-    // const res: Store[] = []
-
-    // if (all.stores) {
-    //     for (let index = 0; index < all.stores.length; index++) {
-    //         const curStore = all.stores[index];
-
-    //         const vendors: Vendor[] = [];
-    //         for (const vendorData of curStore.vendors ?? []) {
-    //             const vendorRoute = `${curStore.name}/${vendorData.name}`;
-    //             const vendor = await getVendorByRoute(vendorRoute);
-    //             if (vendor) {
-    //                 vendors.push(vendor);
-    //             }
-    //         }
-
-    //         res.push({
-    //             id: curStore.id,
-    //             name: curStore.name,
-    //             vendors,
-    //         });
-    //     }
-    // }
-
-    // return res;
 }
 
+const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | "image"): Promise<string> => {
+    if (!product) {
+        return useAppConfig().defaults.thumbnail;
+    }
+
+    const apmis = product.media.filter(m => m.type == type);
+    if (apmis.length == 0) {
+        return useAppConfig().defaults.thumbnail;
+    }
+
+    let ppmi = apmis[0];
+    for (let index = 1; index < apmis.length; index++) {
+        const c = apmis[index];
+        if (c.displayOrder < ppmi.displayOrder) {
+            ppmi = c;
+        }
+    }
+    return await getMediaUrlOrDefault(ppmi.url, useAppConfig().defaults.thumbnail);
+};
 const expiration = 10 * 60;
+
+export async function getProductPrimaryMediaUrl(product: Product, type: "thumbnail" | "image"): Promise<string> {
+    const p = await useNuxtApp().$cache.getOrAcquire(`catalog:product-primary-media:${type}`,
+        () => acquireProductPrimaryMedia(product, type), expiration);
+    return p as string;
+}
 
 export async function getCatalog(): Promise<Catalog | null | undefined> {
     const catalog = await useNuxtApp().$cache.getOrAcquire(`catalog:index`,

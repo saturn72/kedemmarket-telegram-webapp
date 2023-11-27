@@ -26,7 +26,7 @@
 
         <v-card-text>
             <CheckoutAvailableItems @removeFromCart="removeFromCart"></CheckoutAvailableItems>
-            <CheckoutNotAvailableItems></CheckoutNotAvailableItems>
+            <!-- <CheckoutNotAvailableItems></CheckoutNotAvailableItems> -->
         </v-card-text>
 
         <v-card-actions>

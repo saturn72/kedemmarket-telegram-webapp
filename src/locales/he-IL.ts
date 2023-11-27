@@ -42,6 +42,8 @@ export default {
     priceUpdatesAtCheckout: "📝 מחיר לאחר הנחות/מבצעים יעודכן בקופה",
     close: "סגירה",
     calculatingCart: "🧮 מחשב פרטי עגלה 🛒",
+    price: "מחיר",
+    unitPrice: "מחיר ליח'",
     pricesAfterDiscounts: "(מחיר לאחר הנחות)",
     sendToWhatsapp: "שליחה לוואטסאפ",
     orderNumber: "הזמנה #",

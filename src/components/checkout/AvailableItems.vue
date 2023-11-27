@@ -1,41 +1,43 @@
 <template>
-    <v-card v-for="item in checkoutCartStore.items" @removeFromCart="removeFromCart(item)" flat>
-        <v-row>
-            <v-col cols="2" justify-center class="text-subtitle-2 my-4 mr-2">
-                <v-badge overlap :content="item.orderedQuantity ?? 0" color="success">
-                    <v-avatar :image="item.product.image.url" :lazy-src="useAppConfig().defaults.thumbnail"></v-avatar>
-                </v-badge>
-            </v-col>
-            <v-col cols="4" class="text-subtitle-2 d-flex flex-column justify-center">
-                {{ item.product.name }}
-            </v-col>
-            <v-col cols="2" class="text-subtitle-2 d-flex flex-column justify-center">
-                <v-progress-circular v-if="item.loading" size="15" width="1" indeterminate></v-progress-circular>
-                <strong v-else>{{ item.priceAfterDiscounts }}</strong>
-            </v-col>
-            <v-col cols="3" class="d-flex justify-center">
-                <v-card-actions>
+    <v-card v-for="item in checkoutCartStore.items" @removeFromCart="removeFromCart(item)" flat :loading="item.loading">
+        <v-card-text>
+            <v-row>
+                <v-col cols="4" justify-center class="text-subtitle-2 my-4 ml-4">
                     <v-row>
-                        <v-col>
-                            <v-icon @click="decrementCartItem(item)">mdi-minus</v-icon>
-                        </v-col>
-                        <v-col>
-                            <v-icon @click="incrementCartItem(item)">mdi-plus</v-icon>
-                        </v-col>
+                        <ProductAvatar :product="product"></ProductAvatar>
                     </v-row>
-                </v-card-actions>
-            </v-col>
-        </v-row>
+                    <v-row>
+                        {{ $t("unitPrice") }}&nbsp;<strong>{{ item.priceAfterDiscounts }}</strong>&nbsp;{{
+                            $t('currencySymbol') }}
+                    </v-row>
+                </v-col>
+                <v-col class="text-subtitle-2 flex-column justify-right">
+                    <v-row>
+                        {{ item.product.name }}
+                    </v-row>
+                    <v-row>
+                        {{ $t("itemTotal") }}
+                        <strong>{{ item.cartTotal }}</strong>&nbsp;{{
+                            $t('currencySymbol') }}
+                    </v-row>
+                    <v-row>
+                        <v-card-actions>
+                            <v-btn block icon="mdi-minus" @click="decrementCartItem(item)"></v-btn>
+                            {{ item.orderedQuantity }}
+                            <v-btn block icon="mdi-plus" @click="incrementCartItem(item)"></v-btn>
+                        </v-card-actions>
+                    </v-row>
+                </v-col>
+            </v-row>
+            <v-divider></v-divider>
+        </v-card-text>
     </v-card>
 </template>
-
-
-@removeFromCart="removeFromCart(item)" @increment=""
-@decrement=""
 
 <script>
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
+import { getProductPrimaryMediaUrl } from "@/services/catalog";
 
 export default {
     setup() {
@@ -49,13 +51,19 @@ export default {
         const error = computed(() => useCheckoutCartStore().error || false);
         const calculating = computed(() => useCheckoutCartStore().calculating || false);
         useCheckoutCartStore().calculate(0);
-
+        const productThumbnail = computed(() => {
+            const res = {};
+            const items = useCheckoutCartStore().items;
+            items.forEach(async i => res[i.product.id] = await getProductThumbnail(i.product));
+            return res;
+        });
 
         return {
-            checkoutCartStore,
-            loading,
             calculating,
-            error
+            checkoutCartStore,
+            error,
+            loading,
+            productThumbnail
         };
     },
     data() {
@@ -65,6 +73,9 @@ export default {
         }
     },
     methods: {
+        async getProductThumbnail(product) {
+            return await getProductPrimaryMediaUrl(product, "thumbnail");
+        },
         incrementCartItem(item) {
             useCartStore().incrementCartItem(item.product);
             this.updateCheckoutCart(item);

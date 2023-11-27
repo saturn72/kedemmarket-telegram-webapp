@@ -10,7 +10,8 @@
             <v-spacer></v-spacer>
         </v-card-title>
         <v-card-text v-if="!loading">
-            <v-form v-model="valid">
+            This screen is not ready yet...
+            <!-- <v-form v-model="valid">
                 <v-card>
                     <v-radio-group v-model="profile.shippingAddress" :rules="shippingAddressRules">
                         <template v-slot:label>
@@ -28,7 +29,7 @@
                         </v-radio>
                     </v-radio-group>
                 </v-card>
-            </v-form>
+            </v-form> -->
         </v-card-text>
         <v-card-actions>
             <v-btn variant="flat" :loading="loading || saving" :disabled="loading || !valid" color="secondary"
