@@ -1,4 +1,4 @@
-import { Order } from "models/cart";
+import type { Order } from "@/models/cart";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { getOrdersCacheKeyPrefix } from "./order";
 import { useCartStore } from "@/stores/cart";

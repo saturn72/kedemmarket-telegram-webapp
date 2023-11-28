@@ -1,4 +1,4 @@
-import { MediaItem } from "./common";
+import type { MediaItem } from "@/models/common";
 
 export interface Catalog {
     createdOnUtc: Date;

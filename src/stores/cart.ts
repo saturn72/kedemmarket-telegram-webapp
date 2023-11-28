@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import { Product } from 'models/catalog';
+import type { Product } from '@/models/catalog';
 import _, { forEach } from 'lodash';
 import { useUserStore } from './user';
-import { CartItem, UserCart } from 'models/cart';
+import type { CartItem, UserCart } from '@/models/cart';
 type CartState = {
     usersCarts: [key: string, items: UserCart] | any
 }

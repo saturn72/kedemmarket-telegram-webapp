@@ -1,4 +1,4 @@
-import { Catalog, Product } from "models/catalog";
+import type { Catalog, Product } from "@/models/catalog";
 import { useCartStore } from "@/stores/cart";
 import _ from "lodash";
 import { getMediaUrlOrDefault } from "./media";

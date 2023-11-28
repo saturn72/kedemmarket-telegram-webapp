@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CartItem, CheckoutCart, CheckoutCartItem } from 'models/cart';
+import type { CartItem, CheckoutCart, CheckoutCartItem } from '@/models/cart';
 import { defineStore } from 'pinia'
 import { useCartStore } from './cart';
 import { useUserStore } from './user';
@@ -29,7 +29,7 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         state = defaultValue;
         return;
     }
-    const items = userCart.items.map(p => {
+    const items = userCart.items.map((p: CartItem) => {
         return {
             productId: p.product.id,
             orderedQuantity: p.orderedQuantity,

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { UseFetchOptions } from "nuxt/app"
+import type { UseFetchOptions } from "nuxt/app"
 import pRetry from 'p-retry';
 
 export async function useBackendFetch<ResT = void>(uri: string, opts: UseFetchOptions<ResT>): Promise<any> {
