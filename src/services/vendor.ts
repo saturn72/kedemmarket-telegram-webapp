@@ -1,4 +1,4 @@
-import { Product, Vendor } from "models/catalog";
+import type { Product, Vendor } from "@/models/catalog";
 import { getMediaItemOrDefault } from "@/services/media";
 
 const acquireVendor = async (key: string): Promise<Vendor | undefined | null> => {

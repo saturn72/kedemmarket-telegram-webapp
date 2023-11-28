@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Vendor } from 'models/catalog';
+import type { Vendor } from '@/models/catalog';
 import { useRoute } from 'vue-router'
 import { getVendorByRoute } from "@/services/vendor";
 

@@ -1,12 +1,16 @@
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { Messaging, getMessaging, getToken } from "firebase/messaging";
+import type { FirebaseApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
+import type { Messaging } from "firebase/messaging";
+import { getMessaging, getToken } from "firebase/messaging";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { Auth, getAuth } from "firebase/auth";
+import type { Auth } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
-import { AppCheck, initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { UserProfile } from "models/account";
-import { CartItem, CheckoutCart, Order, UserCart } from "models/cart";
+import type { AppCheck } from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import type { UserProfile } from "@/models/account";
+import type { CartItem, CheckoutCart, Order, UserCart } from "@/models/cart";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);

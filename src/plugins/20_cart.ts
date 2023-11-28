@@ -1,5 +1,5 @@
-import { UserCart } from 'models/cart';
-import { PiniaPluginContext } from 'pinia'
+import type { UserCart } from '@/models/cart';
+import type { PiniaPluginContext } from 'pinia'
 import { useCartStore } from '@/stores/cart';
 import { useUserStore } from '@/stores/user';
 import { useAlertStore } from '@/stores/alert';

@@ -1,4 +1,4 @@
-import { MediaItem } from "models/common";
+import type { MediaItem } from "@/models/common";
 
 type MediaItemSlim = { alt: string, src: string, title: string };
 
