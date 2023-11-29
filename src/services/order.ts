@@ -1,4 +1,4 @@
-import { Order } from "models/cart";
+import type { Order } from "@/models/cart";
 import { useUserStore } from "@/stores/user";
 
 const expiration = 10 * 60;
@@ -8,10 +8,17 @@ type Pagination = {
     skip: number
 };
 
+const cache = () => useNuxtApp().$sessionCache;
 
 export function getOrdersCacheKeyPrefix() {
     const userId = useUserStore().getUser.uid;
     return `orders:${userId}`.toLocaleLowerCase();
+}
+
+export function clearOrderCache() {
+    const c = cache();
+    console.log("ssssssssssssssssssss", c);
+    c.removeByPrefix(getOrdersCacheKeyPrefix());
 }
 
 export async function getOrders(options: Pagination = {
@@ -21,14 +28,14 @@ export async function getOrders(options: Pagination = {
     const s = status ? `_status:${status.toString().toLowerCase()}` : '';
     const key = `${getOrdersCacheKeyPrefix()}_pagesize:${options.pageSize}_skip:${options.skip}${s}`;
 
-    return await useNuxtApp().$sessionCache.getOrAcquire(key,
+    return await cache().getOrAcquire(key,
         async () => await useNuxtApp().$backend.getOrders(options, status),
         expiration);
 }
 
 export async function getOrderById(orderId: string, force: boolean = false): Promise<Order | null | undefined> {
     const key = `${getOrdersCacheKeyPrefix()}_orderid:${orderId}`;
-    const sc = useNuxtApp().$sessionCache;
+    const sc = cache();
 
     if (force) {
         sc.remove(key);

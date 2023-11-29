@@ -1,6 +1,6 @@
 import type { Order } from "@/models/cart";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
-import { getOrdersCacheKeyPrefix } from "./order";
+import { clearOrderCache } from "./order";
 import { useCartStore } from "@/stores/cart";
 
 export async function submitOrder(): Promise<Order | undefined> {
@@ -16,8 +16,7 @@ export async function submitOrder(): Promise<Order | undefined> {
     };
 
     const res = await useNuxtApp().$backend.placeOrder(order);
-    const prefix = getOrdersCacheKeyPrefix();
-    useNuxtApp().$cache.removeByPrefix(prefix);
+    clearOrderCache();
 
     useCartStore().clear();
     checoutCart.clearUserCart();

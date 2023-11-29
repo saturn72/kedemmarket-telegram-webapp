@@ -83,6 +83,7 @@ export default {
             const order = await submitOrder();
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
+
             useRouter().push(r)
         },
 
