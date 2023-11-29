@@ -3,6 +3,8 @@ export default {
     kedemmarket: "Kedem Market",
     addButton: "Add",
     save: "Save",
+    loading: "loading...",
+    loadingOrder: "loading order 🔃",
     myOpenOrders: "My Open Orders",
     myOrders: "My Orders",
     profile: "Profile",

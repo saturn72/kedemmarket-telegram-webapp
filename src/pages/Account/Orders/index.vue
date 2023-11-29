@@ -1,6 +1,6 @@
 <template>
     <v-card :loading="loading" :disabled="loading" height="100%" flat class="d-flex flex-column justify-center">
-        <v-card-text>
+        <v-card-text v-if="!loading">
             <v-row>
                 <v-col cols="1">
                 </v-col>
@@ -20,7 +20,7 @@
                     <v-icon>mdi-open-in-app</v-icon>
                 </v-col>
                 <v-col cols="4">
-                    {{ displayDate(item) }}
+                    {{ item.date }}
                 </v-col>
                 <v-col cols="4">
                     <OrderStatus :order="item"></OrderStatus>
@@ -49,7 +49,6 @@
 <script>
 
 import { getOrders } from "@/services/order";
-import moment from "moment";
 
 const pageSize = 10;
 
@@ -59,10 +58,6 @@ export default {
         await this.fetchOrders(pageSize, this.skip)
     },
     methods: {
-        displayDate(item) {
-            const d = new Date(item.date);
-            return moment(d).format("DD/MM/YY");
-        },
         async fetchOrders(pageSize, skip) {
             this.loading = true;
             const res = await getOrders({ pageSize, skip }, this.filter);

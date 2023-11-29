@@ -1,8 +1,10 @@
 <template>
     <v-card :loading="loading">
         <OrderNotExist :show="!orderExist"></OrderNotExist>
+
         <v-card-text>
-            <OrderDetails :order="order"></OrderDetails>
+            <AppProgressCircular v-if="loading" text="loadingOrder"></AppProgressCircular>
+            <OrderDetails v-else :order="order"></OrderDetails>
         </v-card-text>
     </v-card>
 </template>
@@ -21,7 +23,7 @@ export default {
     data() {
         return {
             order: {},
-            loading: false,
+            loading: true,
             orderExist: true,
         }
     }

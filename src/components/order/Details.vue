@@ -1,5 +1,5 @@
 <template>
-    <v-card height="100%" flat class="d-flex flex-column justify-center">
+    <v-card height="100%" flat class="d-flex flex-column justify-center" max-width>
         <v-card-title class="ma-4">
             <v-row>
                 {{ $t('orderTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ order.orderTotal }}
@@ -8,11 +8,21 @@
             </v-row>
         </v-card-title>
         <v-card-subtitle>
-            {{ $t('orderNumber') }} {{ order.orderId }}
+            <v-row>
+                <v-col>
+                    {{ $t('date') }} {{ displayDate() }}
+                </v-col>
+                <v-col>
+                    {{ $t('orderNumber') }} {{ order.orderId }}
+                </v-col>
+            </v-row>
         </v-card-subtitle>
+        <v-divider thickness="5"></v-divider>
 
         <v-card-text>
             <v-card-subtitle>{{ $t('orderItems') }}</v-card-subtitle>
+            <v-divider thickness="2"></v-divider>
+
             <OrderProductDetails v-for="item in order.items" :item="item" @repurchaseItem="repurchaseItem">
             </OrderProductDetails>
         </v-card-text>
@@ -29,12 +39,16 @@
     
 <script>
 import { useCartStore } from '@/stores/cart';
+import moment from "moment";
 
 export default {
     props: {
         order: { type: Object }
     },
     methods: {
+        displayDate() {
+            return moment(this.order.utcTimestamp).format("DD/MM/YY");
+        },
         repurchaseOrder() {
             const userCart = useCartStore();
             this.order.items.forEach(item => {

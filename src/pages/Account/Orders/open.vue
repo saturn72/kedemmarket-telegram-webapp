@@ -20,7 +20,7 @@
                     <v-icon>mdi-open-in-app</v-icon>
                 </v-col>
                 <v-col cols="4">
-                    {{ displayDate(item) }}
+                    {{ item.date }}
                 </v-col>
                 <v-col cols="4">
                     <OrderStatus :order="item"></OrderStatus>
@@ -47,7 +47,6 @@
 
 <script>
 import { getOrders } from "@/services/order";
-import moment from "moment";
 
 const pageSize = 10;
 const filter = ["pending", "submitted", "processing"];
@@ -57,10 +56,6 @@ export default {
         await this.fetchOrders(pageSize, this.skip)
     },
     methods: {
-        displayDate(item) {
-            const d = new Date(item.date);
-            return moment(d).format("DD/MM/YY");
-        },
         async fetchOrders(pageSize, skip) {
             this.loading = true;
             const res = await getOrders({ pageSize, skip }, filter);
