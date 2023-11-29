@@ -10,74 +10,52 @@
             <v-spacer></v-spacer>
         </v-card-title>
         <v-card-text v-if="!loading">
-            This screen is not ready yet...
-            <!-- <v-form v-model="valid">
-                <v-card>
-                    <v-radio-group v-model="profile.shippingAddress" :rules="shippingAddressRules">
-                        <template v-slot:label>
-                            <div> <v-icon>mdi-map-market-outline</v-icon>{{ $t('shippingAddress') }}</div>
-                        </template>
-                        <v-radio value="true">
-                            <template v-slot:label>
-                                {{ $t('iOwnFirearm') }}
-                            </template>
-                        </v-radio>
-                        <v-radio value="false">
-                            <template v-slot:label>
-                                {{ $t('iDoNotOwnFirearm') }}
-                            </template>
-                        </v-radio>
-                    </v-radio-group>
-                </v-card>
-            </v-form> -->
+            <v-container>
+                <v-row>
+                    <v-col cols="12" md="6" v-for="item in items" :key="item.route">
+                        <v-card @click="onClick(item)">
+                            <v-card-title class="d-flex justify-center">
+                                <v-icon>{{ item.icon }}</v-icon>
+                                &nbsp;
+                                {{ $t(item.displayText) }}
+                                <v-spacer></v-spacer>
+                            </v-card-title>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
         </v-card-text>
-        <v-card-actions>
-            <v-btn variant="flat" :loading="loading || saving" :disabled="loading || !valid" color="secondary"
-                @click="save()">{{
-                    $t('save')
-                }}
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn variant="outlined" color="warning" @click="$router.back()">{{
-                $t('cancel')
-            }}
-            </v-btn>
-        </v-card-actions>
-
     </v-card>
 </template>
 
 <script>
-import { getUserProfile, saveUserProfile } from "@/services/profile";
+import { getUserProfile } from "@/services/profile";
 import account from './../account';
 
 export default {
     async created() {
-        this.ownsFirearmRules = [
-            value => value != undefined || this.$t('requiredField')
-        ];
-
-        this.menu = account.profile;
         this.loading = true;
         this.profile = await getUserProfile();
         this.loading = false;
     },
     data: () => ({
-        saving: false,
-        valid: true,
+        items: [{ icon: "mdi-account-multiple-outline", displayText: 'linkAccounts' }],
         loading: true,
-        menu: {},
+        menu: account.profile,
         profile: {
         },
 
-        ownsFirearmRules: [],
-
     }),
     methods: {
-        async save() {
-            this.saving = true;
-            this.profile = await saveUserProfile(this.profile);
-            this.saving = false;
+        methods: {
+            onClick(item) {
+                if (item.onClick) {
+                    item.onClick()
+                }
+                else {
+                    navigateTo(item.route);
+                }
+            }
         }
     }
 }

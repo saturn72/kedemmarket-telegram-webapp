@@ -4,6 +4,7 @@ export default {
     kedemmarket: "קדם מרקט",
     addButton: "הוספה",
     save: "שמירה",
+    linkAccounts: "קישור חשבונות",
     loading: "טוען...",
     loadingOrder: "טוען הזמנה 🔃",
     myOpenOrders: "ההזמנות הפתוחות שלי",
