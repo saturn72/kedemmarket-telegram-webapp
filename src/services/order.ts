@@ -16,9 +16,7 @@ export function getOrdersCacheKeyPrefix() {
 }
 
 export function clearOrderCache() {
-    const c = cache();
-    console.log("ssssssssssssssssssss", c);
-    c.removeByPrefix(getOrdersCacheKeyPrefix());
+    cache().removeByPrefix(getOrdersCacheKeyPrefix());
 }
 
 export async function getOrders(options: Pagination = {
