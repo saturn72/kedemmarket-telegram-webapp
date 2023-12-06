@@ -11,46 +11,21 @@
         </v-card-title>
 
         <v-card-text v-if="!loading">
-            <v-expansion-panels v-model="panels" multiple>
+            <v-expansion-panels multiple>
                 <v-expansion-panel value="billingAddress">
                     <template v-slot:title>
-                        <v-icon>mdi-map-marker-outline</v-icon>{{ $t('billingAddress') }}
-                        <v-spacer></v-spacer>
+                        <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('billingAddress') }}
                     </template>
 
                     <v-expansion-panel-text>
-                        <v-card flat>
-                            <v-card-text>
-                                <ProfileBillingAddress :profile="profile" :edit="edit['billingAddress']">
-                                </ProfileBillingAddress>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-btn variant="flat" block color="secondary" @click="toggleEdit('billingAddress')">
-                                    <v-icon>
-                                        mdi-pencil
-                                    </v-icon>
-                                    {{ $t('update') }}
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
+                        <ProfileBillingAddress :profile="profile">
+                        </ProfileBillingAddress>
                     </v-expansion-panel-text>
 
                 </v-expansion-panel>
             </v-expansion-panels>
         </v-card-text>
     </v-card>
-    <!-- <v-card-actions>
-            <v-btn variant="flat" :loading="loading || saving" :disabled="loading || !valid" color="secondary"
-                @click="save()">{{
-                    $t('save')
-                }}
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn variant="outlined" color="warning" @click="$router.back()">{{
-                $t('cancel')
-            }}
-            </v-btn>
-        </v-card-actions> -->
 </template>
 
 <script>
@@ -65,25 +40,10 @@ export default {
         this.loading = false;
     },
     data: () => ({
-        panels: [],
-        edit: {},
         saving: false,
-        valid: true,
         loading: true,
         menu: {},
-        profile: {
-        },
-
-        ownsFirearmRules: [],
-
-    }),
-    methods: {
-        toggleEdit(key) {
-            this.edit[key] = !this.edit[key];
-        },
-        isExpanded(value) {
-            return this.panels.some(x => x == value);
-        }
-    }
+        profile: {},
+    })
 }
 </script>
