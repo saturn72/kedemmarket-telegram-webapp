@@ -47,7 +47,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
 
     const p = {
       userId: uid,
-      ownsFirearm: req.data.ownsFirearm,
+      billingAddress: req.data.billingAddress,
     };
     await col.add(p);
 
@@ -55,7 +55,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
     return p;
   } else {
     const profile = profiles[0].data();
-    profile.ownsFirearm = req.data.ownsFirearm;
+    profile.billingAddress = req.data.billingAddress;
     profiles[0].ref.update(profile);
 
     logger.debug("user profiles created with values:", profile);
