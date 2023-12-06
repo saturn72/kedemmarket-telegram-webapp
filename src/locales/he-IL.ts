@@ -26,6 +26,8 @@ export default {
     youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב",
     productSearch: "🔎 חיפוש...",
     loginIsRequiredToContinue: "יש להתחבר על מנת להמשיך 🔓",
+    logout: "יציאה",
+    missingBillingAddress: "יש לעדכן כתובת לחיוב",
     failedToFindPage: "הדף לא קיים...",
     failedToPerformAction: "נכשלתי לבצע את הפעולה...🤦‍♂️",
     failedToLocateOrder: "לא מצאתי את ההזמנה...📃",
@@ -62,4 +64,5 @@ export default {
     of: "מתוך",
     next: "הבא",
     previous: "הקודם",
+    update: "לעדכון"
 }

@@ -26,7 +26,7 @@ export async function useBackendFetch<ResT = void>(uri: string, opts: UseFetchOp
             maxTimeout: 1000,
             minTimeout: 50,
             onFailedAttempt: e => {
-                console.log(`Failed to access backend. Attempt ${e.attemptNumber} of  ${e.attemptNumber + e.retriesLeft}`);
+                console.error(`Failed to access backend. Attempt ${e.attemptNumber} of  ${e.attemptNumber + e.retriesLeft}`);
             },
         });
     } catch (err) {

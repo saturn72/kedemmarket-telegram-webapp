@@ -22,7 +22,7 @@ const configureAuth = (app: FirebaseApp): Auth => {
             useUserStore().setUser(user);
         }
         else {
-            useUserStore().setUser(null);
+            useUserStore().setUser(undefined);
             useNuxtApp().$router.push(useAppConfig().routes.login);
         }
     });

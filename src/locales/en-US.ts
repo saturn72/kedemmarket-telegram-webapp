@@ -25,6 +25,8 @@ export default {
     youAreRedirectedToTheStore: "🏎 You'll be redirected to the store soon",
     productSearch: "🔍 Search...",
     loginIsRequiredToContinue: "Login is required to continue 🔓",
+    logout: "Logout",
+    missingBillingAddress: "Missing billing address",
     failedToFindPage: "Failed to find page...",
     failedToPerformAction: "Failed to perform action...🤦‍♂️",
     failedToLocateOrder: "Failed to locate order...📃",
@@ -61,4 +63,5 @@ export default {
     of: "of",
     next: "Next",
     previous: "Previous",
+    update: "Update"
 }

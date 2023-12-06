@@ -1,6 +1,12 @@
 <template>
     <v-snackbar v-model="show" :timeout="timeout">
-        {{ text }}
+        <v-row>
+            <v-col>
+                {{ text }}
+                <v-btn v-if="action" variant="text" @click="action.func" color="secondary">
+                    {{ action.text }} </v-btn>
+            </v-col>
+        </v-row>
         <template v-slot:actions>
             <v-btn color="red" variant="text" @click="close" icon>
                 <v-icon>mdi-close-circle-outline</v-icon>
@@ -19,9 +25,11 @@ export default {
         store.$subscribe((mutation, state) => {
             this.show = state.type == "snackbar";
 
+
             if (this.show) {
                 this.text = state.text;
                 this.timeout = state.duration;
+                this.action = state.action;
             }
         });
     },
@@ -34,6 +42,7 @@ export default {
         return {
             show: false,
             text: undefined,
+            action: undefined,
             timeout: undefined
         }
     }

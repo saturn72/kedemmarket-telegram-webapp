@@ -70,9 +70,6 @@ export default {
                 signInSuccessWithAuthResult: async (authResult, redirectUrl) => {
                     return true;
                 },
-                uiShown: function () {
-                    // document.getElementById('loader').style.display = 'none';
-                }
             },
         };
         const ui = new firebaseui.auth.AuthUI(firebase.auth());
