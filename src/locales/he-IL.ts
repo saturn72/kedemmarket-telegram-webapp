@@ -1,6 +1,16 @@
 
 export default {
     currencySymbol: "₪",
+    firstName: "שם פרטי",
+    lastName: "שם משפחה",
+    phoneNumber: "טלפון",
+    address1: "כתובת 1",
+    address2: "כתובת 2",
+    city: "עיר",
+    company: "שם חברה",
+    country: "ארץ",
+    email: "אימייל",
+    zipPostalCode: "מיקוד",
     kedemmarket: "קדם מרקט",
     addButton: "הוספה",
     save: "שמירה",

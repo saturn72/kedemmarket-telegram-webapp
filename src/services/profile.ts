@@ -1,6 +1,6 @@
 import { useUserStore } from "@/stores/user";
 import defu from "defu";
-import { UserProfile } from "models/account";
+import type { UserProfile } from "@/models/account";
 
 const profileDefaults = {
 };
@@ -17,6 +17,7 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
     const p = await useNuxtApp().$cache.getOrAcquire(key,
         async () => await useNuxtApp().$backend.getUserProfile(),
         cachingTime);
+
     return defu(p, profileDefaults);
 }
 

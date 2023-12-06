@@ -9,29 +9,37 @@
             {{ $t(menu.displayText) }}
             <v-spacer></v-spacer>
         </v-card-title>
+
         <v-card-text v-if="!loading">
-            This screen is not ready yet...
-            <!-- <v-form v-model="valid">
-                <v-card>
-                    <v-radio-group v-model="profile.shippingAddress" :rules="shippingAddressRules">
-                        <template v-slot:label>
-                            <div> <v-icon>mdi-map-market-outline</v-icon>{{ $t('shippingAddress') }}</div>
-                        </template>
-                        <v-radio value="true">
-                            <template v-slot:label>
-                                {{ $t('iOwnFirearm') }}
-                            </template>
-                        </v-radio>
-                        <v-radio value="false">
-                            <template v-slot:label>
-                                {{ $t('iDoNotOwnFirearm') }}
-                            </template>
-                        </v-radio>
-                    </v-radio-group>
-                </v-card>
-            </v-form> -->
+            <v-expansion-panels v-model="panels" multiple>
+                <v-expansion-panel value="billingAddress">
+                    <template v-slot:title>
+                        <v-icon>mdi-map-marker-outline</v-icon>{{ $t('billingAddress') }}
+                        <v-spacer></v-spacer>
+                    </template>
+
+                    <v-expansion-panel-text>
+                        <v-card flat>
+                            <v-card-text>
+                                <ProfileBillingAddress :profile="profile" :edit="edit['billingAddress']">
+                                </ProfileBillingAddress>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-btn variant="flat" block color="secondary" @click="toggleEdit('billingAddress')">
+                                    <v-icon>
+                                        mdi-pencil
+                                    </v-icon>
+                                    {{ $t('update') }}
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-expansion-panel-text>
+
+                </v-expansion-panel>
+            </v-expansion-panels>
         </v-card-text>
-        <v-card-actions>
+    </v-card>
+    <!-- <v-card-actions>
             <v-btn variant="flat" :loading="loading || saving" :disabled="loading || !valid" color="secondary"
                 @click="save()">{{
                     $t('save')
@@ -42,27 +50,23 @@
                 $t('cancel')
             }}
             </v-btn>
-        </v-card-actions>
-
-    </v-card>
+        </v-card-actions> -->
 </template>
 
 <script>
-import { getUserProfile, saveUserProfile } from "@/services/profile";
+import { getUserProfile } from "@/services/profile";
 import account from './../account';
 
 export default {
     async created() {
-        this.ownsFirearmRules = [
-            value => value != undefined || this.$t('requiredField')
-        ];
-
         this.menu = account.profile;
         this.loading = true;
         this.profile = await getUserProfile();
         this.loading = false;
     },
     data: () => ({
+        panels: [],
+        edit: {},
         saving: false,
         valid: true,
         loading: true,
@@ -74,10 +78,11 @@ export default {
 
     }),
     methods: {
-        async save() {
-            this.saving = true;
-            this.profile = await saveUserProfile(this.profile);
-            this.saving = false;
+        toggleEdit(key) {
+            this.edit[key] = !this.edit[key];
+        },
+        isExpanded(value) {
+            return this.panels.some(x => x == value);
         }
     }
 }
