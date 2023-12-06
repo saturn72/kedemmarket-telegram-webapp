@@ -1,6 +1,6 @@
-import {onCall} from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import {validateAuth} from "./requestUtils";
+import { validateAuth } from "./requestUtils";
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -22,9 +22,9 @@ export async function getUserProfiles(uid: string):
 }
 
 export const getUserProfile = onCall(async (req): Promise<any> => {
-  logger.debug("start getUserProfile", {structuredData: true});
+  logger.debug("start getUserProfile", { structuredData: true });
 
-  const {uid} = validateAuth(req);
+  const { uid } = validateAuth(req);
 
   const profiles = await getUserProfiles(uid);
   const profile = profiles.length == 0 ?
@@ -35,9 +35,9 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
 });
 
 export const saveUserProfile = onCall(async (req): Promise<any> => {
-  logger.debug("start saveUserProfile", {structuredData: true});
+  logger.debug("start saveUserProfile", { structuredData: true });
 
-  const {uid} = validateAuth(req);
+  const { uid } = validateAuth(req);
 
   const profiles = await getUserProfiles(uid);
 
@@ -47,7 +47,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
 
     const p = {
       userId: uid,
-      ownsFirearm: req.data.ownsFirearm,
+      billingAddress: req.data.billingAddress,
     };
     await col.add(p);
 
@@ -55,7 +55,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
     return p;
   } else {
     const profile = profiles[0].data();
-    profile.ownsFirearm = req.data.ownsFirearm;
+    profile.billingAddress = req.data.billingAddress;
     profiles[0].ref.update(profile);
 
     logger.debug("user profiles created with values:", profile);
