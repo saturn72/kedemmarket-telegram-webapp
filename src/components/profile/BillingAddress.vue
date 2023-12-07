@@ -1,7 +1,7 @@
 
 import type { log } from 'console';
 
-import type { profile } from 'console';
+import type { log } from 'console';
 
 <template>
     <v-card flat>
@@ -13,40 +13,18 @@ import type { profile } from 'console';
                     </v-btn>
                 </v-col>
                 <v-col v-if="update">
-                    <v-btn variant="flat" block :disabled="!valid || loading" :loading="loading" color="info"
+                    <v-btn variant="flat" block :disabled="!modified || !valid || loading" :loading="loading" color="info"
                         @click="save()">
                         <v-icon>mdi-content-save-outline</v-icon>&nbsp;{{ $t('save') }}
                     </v-btn></v-col>
             </v-row>
         </v-card-actions>
         <v-card-text>
-            <v-form>
-                <v-text-field :label="$t('firstName')" prepend-inner-icon="mdi-account-outline" :readonly="readonly"
-                    v-model="billingAddress.firstName" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('lastName')" prepend-inner-icon="mdi-account-outline" :readonly="readonly"
-                    v-model="billingAddress.lastName" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('company')" prepend-inner-icon="mdi-domain" :readonly="readonly"
-                    v-model="billingAddress.company" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('phoneNumber')" prepend-inner-icon="mdi-phone-outline" :readonly="readonly"
-                    v-model="billingAddress.phoneNumber" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('email')" type="email" prepend-inner-icon="mdi-email-outline" :readonly="readonly"
-                    v-model="billingAddress.email" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('address1')" prepend-inner-icon="mdi-map-marker-outline" :readonly="readonly"
-                    v-model="billingAddress.address1" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('address2')" prepend-inner-icon="mdi-map-marker-outline" :readonly="readonly"
-                    v-model="billingAddress.address2" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('city')" prepend-inner-icon="mdi-city" :readonly="readonly"
-                    v-model="billingAddress.city" density="compact"></v-text-field>
-
-                <v-text-field :label="$t('zipPostalCode')" prepend-inner-icon="mdi-post-outline" :readonly="readonly"
-                    v-model="billingAddress.zipPostalCode" density="compact"></v-text-field>
+            {{ modified }}
+            <v-form ref="form" @update:modelValue="updated">
+                <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon"
+                    :readonly="readonly" v-model="billingAddress[item.key]" density="compact" :type="item.type"
+                    :rules="item.rules"></v-text-field>
             </v-form>
         </v-card-text>
     </v-card>
@@ -54,13 +32,78 @@ import type { profile } from 'console';
 
 <script>
 import { saveUserProfile } from "@/services/profile";
+import _ from 'lodash';
 
 export default {
     props: {
         profile: { type: Object, default: undefined }
     },
     created() {
+        this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
         this.reset();
+        this.items = [{
+            label: 'firstName',
+            key: 'firstName',
+            icon: "mdi-account-outline",
+            type: "text",
+            rules: this.requiredRule("firstName")
+        },
+        {
+            label: 'lastName',
+            key: 'lastName',
+            icon: "mdi-account-outline",
+            type: "text",
+            rules: this.requiredRule("lastName")
+        },
+        {
+            label: 'company',
+            key: 'company',
+            icon: "mdi-domain",
+            type: "text",
+            rules: [],
+        },
+        {
+            label: 'phoneNumber',
+            key: 'phoneNumber',
+            icon: "mdi-phone-outline",
+            type: "text",
+            rules: this.requiredRule("phoneNumber")
+        },
+        {
+            label: 'email',
+            key: 'email',
+            icon: "mdi-email-outline",
+            type: "email",
+            rules: this.requiredRule("email")
+        },
+        {
+            label: 'address1',
+            key: 'address1',
+            icon: "mdi-map-marker-outline",
+            type: "text",
+            rules: this.requiredRule("address1")
+        },
+        {
+            label: 'address2',
+            key: 'address2',
+            icon: "mdi-map-marker-outline",
+            type: "text",
+            rules: [],
+        },
+        {
+            label: 'city',
+            key: 'city',
+            icon: "mdi-city",
+            type: "text",
+            rules: this.requiredRule("city")
+        },
+        {
+            label: 'zipPostalCode',
+            key: 'zipPostalCode',
+            icon: "mdi-post-outline",
+            type: "text",
+            rules: this.requiredRule("zipPostalCode")
+        }];
     },
     computed: {
         readonly() {
@@ -68,21 +111,32 @@ export default {
         }
     },
     methods: {
-        toggleUpdate() {
+        updated(e) {
+            this.valid = e;
+            this.modified = !_.isEqual(this.srcBillingAddress, this.billingAddress);
+        },
+        requiredRule(key) {
+            return [() => !!this.billingAddress[key] || 'This field is required']
+        },
+        async toggleUpdate() {
             if (this.update) {
                 this.reset();
             } else {
                 this.updateIcon = "mdi-close-circle-outline";
                 this.updateText = this.$t('cancel');
                 this.updateColor = "error";
+
+                const { valid } = await this.$refs.form.validate()
+                this.valid = valid;
             }
             this.update = !this.update;
         },
         reset() {
-            this.billingAddress = this.profile.billingAddress;
+            this.billingAddress = this.srcBillingAddress;
             this.updateIcon = "mdi-pencil";
             this.updateText = this.$t('update');
             this.updateColor = "secondary";
+            this.$refs.form?.resetValidation();
         },
         async save() {
             this.loading = true;
@@ -95,9 +149,12 @@ export default {
     },
     data: () => {
         return {
+            valid: false,
+            modified: false,
+            items: [],
             billingAddress: {},
+            srcBillingAddress: {},
             loading: false,
-            valid: true,
             update: false,
             updateIcon: "",
             updateText: '',
