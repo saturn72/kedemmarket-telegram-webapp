@@ -11,7 +11,7 @@
         </v-card-title>
 
         <v-card-text v-if="!loading">
-            <v-expansion-panels multiple>
+            <v-expansion-panels multiple v-model="panels">
                 <v-expansion-panel value="billingAddress">
                     <template v-slot:title>
                         <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('billingAddress') }}
@@ -34,12 +34,18 @@ import account from './../account';
 
 export default {
     async created() {
+        const expand = this.$route.query.expand;
+        if (expand) {
+            this.panels.push(expand);
+        }
+
         this.menu = account.profile;
         this.loading = true;
         this.profile = await getUserProfile();
         this.loading = false;
     },
     data: () => ({
+        panels: [],
         saving: false,
         loading: true,
         menu: {},

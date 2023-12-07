@@ -39,6 +39,7 @@ export default {
         profile: { type: Object, default: undefined }
     },
     created() {
+
         this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
         this.reset();
         this.items = [{
@@ -104,6 +105,7 @@ export default {
             type: "text",
             rules: this.requiredRule("zipPostalCode")
         }];
+
     },
     computed: {
         readonly() {
