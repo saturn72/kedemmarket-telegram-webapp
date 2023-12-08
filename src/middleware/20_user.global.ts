@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     if (profileExist && !profile.billingAddress?.verified) {
         const txt = useNuxtApp().$t("updateBillingAddressIsRequired");
-        const uri = `${useAppConfig().routes.accountProfile}?expand=billingAddress`;
+        const uri = `${useAppConfig().routes.accountProfile}?expand=billingAddress&mode=edit`;
 
         setTimeout(() => {
             navigateTo(uri);
