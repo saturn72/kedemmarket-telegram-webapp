@@ -74,5 +74,6 @@ export default {
     of: "מתוך",
     next: "הבא",
     previous: "הקודם",
-    update: "לעדכון"
+    update: "עדכון",
+    updateBillingAddressIsRequired: "על מנת להמשיך ברכישה, יש לעדכן את כתובת החיוב",
 }

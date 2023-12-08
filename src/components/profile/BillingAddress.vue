@@ -1,8 +1,4 @@
 
-import type { log } from 'console';
-
-import type { log } from 'console';
-
 <template>
     <v-card flat>
         <v-card-actions>

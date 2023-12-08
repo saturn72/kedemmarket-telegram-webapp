@@ -5,6 +5,7 @@ export interface UserProfile {
 }
 
 export interface Address {
+    verified: boolean;
     firstName: string | undefined;
     lastName: string | undefined;
     company: string | undefined;

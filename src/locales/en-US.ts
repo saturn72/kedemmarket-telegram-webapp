@@ -73,5 +73,6 @@ export default {
     of: "of",
     next: "Next",
     previous: "Previous",
-    update: "Update"
+    update: "Update",
+    updateBillingAddressIsRequired: "In order to purchase, billing address must be set",
 }

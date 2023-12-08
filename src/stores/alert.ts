@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
 
-type AlertType = "snackbar";
+type AlertType = "snackbar" | "overlay";
 
 type AlertState = {
     type?: AlertType | undefined,
     text?: string | undefined;
-    action?: { text: string, func: () => any } | undefined,
     duration?: number,
     alertTimelines: [key: AlertType, item: number] | any
 }
@@ -18,44 +17,33 @@ export const useAlertStore = defineStore('alert', {
     },
 
     actions: {
-        setAlarm(
-            type: AlertType | undefined,
+        clearAlarms() {
+            this.$state.type = undefined;
+            this.$state.text = undefined;
+        },
+        setSnackbar(
             text: string,
-            options: {
-                duration: number,
-                timeBetweenAlerts: number,
-                action?: { text: string, func: () => any } | undefined
-            } = {
-                    duration: 5000,
-                    timeBetweenAlerts: 30 * 60 * 60 * 1000,
-                }) {
+            duration: number = 5000,
+            timeBetweenAlerts: number = 5000,
+            force: boolean = false) {
 
-
-            if (type == undefined) {
-                this.$state.type = undefined;
-                this.$state.text = undefined;
-            }
-
-            const t = type as AlertType;
+            const type = "snackbar";
             const cur = Date.now();
-            const a = this.$state.alertTimelines[t];
+            const a = this.$state.alertTimelines[type];
 
-            if (a && cur - a < options.timeBetweenAlerts) {
+            if (!force && a && cur - a < timeBetweenAlerts) {
                 this.$state.type == undefined;
                 return;
             }
 
             this.$state.type = type;
             this.$state.text = text;
-            this.$state.action = options.action;
-            this.$state.duration = options.duration;
-            this.$state.action = options.action;
-            this.$state.alertTimelines[t] = cur;
+            this.$state.duration = duration;
+            this.$state.alertTimelines[type] = cur;
 
             setTimeout(() => {
-                this.$state.type = undefined;
-                this.$state.text = undefined;
-            }, options.duration)
+                this.clearAlarms();
+            }, duration)
         }
     },
     persist: {

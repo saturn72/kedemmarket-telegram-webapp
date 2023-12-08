@@ -25,7 +25,6 @@ export async function saveUserProfile(profile: UserProfile): Promise<UserProfile
     await useNuxtApp().$cache.remove(key);
 
     const up = await useNuxtApp().$backend.saveUserProfile(profile);
-
     const res = alignWithUser(up);
     await useNuxtApp().$cache.set(key, res, cachingTime);
     return res;
@@ -34,30 +33,30 @@ export async function saveUserProfile(profile: UserProfile): Promise<UserProfile
 
 function alignWithUser(profile: UserProfile) {
     const curProfile = defu(profile, {
-        billingAddress: {}
+        billingAddress: {
+            verified: profile.billingAddress?.verified || false,
+        }
     });
-
     const user = useUserStore().getUser;
-    if (user.displayName) {
-        const arr = user.displayName.split(' ');
-
-        if (!curProfile.billingAddress.firstName) {
+    if (!curProfile.billingAddress.verified) {
+        if (user.displayName) {
+            const arr = user.displayName.split(' ');
             curProfile.billingAddress.firstName = arr[0];
+            if (arr.length > 1 && !curProfile.billingAddress.lastName) {
+                curProfile.billingAddress.lastName = user.displayName.substring(arr[0].length + 1);
+            }
         }
-        if (arr.length > 1 && !curProfile.billingAddress.lastName) {
-            curProfile.billingAddress.lastName = user.displayName.substring(arr[0].length + 1);
-        }
-    }
 
-    if (user.phoneNumber) {
-        if (!curProfile.billingAddress.phoneNumber) {
-            curProfile.billingAddress.phoneNumber = user.phoneNumber;
+        if (user.phoneNumber) {
+            if (!curProfile.billingAddress.phoneNumber) {
+                curProfile.billingAddress.phoneNumber = user.phoneNumber;
+            }
         }
-    }
 
-    if (user.email) {
-        if (!curProfile.billingAddress.email) {
-            curProfile.billingAddress.email = user.email;
+        if (user.email) {
+            if (!curProfile.billingAddress.email) {
+                curProfile.billingAddress.email = user.email;
+            }
         }
     }
     return curProfile;
