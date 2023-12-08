@@ -22,10 +22,8 @@ import { useAlertStore } from '@/stores/alert';
 export default {
     created() {
         const store = useAlertStore();
-        console.log("on subscribe");
         store.$subscribe((mutation, state) => {
             this.show = state.type == "snackbar";
-            console.log("in snackbar here", state.type, this.show);
 
             if (this.show) {
                 this.text = state.text;

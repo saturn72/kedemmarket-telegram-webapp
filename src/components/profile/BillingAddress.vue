@@ -16,13 +16,19 @@
             </v-row>
         </v-card-actions>
         <v-card-text>
-            {{ modified }}
             <v-form ref="form" @update:modelValue="updated">
                 <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon"
                     :readonly="readonly" v-model="billingAddress[item.key]" density="compact" :type="item.type"
                     :rules="item.rules"></v-text-field>
             </v-form>
         </v-card-text>
+
+        <v-card-actions>
+            <v-btn v-if="update" variant="flat" block :disabled="!modified || !valid || loading" :loading="loading"
+                color="info" @click="save()">
+                <v-icon>mdi-content-save-outline</v-icon>&nbsp;{{ $t('save') }}
+            </v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
@@ -35,7 +41,6 @@ export default {
         profile: { type: Object, default: undefined }
     },
     created() {
-
         this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
         this.reset();
         this.items = [{
@@ -103,6 +108,11 @@ export default {
         }];
 
     },
+    mounted() {
+        if (this.$route.query.mode == "edit") {
+            this.toggleUpdate();
+        }
+    },
     computed: {
         readonly() {
             return (this.profile?.billingAddress && !this.update) || false;
@@ -111,7 +121,8 @@ export default {
     methods: {
         updated(e) {
             this.valid = e;
-            this.modified = !_.isEqual(this.srcBillingAddress, this.billingAddress);
+            const src = _.cloneDeep(this.srcBillingAddress);
+            this.modified = !_.isEqual(src, this.billingAddress);
         },
         requiredRule(key) {
             return [() => !!this.billingAddress[key] || 'This field is required']
@@ -130,7 +141,7 @@ export default {
             this.update = !this.update;
         },
         reset() {
-            this.billingAddress = this.srcBillingAddress;
+            this.billingAddress = _.cloneDeep(this.srcBillingAddress);
             this.updateIcon = "mdi-pencil";
             this.updateText = this.$t('update');
             this.updateColor = "secondary";
