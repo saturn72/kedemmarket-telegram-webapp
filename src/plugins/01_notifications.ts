@@ -34,14 +34,14 @@ const connectToSignalR = async (
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-    connectToSignalR(`${useRuntimeConfig().public.wsURL}catalog`, false, hcc => {
+    connectToSignalR(`${useRuntimeConfig().public.wsUrl}catalog`, false, hcc => {
         hcc.on("updated", async () => {
             useNuxtApp().$sessionCache.removeByPrefix("catalog");
             await getCatalog();
         });
 
     });
-    connectToSignalR(`${useRuntimeConfig().public.wsURL}order`, true, hcc => {
+    connectToSignalR(`${useRuntimeConfig().public.wsUrl}order`, true, hcc => {
         hcc.on("updated", async (orderId: string) => {
             await getOrderById(orderId, true);
         });

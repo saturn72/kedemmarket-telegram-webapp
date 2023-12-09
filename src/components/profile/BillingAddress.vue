@@ -23,12 +23,12 @@
             </v-form>
         </v-card-text>
 
-        <v-card-actions>
+        <!-- <v-card-actions>
             <v-btn v-if="update" variant="flat" block :disabled="!modified || !valid || loading" :loading="loading"
                 color="info" @click="save()">
                 <v-icon>mdi-content-save-outline</v-icon>&nbsp;{{ $t('save') }}
             </v-btn>
-        </v-card-actions>
+        </v-card-actions> -->
     </v-card>
 </template>
 

@@ -19,8 +19,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      baseURL: process.env.BACKEND_URL || 'https://kedemmarket.co.il/api/',
-      wsURL: process.env.WS_URL || 'https://kedemmarket.co.il/ws/',
+      backendUrl: "",
+      wsUrl: ""
     },
   },
   components: [

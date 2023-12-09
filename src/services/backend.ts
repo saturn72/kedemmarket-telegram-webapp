@@ -7,7 +7,7 @@ export async function useBackendFetch<ResT = void>(uri: string, opts: UseFetchOp
     let d: any = {};
     const run = async () => {
         const { data, error } = await useFetch(uri, {
-            baseURL: useRuntimeConfig().public.baseURL,
+            baseURL: useRuntimeConfig().public.backendUrl,
             ...opts,
         });
 
