@@ -106,7 +106,7 @@ export default {
             this.valid = e;
         },
         requiredRule(key) {
-            return [() => !!this.billingAddress[key] || 'This field is required']
+            return [() => !!this.billingAddress[key] || `${this.$t(key)}  ${this.$t('isRequired')}`]
         },
         async toggleUpdate() {
             if (this.update) {

@@ -71,6 +71,7 @@ export default {
     billingAddress: "כתובת לחיוב",
     shippingAddress: "כתובת למשלוח",
     requiredField: "שדה חובה",
+    isRequired: "נדרש",
     orderId: "מספר הזמנה",
     page: "דף",
     of: "מתוך",
