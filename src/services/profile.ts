@@ -1,6 +1,7 @@
 import { useUserStore } from "@/stores/user";
 import defu from "defu";
 import type { UserProfile } from "@/models/account";
+import type { Address } from "~/models/account";
 
 
 const cachingTime = 10 * 60;
@@ -15,7 +16,6 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
     return await useNuxtApp().$cache.getOrAcquire(key,
         async () => {
             var up = await useNuxtApp().$backend.getUserProfile();
-            console.log("ssssssssssss", up);
             return alignWithUser(up);
         },
         cachingTime);
@@ -31,15 +31,26 @@ export async function saveUserProfile(profile: UserProfile): Promise<UserProfile
     return res;
 }
 
+function notNullAndNotEmpty(str: string | undefined) {
+    return str && str != null && str.trim().length > 0;
+}
 
+function isAddressValid(address: Address) {
+    return notNullAndNotEmpty(address.address) &&
+        notNullAndNotEmpty(address.city) &&
+        notNullAndNotEmpty(address.email) &&
+        notNullAndNotEmpty(address.fullName) &&
+        notNullAndNotEmpty(address.phoneNumber);
+}
 function alignWithUser(profile: UserProfile) {
     const curProfile = defu(profile, {
         billingAddress: {
-            verified: profile.billingAddress?.verified || false,
+            valid: isAddressValid(profile.billingAddress),
         }
     });
+
     const user = useUserStore().getUser;
-    if (!curProfile.billingAddress.verified) {
+    if (!curProfile.billingAddress.valid) {
         if (user.displayName) {
             curProfile.billingAddress.fullName = user.displayName;
         }
