@@ -1,8 +1,10 @@
 export default {
     currencySymbol: "$",
     firstName: "First Name",
+    fullName: "Full Name",
     lastName: "Last Name",
     phoneNumber: "Phone Number",
+    address: "Address",
     address1: "Address1",
     address2: "Address2",
     city: "City",

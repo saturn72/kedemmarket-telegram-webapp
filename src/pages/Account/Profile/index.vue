@@ -18,7 +18,7 @@
                     </template>
 
                     <v-expansion-panel-text>
-                        <ProfileBillingAddress :profile="profile">
+                        <ProfileBillingAddress :profile="profile" @saved="saved">
                         </ProfileBillingAddress>
                     </v-expansion-panel-text>
 
@@ -50,6 +50,14 @@ export default {
         loading: true,
         menu: {},
         profile: {},
-    })
+    }),
+    methods: {
+        saved() {
+            const to = this.$route.query.returnUri;
+            if (to) {
+                navigateTo(to);
+            }
+        }
+    }
 }
 </script>

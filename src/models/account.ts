@@ -6,13 +6,10 @@ export interface UserProfile {
 
 export interface Address {
     verified: boolean;
-    firstName: string | undefined;
-    lastName: string | undefined;
-    company: string | undefined;
+    fullName: string | undefined;
     phoneNumber: string | undefined;
     email: string | undefined;
-    address1: string | undefined;
-    address2: string | undefined;
+    address: string | undefined;
     zipPostalCode: string | undefined;
     city: string | undefined;
 }

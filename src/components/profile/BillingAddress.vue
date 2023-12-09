@@ -43,26 +43,13 @@ export default {
     created() {
         this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
         this.reset();
+
         this.items = [{
-            label: 'firstName',
-            key: 'firstName',
+            label: 'fullName',
+            key: 'fullName',
             icon: "mdi-account-outline",
             type: "text",
-            rules: this.requiredRule("firstName")
-        },
-        {
-            label: 'lastName',
-            key: 'lastName',
-            icon: "mdi-account-outline",
-            type: "text",
-            rules: this.requiredRule("lastName")
-        },
-        {
-            label: 'company',
-            key: 'company',
-            icon: "mdi-domain",
-            type: "text",
-            rules: [],
+            rules: this.requiredRule("fullName")
         },
         {
             label: 'phoneNumber',
@@ -79,18 +66,11 @@ export default {
             rules: this.requiredRule("email")
         },
         {
-            label: 'address1',
-            key: 'address1',
+            label: 'address',
+            key: 'address',
             icon: "mdi-map-marker-outline",
             type: "text",
-            rules: this.requiredRule("address1")
-        },
-        {
-            label: 'address2',
-            key: 'address2',
-            icon: "mdi-map-marker-outline",
-            type: "text",
-            rules: [],
+            rules: this.requiredRule("address")
         },
         {
             label: 'city',
@@ -104,9 +84,8 @@ export default {
             key: 'zipPostalCode',
             icon: "mdi-post-outline",
             type: "text",
-            rules: this.requiredRule("zipPostalCode")
+            rules: []
         }];
-
     },
     mounted() {
         if (this.$route.query.mode == "edit") {
@@ -116,13 +95,15 @@ export default {
     computed: {
         readonly() {
             return (this.profile?.billingAddress && !this.update) || false;
+        },
+        modified() {
+            const src = _.cloneDeep(this.srcBillingAddress);
+            return !_.isEqual(src, this.billingAddress);
         }
     },
     methods: {
         updated(e) {
             this.valid = e;
-            const src = _.cloneDeep(this.srcBillingAddress);
-            this.modified = !_.isEqual(src, this.billingAddress);
         },
         requiredRule(key) {
             return [() => !!this.billingAddress[key] || 'This field is required']
@@ -154,12 +135,12 @@ export default {
             this.loading = false;
             this.update = false;
             this.reset();
+            this.$emit("saved");
         }
     },
     data: () => {
         return {
             valid: false,
-            modified: false,
             items: [],
             billingAddress: {},
             srcBillingAddress: {},

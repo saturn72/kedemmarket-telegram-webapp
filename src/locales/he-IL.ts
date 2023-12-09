@@ -2,8 +2,10 @@
 export default {
     currencySymbol: "₪",
     firstName: "שם פרטי",
+    fullName: "שם מלא",
     lastName: "שם משפחה",
     phoneNumber: "טלפון",
+    address: "כתובת",
     address1: "כתובת 1",
     address2: "כתובת 2",
     city: "עיר",

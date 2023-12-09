@@ -15,6 +15,7 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
     return await useNuxtApp().$cache.getOrAcquire(key,
         async () => {
             var up = await useNuxtApp().$backend.getUserProfile();
+            console.log("ssssssssssss", up);
             return alignWithUser(up);
         },
         cachingTime);
@@ -40,11 +41,7 @@ function alignWithUser(profile: UserProfile) {
     const user = useUserStore().getUser;
     if (!curProfile.billingAddress.verified) {
         if (user.displayName) {
-            const arr = user.displayName.split(' ');
-            curProfile.billingAddress.firstName = arr[0];
-            if (arr.length > 1 && !curProfile.billingAddress.lastName) {
-                curProfile.billingAddress.lastName = user.displayName.substring(arr[0].length + 1);
-            }
+            curProfile.billingAddress.fullName = user.displayName;
         }
 
         if (user.phoneNumber) {

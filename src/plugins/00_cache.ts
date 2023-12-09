@@ -16,7 +16,7 @@ const getItemFromLocalStorage = <T>(key: any): T | undefined => {
     return entry.data as T;
 }
 
-const prepareCacheKey = (key: string): string => key.replaceAll(' ', '-').toLowerCase();
+const prepareCacheKey = (key: string): string => `km-${key.replaceAll(' ', '-').toLowerCase()}`;
 
 const setItemInternal = <T>(key: string,
     data: T,
