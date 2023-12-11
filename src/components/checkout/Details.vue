@@ -9,35 +9,28 @@
         </v-card>
     </v-dialog>
 
-    <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog>
+    <!-- <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog> -->
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
-    <CheckoutBillingAddress :show="billingAddressDialog"></CheckoutBillingAddress>
 
-    <v-card height="100%" flat class="d-flex flex-column justify-center">
-        <v-card-title v-if="loading || calculating" class="d-flex flex-column align-center justify-center">
-            <v-progress-circular indeterminate width="1"></v-progress-circular>
-        </v-card-title>
-        <v-card-title v-else>
-            {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ checkoutCartStore.cartTotal }}
-            <v-card-subtitle>
-                {{ $t('pricesAfterDiscounts') }}
-            </v-card-subtitle>
-        </v-card-title>
-
-        <v-card-text>
-            <CheckoutAvailableItems @removeFromCart="removeFromCart"></CheckoutAvailableItems>
-            <!-- <CheckoutNotAvailableItems></CheckoutNotAvailableItems> -->
-        </v-card-text>
-
-        <v-card-actions>
-            <v-btn block variant="flat" :loading="loading || calculating"
-                :disabled="loading || checkoutCartStore.items.length == 0" color="secondary"
-                @click="checkout_submitOrder()">{{
-                    $t('checkoutCart')
-                }}
-            </v-btn>
-        </v-card-actions>
-    </v-card>
+    <v-stepper :items="items" show-actions v-model="step">
+        <template v-slot:item.1>
+            <ProfileBillingAddressFields :profile="profile" :mode="billingAddressMode" @saved="billingAddressSaved">
+            </ProfileBillingAddressFields>
+        </template>
+        <template v-slot:item.2>
+            <h1>TEsts 2</h1>
+            <!-- <ProfileBillingAddress :profile="profile" :mode="billingAddressMode" @saved="billingAddressSaved">
+                </ProfileBillingAddress> -->
+        </template>
+    </v-stepper>
+    <!-- <v-stepper-header>
+        <v-stepper-item complete :rules="[() => profile.billingAddress.valid]" :title="$t('billingAddress')" value="1">
+        </v-stepper-item>
+        <v-divider></v-divider>
+        <v-stepper-item :title="$t('checkout')" subtitle="Missing Details" value="2"></v-stepper-item>
+    </v-stepper-header>
+</v-stepper>
+ -->
 </template>
 
 <script>
@@ -45,9 +38,11 @@ import _ from "lodash";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
 import { submitOrder } from "@/services/checkout";
+import { getUserProfile } from "~/services/profile";
 
 export default {
-    setup() {
+
+    async setup() {
         const checkoutCartStore = computed(() => useCheckoutCartStore());
 
         const loading = computed(() => {
@@ -57,20 +52,38 @@ export default {
 
         const error = computed(() => useCheckoutCartStore().error || false);
         const calculating = computed(() => useCheckoutCartStore().calculating || false);
+
         useCheckoutCartStore().calculate(0);
 
-
+        const profile = await getUserProfile();
         return {
-            checkoutCartStore,
-            loading,
             calculating,
-            error
+            checkoutCartStore,
+            error,
+            loading,
+            profile
         };
+    },
+    mounted() {
+        // if (!profile.billingAddress.valid) {
+        if (this.profile.billingAddress.valid) {
+            this.step = "0";
+            this.billingAddressMode = "edit";
+        } else {
+            this.step = "1";
+        }
+        this.items = [
+            this.$t("billingAddress"),
+            this.$t("checkout"),
+        ];
     },
     data() {
         return {
             itemToDelete: null,
             orderDialog: false,
+            step: "",
+            billingAddressMode: undefined,
+            items: []
         }
     },
     methods: {
@@ -83,7 +96,6 @@ export default {
             const order = await submitOrder();
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
-
             useRouter().push(r)
         },
 

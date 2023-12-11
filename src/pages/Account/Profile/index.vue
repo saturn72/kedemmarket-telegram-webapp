@@ -18,8 +18,8 @@
                     </template>
 
                     <v-expansion-panel-text>
-                        <ProfileBillingAddress :profile="profile" @saved="saved">
-                        </ProfileBillingAddress>
+                        <ProfileBillingAddressForm :profile="profile" :mode="mode" @saved="saved">
+                        </ProfileBillingAddressForm>
                     </v-expansion-panel-text>
 
                 </v-expansion-panel>
@@ -35,6 +35,7 @@ import account from './../account';
 export default {
     async created() {
         const expand = this.$route.query.expand;
+        this.mode = this.$route.query.mode;
         if (expand) {
             this.panels.push(expand);
         }
@@ -50,6 +51,7 @@ export default {
         loading: true,
         menu: {},
         profile: {},
+        mode: undefined
     }),
     methods: {
         saved() {
