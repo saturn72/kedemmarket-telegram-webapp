@@ -9,16 +9,20 @@
         </v-card>
     </v-dialog>
 
-    <!-- <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog> -->
+    <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog>
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
-    <v-stepper :items="items" show-actions v-model="step" flat hide-actions>
-
+    <v-stepper :items="items" v-model="step" flat hide-actions>
         <template v-slot:item.1>
             <CheckoutDetailsProfileBillingAddressCard :profile="profile" :loading="loading"
                 @saved_billing_address="checkout_approveBillingaAddress" />
         </template>
-
         <template v-slot:item.2>
+            <v-btn block color="info" variant="outlined" @click="step = 1">
+                <template v-slot:prepend><v-icon>
+                        mdi-arrow-right
+                    </v-icon>
+                </template>
+                {{ $t('backToBillingAddress') }}</v-btn>
             <CheckoutDetailsCheckoutItems :loading="loading" />
         </template>
     </v-stepper>
@@ -43,7 +47,7 @@ export default {
     },
     mounted() {
         if (!this.profile?.billingAddress?.valid)
-            this.step = "0";
+            this.step = 1;
 
         this.items = [
             this.$t("billingAddress"),
@@ -52,7 +56,7 @@ export default {
     },
     data() {
         return {
-            step: "1",
+            step: 2,
             items: [],
             itemToDelete: null,
             orderDialog: false,
@@ -62,11 +66,13 @@ export default {
         errorRetry() {
             setupWorker()
         },
-        async checkout_approveBillingaAddress() {
+        async checkout_approveBillingaAddress(modified) {
             this.loading = true;
-            await saveUserProfile(this.profile);
+            if (modified) {
+                await saveUserProfile(this.profile);
+            }
             this.loading = false;
-            this.step += 1;
+            this.step = 2;
         },
         async checkout_submitOrder() {
             this.orderDialog = true;

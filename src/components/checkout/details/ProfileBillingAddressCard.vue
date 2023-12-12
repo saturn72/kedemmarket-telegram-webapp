@@ -6,12 +6,13 @@
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn block variant="flat" :loading="loading" :disabled="loading || !modified" color="secondary"
+            <v-btn block variant="flat" :loading="loading" :disabled="loading || !valid" color="secondary"
                 @click="approve()">{{
                     $t('approve')
                 }}
             </v-btn>
-        </v-card-actions> </v-card>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>
@@ -25,13 +26,9 @@ export default {
     created() {
         this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
     },
-    computed: {
-        modified() {
-            return !_.isEqual(this.srcBillingAddress, this.profile.billingAddress);
-        }
-    },
     data: () => {
         return {
+            valid: undefined,
             srcBillingAddress: undefined,
             billingAddress: undefined,
         }
@@ -41,8 +38,8 @@ export default {
             this.valid = e;
         },
         approve() {
-            this.$emit('saved_billing_address');
-            this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
+            const modified = !_.isEqual(this.srcBillingAddress, this.profile.billingAddress);
+            this.$emit('saved_billing_address', modified);
         }
     }
 }
