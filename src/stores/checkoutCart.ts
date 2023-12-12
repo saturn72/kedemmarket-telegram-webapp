@@ -24,6 +24,7 @@ const defaultValue = {
 };
 
 const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
+
     const userCart = useCartStore().getUserCart;
     if (!userCart || useCartStore().getTotalCartItemsCount == 0) {
         state = defaultValue;

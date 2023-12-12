@@ -6,7 +6,6 @@
 
         <v-card-title>
             <v-icon>mdi-cart-outline</v-icon>
-            <v-spacer></v-spacer>
             {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ checkoutCartStore.cartTotal }}
             <v-card-subtitle>
                 {{ $t('pricesAfterDiscounts') }}

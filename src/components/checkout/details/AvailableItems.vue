@@ -1,5 +1,5 @@
 <template>
-    <v-card v-for="item in checkoutCartStore.items" @removeFromCart="removeFromCart(item)" flat :loading="item.loading">
+    <v-card v-for="item in cartItems" @removeFromCart="removeFromCart(item)" flat :loading="item.loading">
         <v-card-text>
             <v-row>
                 <v-col cols="4" justify-center class="text-subtitle-2 my-4 ml-4">
@@ -41,7 +41,7 @@ import { getProductPrimaryMediaUrl } from "@/services/catalog";
 
 export default {
     setup() {
-        const checkoutCartStore = computed(() => useCheckoutCartStore());
+        const cartItems = computed(() => useCheckoutCartStore().items);
 
         const loading = computed(() => {
             const items = useCheckoutCartStore().items;
@@ -60,7 +60,7 @@ export default {
 
         return {
             calculating,
-            checkoutCartStore,
+            cartItems,
             error,
             loading,
             productThumbnail
