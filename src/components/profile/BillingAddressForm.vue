@@ -17,7 +17,7 @@
         </v-card-actions>
         <v-card-text>
             <v-form ref="form" @update:modelValue="updated">
-                <ProfileBillingAddressFields :billingAddress="billingAddress" :editable="!readonly" />
+                <ProfileBillingAddressFormFields :billingAddress="billingAddress" :editable="editable" />
             </v-form>
         </v-card-text>
     </v-card>
@@ -34,7 +34,6 @@ export default {
     },
     created() {
         this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
-        this.billingAddress = _.cloneDeep(this.profile.billingAddress);
         this.reset();
     },
     mounted() {
@@ -43,23 +42,20 @@ export default {
         }
     },
     computed: {
-        readonly() {
-            return (this.profile?.billingAddress && !this.update) || false;
+        editable() {
+            return !this.profile?.billingAddress || this.update;
         },
         modified() {
-            const src = _.cloneDeep(this.srcBillingAddress);
-            return !_.isEqual(src, this.billingAddress);
+            return !_.isEqual(this.srcBillingAddress, this.billingAddress);
         }
     },
     methods: {
         updated(e) {
             this.valid = e;
         },
-        requiredRule(key) {
-            return [() => !!this.billingAddress[key] || `${this.$t(key)}  ${this.$t('isRequired')}`]
-        },
         async toggleUpdate() {
             if (this.update) {
+                this.billingAddress = this.srcBillingAddress;
                 this.reset();
             } else {
                 this.updateIcon = "mdi-close-circle-outline";
@@ -72,6 +68,7 @@ export default {
             this.update = !this.update;
         },
         reset() {
+            this.billingAddress = _.cloneDeep(this.profile.billingAddress);
             this.updateIcon = "mdi-pencil";
             this.updateText = this.$t('update');
             this.updateColor = "secondary";
@@ -83,6 +80,7 @@ export default {
             await saveUserProfile(this.profile);
             this.loading = false;
             this.update = false;
+            this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
             this.reset();
             this.$emit("saved");
         }

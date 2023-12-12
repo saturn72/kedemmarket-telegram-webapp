@@ -1,4 +1,5 @@
 export default {
+    approve: "Approve",
     currencySymbol: "$",
     firstName: "First Name",
     fullName: "Full Name",

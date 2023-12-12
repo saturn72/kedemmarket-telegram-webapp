@@ -11,26 +11,17 @@
 
     <!-- <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog> -->
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
+    <v-stepper :items="items" show-actions v-model="step" flat hide-actions>
 
-    <v-stepper :items="items" show-actions v-model="step">
         <template v-slot:item.1>
-            <ProfileBillingAddressFields :profile="profile" :mode="billingAddressMode" @saved="billingAddressSaved">
-            </ProfileBillingAddressFields>
+            <CheckoutDetailsProfileBillingAddressCard :profile="profile" :loading="loading"
+                @saved_billing_address="checkout_approveBillingaAddress" />
         </template>
+
         <template v-slot:item.2>
-            <h1>TEsts 2</h1>
-            <!-- <ProfileBillingAddress :profile="profile" :mode="billingAddressMode" @saved="billingAddressSaved">
-                </ProfileBillingAddress> -->
+            <CheckoutDetailsCheckoutItems :loading="loading" />
         </template>
     </v-stepper>
-    <!-- <v-stepper-header>
-        <v-stepper-item complete :rules="[() => profile.billingAddress.valid]" :title="$t('billingAddress')" value="1">
-        </v-stepper-item>
-        <v-divider></v-divider>
-        <v-stepper-item :title="$t('checkout')" subtitle="Missing Details" value="2"></v-stepper-item>
-    </v-stepper-header>
-</v-stepper>
- -->
 </template>
 
 <script>
@@ -38,40 +29,22 @@ import _ from "lodash";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
 import { submitOrder } from "@/services/checkout";
-import { getUserProfile } from "~/services/profile";
+import { getUserProfile, saveUserProfile } from "~/services/profile";
 
 export default {
-
     async setup() {
-        const checkoutCartStore = computed(() => useCheckoutCartStore());
 
-        const loading = computed(() => {
-            const items = useCheckoutCartStore().items;
-            return items && items.some(i => i.loading);
-        });
+        const { data: profile, error } = await useAsyncData(() => getUserProfile());
 
-        const error = computed(() => useCheckoutCartStore().error || false);
-        const calculating = computed(() => useCheckoutCartStore().calculating || false);
-
-        useCheckoutCartStore().calculate(0);
-
-        const profile = await getUserProfile();
         return {
-            calculating,
-            checkoutCartStore,
-            error,
-            loading,
-            profile
+            profile,
+            error
         };
     },
     mounted() {
-        // if (!profile.billingAddress.valid) {
-        if (this.profile.billingAddress.valid) {
+        if (!this.profile?.billingAddress?.valid)
             this.step = "0";
-            this.billingAddressMode = "edit";
-        } else {
-            this.step = "1";
-        }
+
         this.items = [
             this.$t("billingAddress"),
             this.$t("checkout"),
@@ -79,16 +52,21 @@ export default {
     },
     data() {
         return {
+            step: "1",
+            items: [],
             itemToDelete: null,
             orderDialog: false,
-            step: "",
-            billingAddressMode: undefined,
-            items: []
         }
     },
     methods: {
         errorRetry() {
             setupWorker()
+        },
+        async checkout_approveBillingaAddress() {
+            this.loading = true;
+            await saveUserProfile(this.profile);
+            this.loading = false;
+            this.step += 1;
         },
         async checkout_submitOrder() {
             this.orderDialog = true;

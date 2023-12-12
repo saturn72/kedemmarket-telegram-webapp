@@ -1,5 +1,6 @@
 
 export default {
+    approve: "אישור",
     currencySymbol: "₪",
     firstName: "שם פרטי",
     fullName: "שם מלא",
