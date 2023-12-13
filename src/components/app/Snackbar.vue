@@ -1,5 +1,5 @@
 <template>
-    <v-snackbar v-model="show" :timeout="timeout">
+    <v-snackbar v-model="show" :timeout="timeout" transition="fade-transition">
         <v-row>
             <v-col>
                 {{ text }}

@@ -17,7 +17,7 @@
                 @saved_billing_address="checkout_approveBillingaAddress" />
         </template>
         <template v-slot:item.2>
-            <v-btn block color="info" variant="outlined" @click="step = 1">
+            <v-btn block color="info" variant="outlined" @click="toStep(1)">
                 <template v-slot:prepend><v-icon>
                         mdi-arrow-right
                     </v-icon>
@@ -28,6 +28,10 @@
     </v-stepper>
 </template>
 
+<script setup>
+const { data: profile, error } = await useAsyncData(() => getUserProfile());
+</script>
+
 <script>
 import _ from "lodash";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
@@ -36,18 +40,9 @@ import { submitOrder } from "@/services/checkout";
 import { getUserProfile, saveUserProfile } from "~/services/profile";
 
 export default {
-    async setup() {
-
-        const { data: profile, error } = await useAsyncData(() => getUserProfile());
-
-        return {
-            profile,
-            error
-        };
-    },
     mounted() {
         if (!this.profile?.billingAddress?.valid)
-            this.step = 1;
+            this.toStep(1);
 
         this.items = [
             this.$t("billingAddress"),
@@ -66,13 +61,20 @@ export default {
         errorRetry() {
             setupWorker()
         },
+        toStep(stepId) {
+            this.step = stepId;
+            if (stepId == 1) {
+                const txt = this.$t("updateBillingAddressIsRequired");
+                useAlertStore().setSnackbar(txt);
+            }
+        },
         async checkout_approveBillingaAddress(modified) {
             this.loading = true;
             if (modified) {
                 await saveUserProfile(this.profile);
             }
             this.loading = false;
-            this.step = 2;
+            this.toStep(2);
         },
         async checkout_submitOrder() {
             this.orderDialog = true;

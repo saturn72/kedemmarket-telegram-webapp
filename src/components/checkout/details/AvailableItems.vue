@@ -37,23 +37,7 @@
 <script setup>
 
 useCheckoutCartStore().calculate(0);
-const calculating = computed(() => useCheckoutCartStore().calculating || false);
-
 const cartItems = computed(() => useCheckoutCartStore().items);
-
-const error = computed(() => useCheckoutCartStore().error || false);
-
-const loading = computed(() => {
-    const items = useCheckoutCartStore().items;
-    return items && items.some(i => i.loading);
-});
-
-const productThumbnail = computed(() => {
-    const res = {};
-    const items = useCheckoutCartStore().items;
-    items.forEach(async i => res[i.product.id] = await getProductThumbnail(i.product));
-    return res;
-});
 
 </script>
 <script>
@@ -69,9 +53,6 @@ export default {
         }
     },
     methods: {
-        async getProductThumbnail(product) {
-            return await getProductPrimaryMediaUrl(product, "thumbnail");
-        },
         incrementCartItem(item) {
             useCartStore().incrementCartItem(item.product);
             this.updateCheckoutCart(item);
