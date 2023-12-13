@@ -7,8 +7,8 @@
                         <ProductAvatar :product="product"></ProductAvatar>
                     </v-row>
                     <v-row>
-                        {{ $t("unitPrice") }}&nbsp;<strong>{{ item.priceAfterDiscounts }}</strong>&nbsp;{{
-                            $t('currencySymbol') }}
+                        {{ $t("unitPrice") }}&nbsp;<strong>{{ item.priceAfterDiscounts }}</strong>
+                        &nbsp;{{ $t('currencySymbol') }}
                     </v-row>
                 </v-col>
                 <v-col class="text-subtitle-2 flex-column justify-right">
@@ -22,9 +22,9 @@
                     </v-row>
                     <v-row>
                         <v-card-actions>
-                            <v-btn block icon="mdi-minus" @click="decrementCartItem(item)"></v-btn>
+                            <v-btn icon="mdi-minus" @click="decrementCartItem(item)"></v-btn>
                             {{ item.orderedQuantity }}
-                            <v-btn block icon="mdi-plus" @click="incrementCartItem(item)"></v-btn>
+                            <v-btn icon="mdi-plus" @click="incrementCartItem(item)"></v-btn>
                         </v-card-actions>
                     </v-row>
                 </v-col>
@@ -41,16 +41,19 @@ import { getProductPrimaryMediaUrl } from "@/services/catalog";
 
 export default {
     setup() {
+
+        const calculating = computed(() => useCheckoutCartStore().calculating || false);
         const cartItems = computed(() => useCheckoutCartStore().items);
 
+        const error = computed(() => useCheckoutCartStore().error || false);
         const loading = computed(() => {
             const items = useCheckoutCartStore().items;
             return items && items.some(i => i.loading);
         });
 
-        const error = computed(() => useCheckoutCartStore().error || false);
-        const calculating = computed(() => useCheckoutCartStore().calculating || false);
+
         useCheckoutCartStore().calculate(0);
+
         const productThumbnail = computed(() => {
             const res = {};
             const items = useCheckoutCartStore().items;

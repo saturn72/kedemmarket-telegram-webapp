@@ -1,6 +1,6 @@
 <template>
     <v-card height="100%" flat class="d-flex flex-column justify-center">
-        <v-card-title v-if="loading || calculating" class="d-flex flex-column align-center justify-center">
+        <v-card-title v-if="loading" class="d-flex flex-column align-center justify-center">
             <v-progress-circular indeterminate width="1"></v-progress-circular>
         </v-card-title>
         <v-card-title v-else class="d-flex justify-center">

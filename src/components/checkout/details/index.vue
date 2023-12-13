@@ -23,7 +23,7 @@
                     </v-icon>
                 </template>
                 {{ $t('backToBillingAddress') }}</v-btn>
-            <CheckoutDetailsCheckoutItems :loading="loading" />
+            <CheckoutDetailsCheckoutItems :loading="loading"></CheckoutDetailsCheckoutItems>
         </template>
     </v-stepper>
 </template>

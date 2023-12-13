@@ -70,7 +70,6 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
             continue;
         }
 
-
         cp.orderedQuantity = di.Quantity;
         stateItems.push({
             cartTotal: di.SubTotalValue,
@@ -85,30 +84,6 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         state.totalDiscounts += di.numericDiscount;
     }
     state.items = stateItems;
-
-    // for (let index = 0; index < data.Items.length; index++) {
-    //     const cur = data.Items[index];
-
-    //     const p = state.userCart?.items.find(x => x.product.id == cur.ProductId);
-    //     const cp = _.cloneDeep(p);
-    //     if (!cp) {
-    //         continue;
-    //     }
-
-    //     cp.orderedQuantity = cur.Quantity;
-    //     stateItems.push({
-    //         cartTotal: cur.SubTotalValue,
-    //         itemPrice: cur.UnitPriceValue,
-    //         numericDiscount: cur.DiscountValue,
-    //         percentageDiscount: 1 - (cur.DiscountValue / cur.UnitPriceValue),
-    //         priceAfterDiscounts: cur.UnitPriceValue - cur.DiscountValue,
-    //         priceBeforeDiscounts: cur.UnitPriceValue,
-    //         ...cp,
-    //     });
-    //     state.cartTotal += cur.SubTotalValue;
-    //     state.totalDiscounts += cur.numericDiscount;
-    // }
-    // state.items = stateItems;
 }
 
 export const useCheckoutCartStore = defineStore('checkoutCart', {
