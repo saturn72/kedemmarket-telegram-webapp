@@ -34,41 +34,34 @@
     </v-card>
 </template>
 
+<script setup>
+
+useCheckoutCartStore().calculate(0);
+const calculating = computed(() => useCheckoutCartStore().calculating || false);
+
+const cartItems = computed(() => useCheckoutCartStore().items);
+
+const error = computed(() => useCheckoutCartStore().error || false);
+
+const loading = computed(() => {
+    const items = useCheckoutCartStore().items;
+    return items && items.some(i => i.loading);
+});
+
+const productThumbnail = computed(() => {
+    const res = {};
+    const items = useCheckoutCartStore().items;
+    items.forEach(async i => res[i.product.id] = await getProductThumbnail(i.product));
+    return res;
+});
+
+</script>
 <script>
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
 import { getProductPrimaryMediaUrl } from "@/services/catalog";
 
 export default {
-    setup() {
-
-        const calculating = computed(() => useCheckoutCartStore().calculating || false);
-        const cartItems = computed(() => useCheckoutCartStore().items);
-
-        const error = computed(() => useCheckoutCartStore().error || false);
-        const loading = computed(() => {
-            const items = useCheckoutCartStore().items;
-            return items && items.some(i => i.loading);
-        });
-
-
-        useCheckoutCartStore().calculate(0);
-
-        const productThumbnail = computed(() => {
-            const res = {};
-            const items = useCheckoutCartStore().items;
-            items.forEach(async i => res[i.product.id] = await getProductThumbnail(i.product));
-            return res;
-        });
-
-        return {
-            calculating,
-            cartItems,
-            error,
-            loading,
-            productThumbnail
-        };
-    },
     data() {
         return {
             itemToDelete: null,

@@ -36,7 +36,8 @@ function notNullAndNotEmpty(str: string | undefined) {
 }
 
 function isAddressValid(address: Address) {
-    return notNullAndNotEmpty(address.address) &&
+    return address && address != null &&
+        notNullAndNotEmpty(address.address) &&
         notNullAndNotEmpty(address.city) &&
         notNullAndNotEmpty(address.email) &&
         notNullAndNotEmpty(address.fullName) &&

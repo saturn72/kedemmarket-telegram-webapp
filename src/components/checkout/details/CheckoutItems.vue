@@ -28,39 +28,35 @@
     </v-card>
 </template>
 <script setup>
+
+const calculating = computed(() => useCheckoutCartStore().calculating || false);
+
 const checkoutCartStore = computed(() => useCheckoutCartStore());
+
+const error = computed(() => useCheckoutCartStore().error || false);
 
 const loading = computed(() => {
     const items = useCheckoutCartStore().items;
     return items && items.some(i => i.loading);
 });
+
+useCheckoutCartStore().calculate(0);
+
+// return {
+//     calculating,
+//     checkoutCartStore,
+//     error,
+//     loading
+// };
+
 </script>
+
 <script>
 export default {
     props: {
         loading: {
             type: Boolean, default: false
         },
-    },
-    setup() {
-        const checkoutCartStore = computed(() => useCheckoutCartStore());
-
-        const loading = computed(() => {
-            const items = useCheckoutCartStore().items;
-            return items && items.some(i => i.loading);
-        });
-
-        const error = computed(() => useCheckoutCartStore().error || false);
-        const calculating = computed(() => useCheckoutCartStore().calculating || false);
-
-        useCheckoutCartStore().calculate(0);
-
-        return {
-            calculating,
-            checkoutCartStore,
-            error,
-            loading
-        };
-    },
+    }
 }
 </script>
