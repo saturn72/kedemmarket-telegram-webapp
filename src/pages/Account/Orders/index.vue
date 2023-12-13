@@ -15,7 +15,8 @@
                 </v-col>
             </v-row>
 
-            <v-row v-for="item in orders" :key="item.orderId" @click="onClick(item)">
+            <v-row v-if="orders?.length == 0">{{ $t("noOrders") }}</v-row>
+            <v-row v-else v-for="item in orders" :key="item.orderId" @click="onClick(item)">
                 <v-col cols="1">
                     <v-icon>mdi-open-in-app</v-icon>
                 </v-col>

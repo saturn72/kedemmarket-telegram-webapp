@@ -9,6 +9,12 @@
         </v-card>
     </v-dialog>
 
+    <v-card v-if="loading" height="100%" flat class="d-flex flex-column align-center justify-center">
+        <v-card-text>
+            <AppProgressCircular />
+        </v-card-text>
+    </v-card>
+
     <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog>
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
     <v-stepper :items="items" v-model="step" flat hide-actions>
@@ -28,10 +34,6 @@
     </v-stepper>
 </template>
 
-<script setup>
-const { data: profile, error } = await useAsyncData(() => getUserProfile());
-</script>
-
 <script>
 import _ from "lodash";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
@@ -40,9 +42,14 @@ import { submitOrder } from "@/services/checkout";
 import { getUserProfile, saveUserProfile } from "~/services/profile";
 
 export default {
-    mounted() {
+    async mounted() {
+        this.loading = true;
+        const { data, error } = await useAsyncData(() => getUserProfile());
+
+        this.profile = data;
         if (!this.profile?.billingAddress?.valid)
             this.toStep(1);
+        this.loading = false;
 
         this.items = [
             this.$t("billingAddress"),
@@ -54,7 +61,9 @@ export default {
             step: 2,
             items: [],
             itemToDelete: null,
+            loading: true,
             orderDialog: false,
+            profile: {}
         }
     },
     methods: {
