@@ -20,7 +20,7 @@
         <v-card-actions>
             <v-btn block variant="flat" :loading="loading || calculating"
                 :disabled="loading || checkoutCartStore.items.length == 0" color="secondary"
-                @click="checkout_submitOrder()">{{
+                @click="$emit('submitOrder')">{{
                     $t('checkoutCart')
                 }}
             </v-btn>

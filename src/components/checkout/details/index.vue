@@ -29,7 +29,7 @@
                     </v-icon>
                 </template>
                 {{ $t('backToBillingAddress') }}</v-btn>
-            <CheckoutDetailsCheckoutItems :loading="loading"></CheckoutDetailsCheckoutItems>
+            <CheckoutDetailsCheckoutItems :loading="loading" @submitOrder="submitOrder"></CheckoutDetailsCheckoutItems>
         </template>
     </v-stepper>
 </template>
@@ -85,7 +85,7 @@ export default {
             this.loading = false;
             this.toStep(2);
         },
-        async checkout_submitOrder() {
+        async submitOrder() {
             this.orderDialog = true;
 
             const order = await submitOrder();
@@ -93,7 +93,6 @@ export default {
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
             useRouter().push(r)
         },
-
         removeFromCart(item) {
             const t = this.$t('deleteFromCart');
             this.dialogText = t.replace("##0##", item.product.name)
