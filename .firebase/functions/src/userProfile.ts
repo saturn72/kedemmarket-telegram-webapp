@@ -6,7 +6,6 @@ import {
   QueryDocumentSnapshot,
   getFirestore,
 } from "firebase-admin/firestore";
-import * as _ from "lodash";
 
 const USER_PROFILE_COLLECTION_NAME = "user-profiles";
 
@@ -34,7 +33,7 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
 
   const p = profiles[0].data();
   const res = {
-    billingAddress: p.billingAddress,
+    billinginfo: p.billingInfo,
   };
 
   const msg = `user profile found for uid:${uid} = ${res}`;
@@ -55,7 +54,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
 
     const p = {
       userId: uid,
-      billingAddress: req.data.billingAddress,
+      billingInfo: req.data.billingInfo,
     };
     await col.add(p);
 
@@ -63,7 +62,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
     return p;
   } else {
     const profile = profiles[0].data();
-    profile.billingAddress = req.data.billingAddress;
+    profile.billingInfo = req.data.billingInfo;
     profiles[0].ref.update(profile);
 
     logger.debug("user profiles created with values:", profile);

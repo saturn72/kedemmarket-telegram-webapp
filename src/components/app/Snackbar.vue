@@ -8,7 +8,7 @@
             </v-col>
         </v-row>
         <template v-slot:actions>
-            <v-btn color="red" variant="text" @click="close" icon>
+            <v-btn variant="text" @click="close" icon>
                 <v-icon>mdi-close-circle-outline</v-icon>
                 <!-- {{ $t("close") }} -->
             </v-btn>

@@ -17,7 +17,7 @@
         </v-card-actions>
         <v-card-text>
             <v-form ref="form" @update:modelValue="updated">
-                <ProfileBillingAddressFormFields :billingAddress="billingAddress" :editable="editable" />
+                <ProfileBillingInfoFormFields :billingInfo="billingInfo" :editable="editable" />
             </v-form>
         </v-card-text>
     </v-card>
@@ -33,7 +33,7 @@ export default {
         mode: { type: String, default: undefined },
     },
     created() {
-        this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
+        this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
         this.reset();
     },
     mounted() {
@@ -43,10 +43,10 @@ export default {
     },
     computed: {
         editable() {
-            return !this.profile?.billingAddress || this.update;
+            return !this.profile?.billingInfo || this.update;
         },
         modified() {
-            return !_.isEqual(this.srcBillingAddress, this.billingAddress);
+            return !_.isEqual(this.srcBillingInfo, this.billingInfo);
         }
     },
     methods: {
@@ -55,7 +55,7 @@ export default {
         },
         async toggleUpdate() {
             if (this.update) {
-                this.billingAddress = this.srcBillingAddress;
+                this.billingInfo = this.srcBillingInfo;
                 this.reset();
             } else {
                 this.updateIcon = "mdi-close-circle-outline";
@@ -68,7 +68,7 @@ export default {
             this.update = !this.update;
         },
         reset() {
-            this.billingAddress = _.cloneDeep(this.profile.billingAddress);
+            this.billingInfo = _.cloneDeep(this.profile.billingInfo);
             this.updateIcon = "mdi-pencil";
             this.updateText = this.$t('update');
             this.updateColor = "secondary";
@@ -76,11 +76,11 @@ export default {
         },
         async save() {
             this.loading = true;
-            this.profile.billingAddress = this.billingAddress;
+            this.profile.billingInfo = this.billingInfo;
             await saveUserProfile(this.profile);
             this.loading = false;
             this.update = false;
-            this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
+            this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
             this.reset();
             this.$emit("saved");
         }
@@ -88,8 +88,8 @@ export default {
     data: () => {
         return {
             valid: false,
-            billingAddress: {},
-            srcBillingAddress: {},
+            billingInfo: {},
+            srcBillingInfo: {},
             loading: false,
             update: false,
             updateIcon: "",

@@ -2,7 +2,7 @@
     <v-card flat>
         <v-card-text>
             <v-form ref="form" @update:modelValue="updated">
-                <ProfileBillingAddressFormFields :billingAddress="profile?.billingAddress" mode="edit" />
+                <ProfileBillingInfoFormFields :billingInfo="profile?.billingInfo" mode="edit" />
             </v-form>
         </v-card-text>
         <v-card-actions>
@@ -24,13 +24,13 @@ export default {
         loading: { type: Boolean, default: false }
     },
     created() {
-        this.srcBillingAddress = _.cloneDeep(this.profile.billingAddress);
+        this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
     },
     data: () => {
         return {
             valid: undefined,
-            srcBillingAddress: undefined,
-            billingAddress: undefined,
+            srcBillingInfo: undefined,
+            billingInfo: undefined,
         }
     },
     methods: {
@@ -38,8 +38,8 @@ export default {
             this.valid = e;
         },
         approve() {
-            const modified = !_.isEqual(this.srcBillingAddress, this.profile.billingAddress);
-            this.$emit('saved_billing_address', modified);
+            const modified = !_.isEqual(this.srcBillingInfo, this.profile.billingInfo);
+            this.$emit('saved_billing_info', modified);
         }
     }
 }

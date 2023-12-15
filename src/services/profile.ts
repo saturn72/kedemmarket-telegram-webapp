@@ -28,6 +28,7 @@ export async function saveUserProfile(profile: UserProfile): Promise<UserProfile
     const up = await useNuxtApp().$backend.saveUserProfile(profile);
     const res = alignWithUser(up);
     await useNuxtApp().$cache.set(key, res, cachingTime);
+
     return res;
 }
 
@@ -45,26 +46,26 @@ function isAddressValid(address: Address) {
 }
 function alignWithUser(profile: UserProfile) {
     const curProfile = defu(profile, {
-        billingAddress: {
-            valid: isAddressValid(profile.billingAddress),
+        billingInfo: {
+            valid: isAddressValid(profile.billingInfo),
         }
     });
 
     const user = useUserStore().getUser;
-    if (!curProfile.billingAddress.valid) {
+    if (!curProfile.billingInfo.valid) {
         if (user.displayName) {
-            curProfile.billingAddress.fullName = user.displayName;
+            curProfile.billingInfo.fullName = user.displayName;
         }
 
         if (user.phoneNumber) {
-            if (!curProfile.billingAddress.phoneNumber) {
-                curProfile.billingAddress.phoneNumber = user.phoneNumber;
+            if (!curProfile.billingInfo.phoneNumber) {
+                curProfile.billingInfo.phoneNumber = user.phoneNumber;
             }
         }
 
         if (user.email) {
-            if (!curProfile.billingAddress.email) {
-                curProfile.billingAddress.email = user.email;
+            if (!curProfile.billingInfo.email) {
+                curProfile.billingInfo.email = user.email;
             }
         }
     }
