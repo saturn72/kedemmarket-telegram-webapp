@@ -12,14 +12,14 @@
 
         <v-card-text v-if="!loading">
             <v-expansion-panels multiple v-model="panels">
-                <v-expansion-panel value="billingAddress">
+                <v-expansion-panel value="billingInfo">
                     <template v-slot:title>
-                        <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('billingAddress') }}
+                        <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('billingInfo') }}
                     </template>
 
                     <v-expansion-panel-text>
-                        <ProfileBillingAddressForm :profile="profile" :mode="mode" @saved="saved">
-                        </ProfileBillingAddressForm>
+                        <ProfileBillingInfoForm :profile="profile" :mode="mode" @saved="saved">
+                        </ProfileBillingInfoForm>
                     </v-expansion-panel-text>
 
                 </v-expansion-panel>

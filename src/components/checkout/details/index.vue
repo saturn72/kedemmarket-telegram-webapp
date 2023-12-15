@@ -19,8 +19,8 @@
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
     <v-stepper :items="items" v-model="step" flat hide-actions>
         <template v-slot:item.1>
-            <CheckoutDetailsProfileBillingAddressCard :profile="profile" :loading="loading"
-                @saved_billing_address="checkout_approveBillingaAddress" />
+            <CheckoutDetailsProfileBillingInfoCard :profile="profile" :loading="loading"
+                @saved_billing_info="checkout_approveBillingInfo" />
         </template>
         <template v-slot:item.2>
             <v-btn block color="info" variant="outlined" @click="toStep(1)">
@@ -28,7 +28,7 @@
                         mdi-arrow-right
                     </v-icon>
                 </template>
-                {{ $t('backToBillingAddress') }}</v-btn>
+                {{ $t('backToBillingInfo') }}</v-btn>
             <CheckoutDetailsCheckoutItems :loading="loading" @submitOrder="submitOrder"></CheckoutDetailsCheckoutItems>
         </template>
     </v-stepper>
@@ -47,12 +47,12 @@ export default {
         const { data, error } = await useAsyncData(() => getUserProfile());
 
         this.profile = data;
-        if (!this.profile?.billingAddress?.valid)
+        if (!this.profile?.billingInfo?.valid)
             this.toStep(1);
         this.loading = false;
 
         this.items = [
-            this.$t("billingAddress"),
+            this.$t("billingInfo"),
             this.$t("checkout"),
         ];
     },
@@ -73,14 +73,14 @@ export default {
         toStep(stepId) {
             this.step = stepId;
             if (stepId == 1) {
-                const txt = this.$t("updateBillingAddressIsRequired");
+                const txt = this.$t("updateBillingInfoIsRequired");
                 useAlertStore().setSnackbar(txt);
             }
         },
-        async checkout_approveBillingaAddress(modified) {
+        async checkout_approveBillingInfo(modified) {
             this.loading = true;
             if (modified) {
-                await saveUserProfile(this.profile);
+                this.profile = await saveUserProfile(this.profile);
             }
             this.loading = false;
             this.toStep(2);

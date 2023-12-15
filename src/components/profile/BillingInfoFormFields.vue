@@ -1,8 +1,8 @@
 
 <template>
     <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon" :readonly="!editable"
-        v-model="billingAddress[item.key]" density="compact" :type="item.type" :rules="item.rules"
-        :loading="!billingAddress && !(!!billingAddress[item.key])"></v-text-field>
+        v-model="billingInfo[item.key]" density="compact" :type="item.type" :rules="item.rules"
+        :loading="!billingInfo && !(!!billingInfo[item.key])"></v-text-field>
 </template>
 
 <script>
@@ -10,7 +10,7 @@
 export default {
     props: {
         editable: { type: Boolean, default: true },
-        billingAddress: { type: Object, default: {} }
+        billingInfo: { type: Object, default: {} }
     },
     created() {
         this.items = [{
@@ -58,7 +58,7 @@ export default {
     },
     methods: {
         requiredRule(key) {
-            return [() => !!this.billingAddress[key] || `${this.$t(key)}  ${this.$t('isRequired')}`]
+            return [() => !!this.billingInfo[key] || `${this.$t(key)}  ${this.$t('isRequired')}`]
         }
     },
     data: () => {

@@ -1,7 +1,7 @@
 
 export interface UserProfile {
     userId: any;
-    billingAddress: Address
+    billingInfo: Address
 }
 
 export interface Address {
