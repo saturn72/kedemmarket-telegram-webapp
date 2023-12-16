@@ -120,7 +120,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                     return await executeFunction('getOrCreateCart', cart);
                 },
 
-                async placeOrder(order: { items: CartItem[] }): Promise<Order> {
+                async placeOrder(order: { items: CartItem[], userId: any }): Promise<Order> {
                     return await executeFunction('submitOrder', order);
                 },
 
@@ -133,7 +133,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 },
 
                 async saveUserProfile(profile: UserProfile): Promise<UserProfile> {
-                    const p = _.omit(profile, ['valid']);
+                    const c = _.cloneDeep(profile);
+                    const p = _.omit(c, ['billingInfo.valid']);
                     return await executeFunction('saveUserProfile', p);
                 }
             }

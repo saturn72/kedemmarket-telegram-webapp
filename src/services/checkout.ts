@@ -2,7 +2,6 @@ import type { Order } from "@/models/cart";
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { clearOrderCache } from "./order";
 import { useCartStore } from "@/stores/cart";
-import { getUserProfile } from "./profile";
 
 export async function submitOrder(): Promise<Order | undefined> {
     const checoutCart = useCheckoutCartStore();
@@ -12,10 +11,10 @@ export async function submitOrder(): Promise<Order | undefined> {
         checoutCart.userCart.items.length == 0) {
         return;
     }
-    const user = await getUserProfile();
+    const userId = useUserStore().getUser.uid;
     const order = {
         items: checoutCart.userCart.items,
-        user,
+        userId,
     };
 
     const res = await useNuxtApp().$backend.placeOrder(order);

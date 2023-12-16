@@ -7,6 +7,7 @@ import {
   QueryDocumentSnapshot,
   getFirestore,
 } from "firebase-admin/firestore";
+import {getUserProfiles} from "./userProfile";
 
 export async function getUserCarts(uid: string):
   Promise<QueryDocumentSnapshot<DocumentData>[]> {
@@ -93,6 +94,7 @@ type CartItem = {
 type UserCart = {
   items: CartItem[],
   paymentMethod: string;
+  userId: any;
 }
 
 export async function deleteUserCarts(uid: string) {
@@ -162,5 +164,8 @@ export async function getCheckoutCart(userCart: UserCart) {
     cartTotal += x.priceAfterDiscounts;
     totalDiscounts += x.numericDiscount;
   });
-  return {userCart, items, cartTotal, totalDiscounts};
+
+  const profiles = await getUserProfiles(userCart.userId);
+  const userProfile = profiles[0].data();
+  return {userProfile, userCart, items, cartTotal, totalDiscounts};
 }
