@@ -11,6 +11,7 @@ import type { AppCheck } from "firebase/app-check";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import type { UserProfile } from "@/models/account";
 import type { CartItem, CheckoutCart, Order, UserCart } from "@/models/cart";
+import _ from "lodash";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
@@ -132,7 +133,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 },
 
                 async saveUserProfile(profile: UserProfile): Promise<UserProfile> {
-                    return await executeFunction('saveUserProfile', profile);
+                    const p = _.omit(profile, ['valid']);
+                    return await executeFunction('saveUserProfile', p);
                 }
             }
         }

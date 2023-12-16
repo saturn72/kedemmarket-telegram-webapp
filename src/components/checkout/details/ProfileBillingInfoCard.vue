@@ -2,7 +2,7 @@
     <v-card flat>
         <v-card-text>
             <v-form ref="form" @update:modelValue="updated">
-                <ProfileBillingInfoFormFields :billingInfo="profile?.billingInfo" mode="edit" />
+                <ProfileBillingInfoFormFields :billingInfo="profile?.billingInfo" editable="editable" />
             </v-form>
         </v-card-text>
         <v-card-actions>
@@ -23,7 +23,9 @@ export default {
         profile: { type: Object, default: undefined },
         loading: { type: Boolean, default: false }
     },
-    created() {
+    async mounted() {
+        const { valid } = await this.$refs.form?.validate()
+        this.valid = valid || false;
         this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
     },
     data: () => {

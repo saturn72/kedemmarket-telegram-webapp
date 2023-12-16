@@ -33,7 +33,7 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
 
   const p = profiles[0].data();
   const res = {
-    billinginfo: p.billingInfo,
+    billingInfo: p.billingInfo,
   };
 
   const msg = `user profile found for uid:${uid} = ${res}`;
