@@ -1,10 +1,11 @@
-import {onCall} from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import {validateAuth} from "./requestUtils";
+import { validateAuth } from "./requestUtils";
 import {
   DocumentData,
   QueryDocumentSnapshot,
   getFirestore,
+  Timestamp,
 } from "firebase-admin/firestore";
 
 const USER_PROFILE_COLLECTION_NAME = "user-profiles";
@@ -21,9 +22,9 @@ export async function getUserProfiles(uid: string):
 }
 
 export const getUserProfile = onCall(async (req): Promise<any> => {
-  logger.debug("start getUserProfile", {structuredData: true});
+  logger.debug("start getUserProfile", { structuredData: true });
 
-  const {uid} = validateAuth(req);
+  const { uid } = validateAuth(req);
 
   const profiles = await getUserProfiles(uid);
   if (profiles.length == 0) {
@@ -37,14 +38,14 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
   };
 
   const msg = `user profile found for uid:${uid} = ${res}`;
-  logger.debug(msg, {structuredData: true});
+  logger.debug(msg, { structuredData: true });
   return res;
 });
 
 export const saveUserProfile = onCall(async (req): Promise<any> => {
-  logger.debug("start saveUserProfile", {structuredData: true});
+  logger.debug("start saveUserProfile", { structuredData: true });
 
-  const {uid} = validateAuth(req);
+  const { uid } = validateAuth(req);
 
   const profiles = await getUserProfiles(uid);
 
@@ -55,6 +56,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
     const p = {
       userId: uid,
       billingInfo: req.data.billingInfo,
+      utcTimestamp: Timestamp.now(),
     };
     await col.add(p);
 
@@ -63,6 +65,8 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
   } else {
     const profile = profiles[0].data();
     profile.billingInfo = req.data.billingInfo;
+    profile.utcTimestamp = Timestamp.now();
+
     profiles[0].ref.update(profile);
 
     logger.debug("user profiles created with values:", profile);

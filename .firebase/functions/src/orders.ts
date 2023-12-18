@@ -1,22 +1,23 @@
-import {onCall} from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import {validateAuth, validateData} from "./requestUtils";
+import { validateAuth, validateData } from "./requestUtils";
 import {
   FieldPath,
   getFirestore,
+  Timestamp
 } from "firebase-admin/firestore";
 
-import {deleteUserCarts, getCheckoutCart} from "./cart";
+import { deleteUserCarts, getCheckoutCart } from "./cart";
 
 export const submitOrder = onCall(async (req) => {
-  logger.debug("start submitOrder", {structuredData: true});
+  logger.debug("start submitOrder", { structuredData: true });
 
-  const {uid} = validateAuth(req);
+  const { uid } = validateAuth(req);
   validateData(req);
 
   const checkoutCart = await getCheckoutCart(req.data);
   const o = {
-    utcTimestamp: new Date().getTime(),
+    utcTimestamp: Timestamp.now(),
     ipAddress: req.rawRequest.ip,
     submitterUserId: req.auth?.uid,
     userId: req.data.userId,
@@ -34,7 +35,7 @@ export const submitOrder = onCall(async (req) => {
   const writeResult = await orders.add(o);
   await deleteUserCarts(uid);
 
-  logger.debug("end submitOrder", {structuredData: true});
+  logger.debug("end submitOrder", { structuredData: true });
   return {
     orderId: writeResult.id,
     items: req.data.items,
@@ -55,10 +56,10 @@ const getOrdersInternal =
   };
 
 export const getOrders = onCall(async (req): Promise<any> => {
-  logger.debug("start getOrderById", {structuredData: true});
+  logger.debug("start getOrderById", { structuredData: true });
 
-  const {uid} = validateAuth(req);
-  const {pageSize = 10, skip = 0, status = []} = req.data;
+  const { uid } = validateAuth(req);
+  const { pageSize = 10, skip = 0, status = [] } = req.data;
   logger.debug("pageSize, skip, status", pageSize, skip, status);
 
   const t = await getOrdersInternal(uid, status)
@@ -110,8 +111,8 @@ export const getOrders = onCall(async (req): Promise<any> => {
 });
 
 export const getOrderById = onCall(async (req): Promise<any> => {
-  logger.debug("start 'getOrderById'", {structuredData: true});
-  const {uid} = validateAuth(req);
+  logger.debug("start 'getOrderById'", { structuredData: true });
+  const { uid } = validateAuth(req);
   validateData(req);
 
   const orderId = req.data?.orderId;
