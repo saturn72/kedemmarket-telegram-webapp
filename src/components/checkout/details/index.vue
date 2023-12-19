@@ -72,7 +72,7 @@ export default {
         },
         toStep(stepId) {
             this.step = stepId;
-            if (stepId == 1) {
+            if (stepId == 1 && !this.profile?.billingInfo?.valid) {
                 const txt = this.$t("updateBillingInfoIsRequired");
                 useAlertStore().setSnackbar(txt);
             }

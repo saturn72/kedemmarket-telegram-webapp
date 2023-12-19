@@ -74,7 +74,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     const auth = configureAuth(app);
     configureAppCheck(app);
-    await initCloudMessaging(app);
+    // await initCloudMessaging(app);
 
     return {
         provide: {
