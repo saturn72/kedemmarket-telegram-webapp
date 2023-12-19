@@ -23,6 +23,17 @@
                     </v-expansion-panel-text>
 
                 </v-expansion-panel>
+                <v-expansion-panel value="shippingAddresses">
+                    <template v-slot:title>
+                        <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('shippingAddresses') }}
+                    </template>
+
+                    <v-expansion-panel-text>
+                        <ProfileBillingInfoForm :profile="profile" :mode="mode" @saved="saved">
+                        </ProfileBillingInfoForm>
+                    </v-expansion-panel-text>
+
+                </v-expansion-panel>
             </v-expansion-panels>
         </v-card-text>
     </v-card>
