@@ -4,7 +4,7 @@
         <v-card-actions>
             <v-row>
                 <v-col>
-                    <v-btn variant="outlined" block :disabled="profile.shippingAddresses.useBillingAddress || loading"
+                    <v-btn variant="outlined" block :disabled="profile.shipping.useBillingAddress || loading"
                         :loading="loading" color="info" @click="useBillingAddress()">
                         <v-icon>mdi-map-marker-account-outline</v-icon>&nbsp;{{ $t('useBillingAddress') }}
                     </v-btn>
@@ -12,9 +12,26 @@
             </v-row>
         </v-card-actions>
         <v-card-text>
-            <v-form ref="form" @update:modelValue="updated">
-                <ProfileBillingInfoFormFields :billingInfo="billingInfo" :editable="editable" />
-            </v-form>
+            <v-data-iterator :items="displayAddresses" items-per-page="5">
+                <template v-slot:default="{ items }">
+                    <v-card flat>
+                        <v-row>
+                            <v-col v-for="(item, i) in items" :key="i" height="50">
+                                <v-card>
+                                    <v-card-text v-if="i == 0">
+                                        <ProfileShippingAddressNewForm :profile="profile"></ProfileShippingAddressNewForm>
+                                    </v-card-text>
+                                    <v-card-text v-else>
+                                        <ProfileShippingAddressCard :address="item"></ProfileShippingAddressCard>
+                                    </v-card-text>
+
+                                </v-card>
+
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </template>
+            </v-data-iterator>
         </v-card-text>
     </v-card>
 </template>
@@ -29,69 +46,32 @@ export default {
         mode: { type: String, default: undefined },
     },
     created() {
-        if (!this.profile.shippingAddresses) {
-            this.profile.shippingAddresses = { useBillingAddress: false };
+        if (!this.profile.shipping) {
+            this.profile.shipping = { useBillingAddress: false };
+            this.profile.shipping.addresses = [];
         }
-
-        this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
-        this.reset();
+        this.profile.shipping.addresses
     },
     mounted() {
         if (this.mode == "edit") {
             this.toggleUpdate();
         }
-    },
-    computed: {
-        editable() {
-            return !this.profile?.billingInfo || this.update;
-        },
-        modified() {
-            return !_.isEqual(this.srcBillingInfo, this.billingInfo);
-        }
+        this.displayAddresses.push(...this.profile.shipping.addresses)
     },
     methods: {
         async useBillingAddress() {
             this.loading = true;
-            this.profile.shippingAddresses.useBillingAddress = true;
+            this.profile.shipping.useBillingAddress = true;
             await saveUserProfile(this.profile);
             this.loading = false;
             this.$emit("saved");
-        },
-        updated(e) {
-            this.valid = e;
-        },
-        async toggleUpdate() {
-            if (this.update) {
-                this.billingInfo = this.srcBillingInfo;
-                this.reset();
-            } else {
-                this.updateIcon = "mdi-close-circle-outline";
-                this.updateText = this.$t('cancel');
-                this.updateColor = "error";
-
-                const { valid } = await this.$refs.form.validate()
-                this.valid = valid;
-            }
-            this.update = !this.update;
-        },
-        reset() {
-            this.billingInfo = _.cloneDeep(this.profile.billingInfo);
-            this.updateIcon = "mdi-pencil";
-            this.updateText = this.$t('update');
-            this.updateColor = "secondary";
-            this.$refs.form?.resetValidation();
         },
     },
     data: () => {
         return {
             valid: false,
-            billingInfo: {},
-            srcBillingInfo: {},
             loading: false,
-            update: false,
-            updateIcon: "",
-            updateText: '',
-            updateColor: "",
+            displayAddresses: [{}]
         }
     }
 }

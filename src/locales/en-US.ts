@@ -1,6 +1,7 @@
 export default {
     addButton: "Add",
     address: "Address",
+    addAddress: "Add Address",
     approve: "Approve",
     back: "Back",
     backToBillingInfo: "Back to Billing Address",

@@ -2,6 +2,7 @@
 export default {
     addButton: "הוספה",
     address: "כתובת",
+    addAddress: "הוספת כתובת",
     approve: "אישור",
     back: "חזרה",
     backToBillingInfo: "לעדכון פרטי לחיוב",
