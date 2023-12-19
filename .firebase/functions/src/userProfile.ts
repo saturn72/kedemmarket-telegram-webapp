@@ -56,6 +56,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
     const p = {
       userId: uid,
       billingInfo: req.data.billingInfo,
+      shippingAddresses: req.data.shippingAddresses,
       updatedOnUtc: Timestamp.now(),
     };
     await col.add(p);
@@ -65,6 +66,7 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
   } else {
     const profile = profiles[0].data();
     profile.billingInfo = req.data.billingInfo;
+    profile.shippingAddresses = req.data.shippingAddresses;
     profile.updatedOnUtc = Timestamp.now();
 
     profiles[0].ref.update(profile);

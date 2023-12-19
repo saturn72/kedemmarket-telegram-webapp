@@ -135,6 +135,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 async saveUserProfile(profile: UserProfile): Promise<UserProfile> {
                     const c = _.cloneDeep(profile);
                     const p = _.omit(c, ['billingInfo.valid']);
+                    console.log(p);
                     return await executeFunction('saveUserProfile', p);
                 }
             }

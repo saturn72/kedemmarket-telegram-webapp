@@ -79,6 +79,7 @@ export default {
     unitPrice: "Unit Price'",
     update: "Update",
     updateBillingInfoIsRequired: "In order to purchase, billing details must be set",
+    useBillingAddress: "Use Billing Address",
     youAreRedirectedToTheStore: "🏎 You'll be redirected to the store soon",
     yourCartIsEmpty: "Your Cart is Empty 🛒",
     zipPostalCode: "zipPostalCode",

@@ -80,6 +80,7 @@ export default {
     unitPrice: "מחיר ליח'",
     update: "עדכון",
     updateBillingInfoIsRequired: "על מנת להמשיך ברכישה, יש לעדכן פרטי חיוב",
+    useBillingAddress: "השתמש בכתובת חיוב",
     youAreRedirectedToTheStore: "🏎 דף החנות יטען ממש בקרוב",
     yourCartIsEmpty: "🛒 עגלת הקניות ריקה",
     zipPostalCode: "מיקוד",

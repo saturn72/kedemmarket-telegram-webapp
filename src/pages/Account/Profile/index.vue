@@ -14,7 +14,7 @@
             <v-expansion-panels multiple v-model="panels">
                 <v-expansion-panel value="billingInfo">
                     <template v-slot:title>
-                        <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('billingInfo') }}
+                        <v-icon>mdi-map-marker-account-outline</v-icon>&nbsp;{{ $t('billingInfo') }}
                     </template>
 
                     <v-expansion-panel-text>
@@ -25,12 +25,12 @@
                 </v-expansion-panel>
                 <v-expansion-panel value="shippingAddresses">
                     <template v-slot:title>
-                        <v-icon>mdi-map-marker-outline</v-icon>&nbsp;{{ $t('shippingAddresses') }}
+                        <v-icon>mdi-truck-fast-outline</v-icon>&nbsp;{{ $t('shippingAddresses') }}
                     </template>
 
                     <v-expansion-panel-text>
-                        <ProfileBillingInfoForm :profile="profile" :mode="mode" @saved="saved">
-                        </ProfileBillingInfoForm>
+                        <ProfileShippingAddresses :profile="profile" :mode="mode" @saved="saved">
+                        </ProfileShippingAddresses>
                     </v-expansion-panel-text>
 
                 </v-expansion-panel>
