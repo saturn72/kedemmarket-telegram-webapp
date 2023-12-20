@@ -1,6 +1,6 @@
 
 <template>
-    <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon" :readonly="!editable"
+    <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon"
         v-model="billingInfo[item.key]" density="compact" :type="item.type" :rules="item.rules"
         :loading="!billingInfo && !(!!billingInfo[item.key])"></v-text-field>
 </template>

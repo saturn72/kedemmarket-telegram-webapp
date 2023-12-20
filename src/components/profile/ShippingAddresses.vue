@@ -4,35 +4,34 @@
         <v-card-actions>
             <v-row>
                 <v-col>
-                    <v-btn variant="outlined" block :disabled="profile.shipping.useBillingAddress || loading"
-                        :loading="loading" color="info" @click="useBillingAddress()">
+                    <v-btn variant="flat" block :disabled="profile.shipping.useBillingAddress || loading" :loading="loading"
+                        color="info" @click="useBillingAddress()">
                         <v-icon>mdi-map-marker-account-outline</v-icon>&nbsp;{{ $t('useBillingAddress') }}
                     </v-btn>
                 </v-col>
             </v-row>
         </v-card-actions>
-        <v-card-text>
-            <v-data-iterator :items="displayAddresses" items-per-page="5">
-                <template v-slot:default="{ items }">
-                    <v-card flat>
-                        <v-row>
-                            <v-col v-for="(item, i) in items" :key="i" height="50">
-                                <v-card>
-                                    <v-card-text v-if="i == 0">
-                                        <ProfileShippingAddressNewForm :profile="profile"></ProfileShippingAddressNewForm>
-                                    </v-card-text>
-                                    <v-card-text v-else>
-                                        <ProfileShippingAddressCard :address="item"></ProfileShippingAddressCard>
-                                    </v-card-text>
+        <v-data-iterator :items="profile.shipping.addresses" :key="alias" :items-per-page="itemsPerPage" :sort-by="sortBy()"
+            cols="12" sm="6" md="6">
+            <template v-slot:default="{ items }">
+                <v-card flat>
+                    <v-row>
+                        <v-col v-for="(item, i) in items" :key="i.alias" :value="i.alias">
+                            <v-card>
+                                <v-card-text>
+                                    <ProfileShippingAddressCard :address="item.raw"></ProfileShippingAddressCard>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </template>
+        </v-data-iterator>
 
-                                </v-card>
-
-                            </v-col>
-                        </v-row>
-                    </v-card>
-                </template>
-            </v-data-iterator>
-        </v-card-text>
+        <v-card-actions v-if="profile.shipping.addresses.length < itemsPerPage">
+            <ProfileShippingAddressNewForm :profile="profile" @address-saved="addressSaved">
+            </ProfileShippingAddressNewForm>
+        </v-card-actions>
     </v-card>
 </template>
 
@@ -50,15 +49,19 @@ export default {
             this.profile.shipping = { useBillingAddress: false };
             this.profile.shipping.addresses = [];
         }
-        this.profile.shipping.addresses
     },
     mounted() {
         if (this.mode == "edit") {
             this.toggleUpdate();
         }
-        this.displayAddresses.push(...this.profile.shipping.addresses)
     },
     methods: {
+        sortBy() {
+            return [
+                { key: "isDefault", order: 'desc' },
+                // { key: "alias", order: 'desc' }
+            ];
+        },
         async useBillingAddress() {
             this.loading = true;
             this.profile.shipping.useBillingAddress = true;
@@ -66,12 +69,14 @@ export default {
             this.loading = false;
             this.$emit("saved");
         },
+        async addressSaved(address) {
+        },
     },
     data: () => {
         return {
             valid: false,
             loading: false,
-            displayAddresses: [{}]
+            itemsPerPage: 3
         }
     }
 }

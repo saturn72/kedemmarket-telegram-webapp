@@ -23,11 +23,10 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
 }
 
 export async function saveUserProfile(profile: UserProfile): Promise<UserProfile | null | undefined> {
-    const key = userProfileCacheKey();
-    await useNuxtApp().$cache.remove(key);
-
     const up = await useNuxtApp().$backend.saveUserProfile(profile);
     const res = alignWithUser(up);
+
+    const key = userProfileCacheKey();
     await useNuxtApp().$cache.set(key, res, cachingTime);
 
     return res;

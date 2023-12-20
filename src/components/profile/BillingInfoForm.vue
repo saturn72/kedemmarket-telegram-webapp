@@ -16,8 +16,8 @@
             </v-row>
         </v-card-actions>
         <v-card-text>
-            <v-form ref="form" @update:modelValue="updated">
-                <ProfileBillingInfoFormFields :billingInfo="billingInfo" :editable="editable" />
+            <v-form ref="form" @update:modelValue="updated" :disabled="!editable">
+                <ProfileBillingInfoFormFields :billingInfo="billingInfo" />
             </v-form>
         </v-card-text>
     </v-card>

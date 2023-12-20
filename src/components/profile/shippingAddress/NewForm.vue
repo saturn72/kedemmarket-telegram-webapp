@@ -1,17 +1,18 @@
 
 <template>
     <v-dialog v-click-outside="toggleDialog" v-model="dialog">
-        <v-card>
+        <v-card :loading="loading">
             <v-card-title>
                 <v-icon>mdi-truck-fast-outline</v-icon>&nbsp;{{ $t('addAddress') }}
             </v-card-title>
             <v-card-text>
                 <v-form ref="form" @update:modelValue="updated">
-                    <ProfileShippingAddressNewFormFields :address="newAddress"></ProfileShippingAddressNewFormFields>
+                    <ProfileShippingAddressNewFormFields :address="address" :profile="profile">
+                    </ProfileShippingAddressNewFormFields>
                 </v-form>
             </v-card-text>
             <v-card-actions>
-                <v-btn variant="flat" block :disabled="!valid" color="info" @click="save()">
+                <v-btn variant="flat" block :disabled="!valid" color="info" @click="addAddress">
                     <v-icon>mdi-content-save-outline</v-icon>&nbsp;{{ $t('save') }}
                 </v-btn>
             </v-card-actions>
@@ -22,6 +23,9 @@
     </v-btn>
 </template>
 <script>
+
+import { saveUserProfile } from "@/services/profile";
+
 export default {
     props: {
         profile: { type: Object, default: undefined }
@@ -29,22 +33,36 @@ export default {
     data() {
         return {
             dialog: false,
-            newAddress: {},
+            address: {},
             valid: false,
+            loading: false,
         };
     },
     methods: {
         async toggleDialog() {
             this.dialog = !this.dialog
             if (this.dialog) {
-                console.log(this.$refs.form);
-                const { valid } = await this.$refs.form.validate();
-                this.valid = valid;
+                this.address = { isDefault: true };
             }
         },
         updated(e) {
             this.valid = e;
         },
+        async addAddress() {
+            this.loading = true;
+            if (this.address.isDefault) {
+                this.profile.shipping.useBillingAddress = false;
+                this.profile.shipping.addresses.forEach((e, i) => {
+                    this.profile.shipping.addresses[i].isDefault = false;
+                });
+            }
+            this.profile.shipping.addresses.push(this.address);
+            await saveUserProfile(this.profile);
+
+            this.toggleDialog();
+            this.$emit('address-saved', this.address)
+            this.loading = false;
+        }
     }
 }
 </script>
