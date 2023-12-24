@@ -8,6 +8,7 @@ export default {
     approve: "אישור",
     back: "חזרה",
     backToBillingInfo: "לעדכון פרטי לחיוב",
+    backToShippingAddress: "לעדכון פרטי משלוח",
     backToStore: "חזרה לחנות 🏬",
     billingInfo: "פרטי חיוב",
     browsingToOrders: "עובר לדף הזמנות",

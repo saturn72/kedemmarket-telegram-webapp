@@ -23,14 +23,14 @@ export default {
         profile: { type: Object, default: undefined },
         loading: { type: Boolean, default: false }
     },
-    async mounted() {
-        const { valid } = await this.$refs.form?.validate()
+    async created() {
+        const { valid } = await this.$refs.form?.validate();
         this.valid = valid || false;
         this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
     },
     data: () => {
         return {
-            valid: undefined,
+            valid: false,
             srcBillingInfo: undefined,
             billingInfo: undefined,
         }

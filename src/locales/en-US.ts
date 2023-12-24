@@ -7,6 +7,7 @@ export default {
     approve: "Approve",
     back: "Back",
     backToBillingInfo: "Back to Billing Address",
+    backToShippingAddress: "Back to Shipping Address",
     backToStore: "Back to Store 🏬",
     billingInfo: "Billing Details",
     browsingToOrders: "Browsing to Orders",
