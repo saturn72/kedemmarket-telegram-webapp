@@ -55,13 +55,12 @@ const pageSize = 10;
 
 export default {
     async created() {
-        this.filter = this.$route.query["status"];
         await this.fetchOrders(pageSize, this.skip)
     },
     methods: {
         async fetchOrders(pageSize, skip) {
             this.loading = true;
-            const res = await getOrders({ pageSize, skip }, this.filter);
+            const res = await getOrders({ pageSize, skip });
             this.orders = res.orders.map(o => {
                 return {
                     ...o,

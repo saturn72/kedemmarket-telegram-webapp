@@ -7,3 +7,8 @@ export interface MediaItem {
     url: string;
 }
 
+export type ErrorResponse = {
+    code?: number | string | undefined;
+    message?: string | undefined;
+}
+

@@ -12,6 +12,7 @@ import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import type { UserProfile } from "@/models/account";
 import type { CartItem, CheckoutCart, Order, UserCart } from "@/models/cart";
 import _ from "lodash";
+import type { ErrorResponse } from "~/models/common";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
@@ -62,11 +63,16 @@ const initCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefin
     return messaging;
 }
 
-const executeFunction = async (functionName: string, payload?: any): Promise<any> => {
+const executeFunction = async (functionName: string, payload?: any): Promise<any | ErrorResponse> => {
     const f = getFunctions();
     const po = httpsCallable(f, functionName);
-    const res = await po(payload);
-    return res.data;
+    try {
+        const res = await po(payload);
+        return res.data;
+    } catch (err) {
+        return { message: `failed to run \'${functionName}\'` };
+    }
+
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -90,6 +96,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                         const r = ref(s, uri);
                         return await getDownloadURL(r);
                     } catch (error) {
+                        console.log(error)
                         console.debug(error);
                         createError({ data: error });
                         return null;
@@ -104,7 +111,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
             backend: {
 
-                async getOrders(options: { pageSize: number, skip: number }, status: string[]): Promise<Order[]> {
+                async getOrders(options: { pageSize: number, skip: number }, status: string[] | undefined): Promise<Order[] | ErrorResponse> {
                     return await executeFunction('getOrders', { ...options, status });
                 },
 
