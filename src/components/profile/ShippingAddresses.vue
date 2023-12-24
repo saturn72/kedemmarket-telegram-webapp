@@ -13,7 +13,7 @@
                         prepend-icon="mdi-eye-outline" @click:prepend="toBillingInfo">{{
                             $t('usingBillingAddress')
                         }}</v-text-field>
-                    <v-btn v-else block variant=" flat" :disabled="profile.shipping.useBillingAddress || loading"
+                    <v-btn v-else block variant="flat" :disabled="profile.shipping.useBillingAddress || loading"
                         :loading="loading" color="info" @click="useBillingAddress()">
                         <v-icon>mdi-map-marker-account-outline</v-icon>&nbsp;{{ $t('useBillingAddress') }}
                     </v-btn>
