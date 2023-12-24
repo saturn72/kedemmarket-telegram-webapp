@@ -1,9 +1,9 @@
 
 <template>
-    <v-switch :label="$t('setAsDefaultAddress')" color="primary" v-model="address.isDefault"></v-switch>
+    <v-switch density="compact" :label="$t('defaultAddress')" color="primary" v-model="address.isDefault"></v-switch>
 
-    <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon" v-model="address[item.key]"
-        density="compact" :type="item.type" :rules="item.rules"
+    <v-text-field class="mb-n2" v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon"
+        v-model="address[item.key]" density="compact" :type="item.type" :rules="item.rules"
         :loading="!address && !(!!address[item.key])"></v-text-field>
 </template>
 
@@ -12,7 +12,8 @@
 export default {
     props: {
         address: { type: Object, default: {} },
-        profile: { type: Object, default: {} }
+        profile: { type: Object, default: {} },
+        mode: { type: String, default: undefined }
     },
     created() {
         this.items = [{
@@ -71,10 +72,13 @@ export default {
         aliasRules() {
             return [
                 this.requiredRule("alias"),
-                () => (!!this.address.alias && this.profile.shipping.addresses.every(x => x.alias?.trim() != this.address.alias.trim()))
+                () => (!!this.address.alias && this.checkAlias())
                     || `${this.$t('addressAlias')}  ${this.$t('isRequired')}`]
         },
-
+        checkAlias() {
+            var hasSameAlias = this.profile.shipping.addresses.filter(x => x.alias?.trim() == this.address.alias.trim()).length
+            return this.mode == "edit" ? hasSameAlias <= 1 : hasSameAlias == 0;
+        }
     },
     data: () => {
         return {

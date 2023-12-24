@@ -1,37 +1,40 @@
 
 <template>
-    <v-card flat>
-        <v-card-actions>
-            <v-row>
+    <v-dialog :model-value="dialog">
+        <ProfileShippingAddressAddOrEditForm :profile="profile" :address="editedAddress" @on-cancel="toggleDialog"
+            @address-saved="addressSaved">
+        </ProfileShippingAddressAddOrEditForm>
+    </v-dialog>
+    <v-card>
+        <v-card-title>
+            <v-row no-gutters>
                 <v-col>
-                    <v-btn variant="flat" block :disabled="profile.shipping.useBillingAddress || loading" :loading="loading"
-                        color="info" @click="useBillingAddress()">
+                    <v-text-field v-if="profile.shipping.useBillingAddress" readonly density="compact" variant="plain"
+                        prepend-icon="mdi-eye-outline" @click:prepend="toBillingInfo">{{
+                            $t('usingBillingAddress')
+                        }}</v-text-field>
+                    <v-btn v-else block variant=" flat" :disabled="profile.shipping.useBillingAddress || loading"
+                        :loading="loading" color="info" @click="useBillingAddress()">
                         <v-icon>mdi-map-marker-account-outline</v-icon>&nbsp;{{ $t('useBillingAddress') }}
                     </v-btn>
                 </v-col>
             </v-row>
-        </v-card-actions>
-        <v-data-iterator :items="profile.shipping.addresses" :key="alias" :items-per-page="itemsPerPage" :sort-by="sortBy()"
-            cols="12" sm="6" md="6">
+            <v-row no-gutters v-if="showAddButton">
+                <v-col>
+                    <v-btn block variant="outlined" color="info" @click="toggleDialog()">
+                        <v-icon size="x-large">mdi-plus-circle-outline</v-icon>&nbsp;{{ $t("addressAdd") }}
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-card-title>
+        <v-data-iterator :items="profile.shipping.addresses" :key="alias" :items-per-page="maxAllowedAddresses"
+            :sort-by="sortBy()" cols="12" sm="12" md="6">
             <template v-slot:default="{ items }">
-                <v-card flat>
-                    <v-row>
-                        <v-col v-for="(item, i) in items" :key="i.alias" :value="i.alias">
-                            <v-card>
-                                <v-card-text>
-                                    <ProfileShippingAddressCard :address="item.raw"></ProfileShippingAddressCard>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-card>
+                <ProfileShippingAddressCard v-for="(item, i) in items" :key="i.alias" :value="i.alias" :address="item.raw"
+                    @delete-address="deleteAddress(i)" @edit-address="toggleDialog(i)">
+                </ProfileShippingAddressCard>
             </template>
         </v-data-iterator>
-
-        <v-card-actions v-if="profile.shipping.addresses.length < itemsPerPage">
-            <ProfileShippingAddressNewForm :profile="profile" @address-saved="addressSaved">
-            </ProfileShippingAddressNewForm>
-        </v-card-actions>
     </v-card>
 </template>
 
@@ -43,6 +46,12 @@ export default {
     props: {
         profile: { type: Object, default: undefined },
         mode: { type: String, default: undefined },
+        loading: { type: Boolean, default: true },
+    },
+    computed: {
+        showAddButton() {
+            return (this.profile.shipping?.addresses?.length || 0) < this.maxAllowedAddresses;
+        }
     },
     created() {
         if (!this.profile.shipping) {
@@ -50,21 +59,43 @@ export default {
             this.profile.shipping.addresses = [];
         }
     },
-    mounted() {
-        if (this.mode == "edit") {
-            this.toggleUpdate();
-        }
-    },
     methods: {
+        toBillingInfo() {
+            navigateTo(`${useAppConfig().routes.accountProfile}?expand=billingInfo`);
+        },
+        toggleDialog(index) {
+            this.dialog = !this.dialog;
+            this.editedAddress = index != undefined ? this.profile.shipping.addresses[index] : undefined;
+        },
+        async deleteAddress(index) {
+            this.loading = true;
+            this.profile.shipping.addresses.splice(index, 1);
+
+            const s = this.profile.shipping;
+            if (!s.useBillingAddress) {
+                if (!s.addresses || s.addresses.length == 0) {
+                    this.profile.shipping.useBillingAddress = true;
+                }
+                else {
+                    if (!s.addresses.some(a => a.isDefault)) {
+                        this.profile.shipping.addresses[0].isDefault = true;
+                    }
+                }
+            }
+            await saveUserProfile(this.profile);
+            this.loading = false;
+            this.$emit("profile-updated")
+        },
         sortBy() {
             return [
                 { key: "isDefault", order: 'desc' },
-                // { key: "alias", order: 'desc' }
             ];
         },
         async useBillingAddress() {
             this.loading = true;
             this.profile.shipping.useBillingAddress = true;
+            this.profile.shipping.addresses.forEach(a => a.isDefault = false);
+
             await saveUserProfile(this.profile);
             this.loading = false;
             this.$emit("saved");
@@ -74,9 +105,11 @@ export default {
     },
     data: () => {
         return {
-            valid: false,
+            dialog: false,
+            editedAddress: undefined,
             loading: false,
-            itemsPerPage: 3
+            maxAllowedAddresses: 3,
+            valid: false,
         }
     }
 }

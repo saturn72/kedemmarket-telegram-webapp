@@ -31,10 +31,10 @@ export default defineNuxtConfig({
   ],
   modules: [
     "nuxt-gtag",
-    // '@nuxtjs/i18n',
-    '@invictus.codes/nuxt-vuetify',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
+    // '@nuxtjs/i18n',
+    '@invictus.codes/nuxt-vuetify',
   ],
   vuetify: {
     vuetifyOptions: {

@@ -10,7 +10,6 @@
         <template v-slot:actions>
             <v-btn variant="text" @click="close" icon>
                 <v-icon>mdi-close-circle-outline</v-icon>
-                <!-- {{ $t("close") }} -->
             </v-btn>
         </template>
     </v-snackbar>

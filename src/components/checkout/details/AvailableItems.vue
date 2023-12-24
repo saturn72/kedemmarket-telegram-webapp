@@ -43,7 +43,6 @@ const cartItems = computed(() => useCheckoutCartStore().items);
 <script>
 import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
-import { getProductPrimaryMediaUrl } from "@/services/catalog";
 
 export default {
     data() {

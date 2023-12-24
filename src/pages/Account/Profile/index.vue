@@ -29,7 +29,8 @@
                     </template>
 
                     <v-expansion-panel-text>
-                        <ProfileShippingAddresses :profile="profile" :mode="mode" @saved="saved">
+                        <ProfileShippingAddresses :profile="profile" :mode="mode" :loading="loading"
+                            @profile-updated="profileUpdated">
                         </ProfileShippingAddresses>
                     </v-expansion-panel-text>
 
@@ -44,6 +45,11 @@ import { getUserProfile } from "@/services/profile";
 import account from './../account';
 
 export default {
+    watch: {
+        "$route.query.expand"(expand) {
+            this.panels = [expand];
+        }
+    },
     async created() {
         const expand = this.$route.query.expand;
         this.mode = this.$route.query.mode;
@@ -65,11 +71,18 @@ export default {
         mode: undefined
     }),
     methods: {
-        saved() {
+        async profileUpdated() {
+            this.loading = true;
+
+            //check if navigation is required
             const to = this.$route.query.returnUri;
             if (to) {
                 navigateTo(to);
             }
+
+            //update profile
+            this.profile = await getUserProfile();
+            this.loading = false;
         }
     }
 }
