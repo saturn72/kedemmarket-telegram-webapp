@@ -3,7 +3,6 @@ import _ from "lodash";
 import type { UserProfile } from "@/models/account";
 import type { Address } from "~/models/account";
 
-
 const cachingTime = 10 * 60;
 
 const userProfileCacheKey = (): string => {
@@ -14,21 +13,24 @@ const userProfileCacheKey = (): string => {
 export async function getUserProfile(): Promise<UserProfile | null | undefined> {
     const key = userProfileCacheKey();
 
-    return await useNuxtApp().$cache.getOrAcquire(key,
-        async () => {
-            var up = await useNuxtApp().$backend.getUserProfile();
-            return alignWithUser(up);
-        },
+    const up = await useNuxtApp().$cache.getOrAcquire(key,
+        async () => await useNuxtApp().$backend.getUserProfile(),
         cachingTime);
+
+    if (up) {
+        up.billingInfo!.valid = isAddressValid(up.billingInfo!);
+    }
+
+    return up || alignWithUser(up);
 }
 
 export async function saveUserProfile(profile: UserProfile): Promise<UserProfile | null | undefined> {
     const up = await useNuxtApp().$backend.saveUserProfile(profile);
-    const res = alignWithUser(up);
 
     const key = userProfileCacheKey();
-    await useNuxtApp().$cache.set(key, res, cachingTime);
+    await useNuxtApp().$cache.set(key, up, cachingTime);
 
+    const res = alignWithUser(up);
     return res;
 }
 
@@ -45,14 +47,13 @@ function isAddressValid(address: Address): boolean {
         notNullAndNotEmpty(address.phoneNumber);
 }
 
-function alignWithUser(profile: UserProfile): UserProfile {
+function alignWithUser(profile: any | undefined): UserProfile {
     const defaultProfile = {
         billingInfo: {
         }
     };
 
     const curProfile = _.assign(defaultProfile, profile);
-    curProfile.billingInfo.valid = isAddressValid(profile.billingInfo);
 
     const user = useUserStore().getUser;
     if (!curProfile.billingInfo.valid) {

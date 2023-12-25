@@ -74,15 +74,15 @@ export default {
 
         this.profile = await getUserProfile();
 
-        if (this.profile.shipping?.addresses?.length == 0) {
-            this.profile.shipping = { useBillingAddress: true };
-        }
-
-        if (this.profile.shipping?.useBillingAddress) {
-            const c = _.cloneDeep(this.profile.billingInfo);
-            const a = _.omit(c, ['valid']);
-            this.checkout_selectShippingAddress(a);
-        } else {
+        if (this.requireShipping) {
+            if (this.profile.shipping?.addresses?.length == 0) {
+                this.profile.shipping = { useBillingAddress: true };
+            }
+            if (this.profile.shipping?.useBillingAddress) {
+                const c = _.cloneDeep(this.profile.billingInfo);
+                const a = _.omit(c, ['valid']);
+                this.checkout_selectShippingAddress(a);
+            }
             const da = this.profile.shipping?.addresses.find(a => a.isDefault);
             if (da) {
                 this.checkout_selectShippingAddress(da);

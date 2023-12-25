@@ -1,8 +1,8 @@
 
 export interface UserProfile {
     userId: any;
-    billingInfo: Address;
-    shipping: ShippingInfo | undefined;
+    billingInfo?: Address;
+    shipping?: ShippingInfo;
 }
 
 export interface ShippingInfo {

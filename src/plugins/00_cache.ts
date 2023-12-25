@@ -76,9 +76,9 @@ export default defineNuxtPlugin((nuxtApp) => {
                     const av = await acquire();
                     if (av) {
                         setItemInternal<T>(key, av, expiration);
-                        return av;
                     }
-                    return null;
+                    return av;
+                    // return null;
                 }
             }
         }
