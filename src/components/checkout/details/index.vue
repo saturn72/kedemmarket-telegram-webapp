@@ -49,7 +49,7 @@
                         </v-icon>
                     </template>
                     {{ requireShipping ? $t('backToShippingAddress') : $t('backToBillingInfo') }}</v-btn>
-                <CheckoutDetailsCheckoutItems :loading="loading" @submitOrder="submitOrder"></CheckoutDetailsCheckoutItems>
+                <CheckoutDetailsCheckoutItems :loading="loading" @submit-order="submitOrder"></CheckoutDetailsCheckoutItems>
             </v-stepper-window-item>
         </v-stepper-window>
     </v-stepper>
@@ -139,6 +139,7 @@ export default {
             const order = await submitOrder();
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
+            console.log(r)
             useRouter().push(r)
         },
         removeFromCart(item) {
