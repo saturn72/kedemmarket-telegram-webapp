@@ -73,6 +73,11 @@ export default {
         this.loading = true;
 
         this.profile = await getUserProfile();
+
+        if (this.profile.shipping?.addresses?.length == 0) {
+            this.profile.shipping = { useBillingAddress: true };
+        }
+
         if (this.profile.shipping?.useBillingAddress) {
             const c = _.cloneDeep(this.profile.billingInfo);
             const a = _.omit(c, ['valid']);

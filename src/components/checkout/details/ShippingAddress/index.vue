@@ -4,10 +4,11 @@
         <v-card-title>
             <v-row no-gutters>
                 <v-col>
-                    <v-text-field v-if="useBillingAddress" readonly density="compact" variant="plain"
+                    <v-text-field v-if="profile.shipping.useBillingAddress" readonly density="compact" variant="plain"
                         prepend-icon="mdi-eye-outline">{{
                             $t('usingBillingAddress')
                         }}</v-text-field>
+
                     <v-btn v-else block variant="flat" :disabled="profile.shipping.useBillingAddress || loading"
                         :loading="loading" color="primary" @click="setBillingAddress">
                         <v-icon>mdi-map-marker-account-outline</v-icon>&nbsp;{{ $t('useBillingAddress') }}
@@ -49,14 +50,6 @@ export default {
             return [
                 { key: "isDefault", order: 'desc' },
             ];
-        }
-    },
-    data: () => {
-        return {
-            useBillingAddress: false,
-            //     valid: undefined,
-            //     srcBillingInfo: undefined,
-            //     billingInfo: undefined,
         }
     }
 }

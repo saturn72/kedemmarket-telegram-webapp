@@ -92,7 +92,7 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
     state: (): CheckoutCartState => defaultValue,
     getters: {
         shippingRequired(state) {
-            return !state.items.some(i => i.product.isShipEnabled);
+            return state.items.some(i => i.product.isShipEnabled);
         }
     },
     actions: {

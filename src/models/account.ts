@@ -1,7 +1,13 @@
 
 export interface UserProfile {
     userId: any;
-    billingInfo: Address
+    billingInfo: Address;
+    shipping: ShippingInfo | undefined;
+}
+
+export interface ShippingInfo {
+    useBillingAddress: boolean;
+    addresses: [Address] | undefined;
 }
 
 export interface Address {
