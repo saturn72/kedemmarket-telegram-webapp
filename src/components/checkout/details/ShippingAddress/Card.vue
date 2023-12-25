@@ -1,12 +1,12 @@
 
 <template>
-    <v-card flat :loading="loading" @click="$emit('click', address)">
+    <v-card :loading="loading" @click="$emit('click', address)">
         <v-card-title>{{ address.alias }}</v-card-title>
         <v-card-text>
-            <v-switch v-if="address.isDefault" :label="$t('defaultAddress')" color="primary" v-model="address.isDefault"
+            <v-switch :label="$t('defaultAddress')" color="primary" v-model="address.isDefault"
                 true-icon="mdi-check-outline" readonly density="compact">
             </v-switch>
-            <v-text-field v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon"
+            <v-text-field variant="plain" v-for="item in items" :label="$t(item.label)" :prepend-inner-icon="item.icon"
                 v-model="address[item.key]" density="compact" :type="item.type" readonly></v-text-field>
         </v-card-text>
     </v-card>

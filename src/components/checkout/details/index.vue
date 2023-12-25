@@ -71,16 +71,17 @@ import { clearOrderCache } from "~/services/order";
 export default {
     async mounted() {
         this.loading = true;
-        const { data, error } = await useAsyncData(() => getUserProfile());
 
-        this.profile = data;
-        if (this.profile.shipping.useBillingAddress) {
+        this.profile = await getUserProfile();
+        if (this.profile.shipping?.useBillingAddress) {
             const c = _.cloneDeep(this.profile.billingInfo);
             const a = _.omit(c, ['valid']);
             this.checkout_selectShippingAddress(a);
         } else {
-            const da = this.profile.shipping.addresses.find(a => a.isDefault);
-            this.checkout_selectShippingAddress(da);
+            const da = this.profile.shipping?.addresses.find(a => a.isDefault);
+            if (da) {
+                this.checkout_selectShippingAddress(da);
+            }
         }
 
         this.toNextStep();
@@ -88,7 +89,7 @@ export default {
     },
     data() {
         return {
-            steps: ["billingInfo", "shippingAddress", "checkout"],
+            steps: ["1", "2", "3"],
             step: '',
             itemToDelete: null,
             loading: true,
