@@ -4,11 +4,13 @@ import { defineStore } from 'pinia'
 import { useCartStore } from './cart';
 import { useUserStore } from './user';
 import { useBackendFetch } from '../services/backend';
+import type { Address } from '~/models/account';
 
 type CheckoutCartState = CheckoutCart & {
     notAvailableItems: CartItem[]
     calculating: boolean,
     error: boolean
+    shippingAddress?: Address | undefined
 };
 
 let timoutRef: NodeJS.Timeout;
@@ -20,11 +22,11 @@ const defaultValue = {
     items: [],
     notAvailableItems: [],
     calculating: false,
-    error: false
+    error: false,
+    shippingAddress: undefined
 };
 
 const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
-
     const userCart = useCartStore().getUserCart;
     if (!userCart || useCartStore().getTotalCartItemsCount == 0) {
         state = defaultValue;
@@ -88,8 +90,12 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
 
 export const useCheckoutCartStore = defineStore('checkoutCart', {
     state: (): CheckoutCartState => defaultValue,
+    getters: {
+        shippingRequired(state) {
+            return !state.items.some(i => i.product.isShipEnabled);
+        }
+    },
     actions: {
-
         clearUserCart(): void {
             this.$state.userCart = useCartStore().getUserCart;
         },
@@ -108,5 +114,8 @@ export const useCheckoutCartStore = defineStore('checkoutCart', {
                 this.$state.calculating = false;
             }, timeout)
         },
+        setShippingAddress(address: Address) {
+            this.$state.shippingAddress = address;
+        }
     }
 })

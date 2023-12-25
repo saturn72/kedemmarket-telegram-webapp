@@ -21,7 +21,7 @@
         <v-stepper-header>
             <v-stepper-item :title="$t('billingInfo')" :value="steps[0]" />
             <v-divider></v-divider>
-            <v-stepper-item :complete="requireShipping" :title="$t('shippingAddress')" :value="steps[1]" />
+            <v-stepper-item v-if="requireShipping" :title="$t('shippingAddress')" :value="steps[1]" />
             <v-divider></v-divider>
             <v-stepper-item :title="$t('checkout')" :value="steps[2]" />
         </v-stepper-header>
@@ -32,24 +32,23 @@
             </v-stepper-window-item>
 
             <v-stepper-window-item :value="steps[1]">
-                <v-btn block color="info" variant="outlined" @click="toStep(steps[0])">
+                <v-btn block color="info" variant="outlined" @click="toStep(0)">
                     <template v-slot:prepend><v-icon>
                             mdi-arrow-right
                         </v-icon>
                     </template>
                     {{ $t('backToBillingInfo') }}</v-btn>
                 <CheckoutDetailsShippingAddress :profile="profile" :loading="loading"
-                    @save_shipping_address="checkout_approveShippingAddress" />
+                    @shipping-address-selected="checkout_selectShippingAddress" />
             </v-stepper-window-item>
 
             <v-stepper-window-item :value="steps[2]">
-
-                <v-btn block color="info" variant="outlined" @click="toStep(steps[1])">
+                <v-btn block color="info" variant="outlined" @click="toStep(requireShipping ? 1 : 0)">
                     <template v-slot:prepend><v-icon>
                             mdi-arrow-right
                         </v-icon>
                     </template>
-                    {{ $t('backToShippingAddress') }}</v-btn>
+                    {{ requireShipping ? $t('backToShippingAddress') : $t('backToBillingInfo') }}</v-btn>
                 <CheckoutDetailsCheckoutItems :loading="loading" @submitOrder="submitOrder"></CheckoutDetailsCheckoutItems>
             </v-stepper-window-item>
         </v-stepper-window>
@@ -57,7 +56,7 @@
 </template>
 <script setup>
 
-const requireShipping = computed(() => !useCheckoutCartStore().items.some(i => i.product.isShipEnabled));
+const requireShipping = computed(() => useCheckoutCartStore().shippingRequired);
 
 </script>
 <script>
@@ -73,14 +72,20 @@ export default {
         const { data, error } = await useAsyncData(() => getUserProfile());
 
         this.profile = data;
-        if (!this.profile?.billingInfo?.valid)
-            this.toStep(this.steps[0]);
+        if (this.profile.shipping.useBillingAddress) {
+            const c = _.cloneDeep(this.profile.billingInfo);
+            const a = _.omit(c, ['valid']);
+            this.checkout_selectShippingAddress(a);
+        } else {
+            const da = this.profile.shipping.addresses.find(a => a.isDefault);
+            this.checkout_selectShippingAddress(da);
+        }
+
+        this.toNextStep();
         this.loading = false;
-        this.step = this.steps[this.steps.length - 1];
     },
     data() {
         return {
-            // steps: ["billingInfo", "shippingAddress", "checkout"],
             steps: ["billingInfo", "shippingAddress", "checkout"],
             step: '',
             itemToDelete: null,
@@ -93,29 +98,40 @@ export default {
         errorRetry() {
             setupWorker()
         },
-        toStep(stepId) {
-            this.step = stepId;
-            if (stepId == 0 && !this.profile?.billingInfo?.valid) {
-                const txt = this.$t("updateBillingInfoIsRequired");
-                useAlertStore().setSnackbar(txt);
+        toStep(to) {
+            this.step = this.steps[to];
+        },
+        toNextStep(from) {
+            if (!from) {
+                if (!this.profile?.billingInfo?.valid) {
+                    this.toStep(0);
+                    const txt = this.$t("updateBillingInfoIsRequired");
+                    useAlertStore().setSnackbar(txt);
+                    return;
+                }
+
+                if (useCheckoutCartStore().shippingRequired && !useCheckoutCartStore().shippingAddress) {
+                    this.toStep(1);
+                    return;
+                }
             }
+            this.toStep(2);
         },
         async checkout_approveBillingInfo(modified) {
             this.loading = true;
+
             if (modified) {
                 this.profile = await saveUserProfile(this.profile);
             }
+
             this.loading = false;
-            this.toStep(this.steps[1]);
+            this.toNextStep(0);
         },
-        async checkout_approveShippingAddress(address) {
+        async checkout_selectShippingAddress(address) {
             this.loading = true;
-            console.log("add address to checkout info")
-            // if (modified) {
-            //     this.profile = await saveUserProfile(this.profile);
-            // }
+            useCheckoutCartStore().setShippingAddress(address);
             this.loading = false;
-            this.toStep(this.steps[2]);
+            this.toNextStep(1);
         },
         async submitOrder() {
             this.orderDialog = true;

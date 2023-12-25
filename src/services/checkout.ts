@@ -15,6 +15,7 @@ export async function submitOrder(): Promise<Order | undefined> {
     const order = {
         items: checoutCart.userCart.items,
         userId,
+        shippingAddress: checoutCart.shippingAddress,
     };
 
     const res = await useNuxtApp().$backend.placeOrder(order);

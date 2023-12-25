@@ -24,8 +24,10 @@ export default {
         loading: { type: Boolean, default: false }
     },
     async created() {
-        const { valid } = await this.$refs.form?.validate();
-        this.valid = valid || false;
+        const v = await this.$refs.form?.validate();
+        this.valid = v?.valid || false;
+    },
+    updated() {
         this.srcBillingInfo = _.cloneDeep(this.profile.billingInfo);
     },
     data: () => {

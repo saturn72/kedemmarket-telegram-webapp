@@ -5,7 +5,7 @@ export interface UserProfile {
 }
 
 export interface Address {
-    valid: boolean;
+    valid?: boolean;
     fullName: string | undefined;
     phoneNumber: string | undefined;
     email: string | undefined;
