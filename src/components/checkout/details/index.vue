@@ -49,7 +49,8 @@
                         </v-icon>
                     </template>
                     {{ requireShipping ? $t('backToShippingAddress') : $t('backToBillingInfo') }}</v-btn>
-                <CheckoutDetailsCheckoutItems :loading="loading" @submit-order="submitOrder"></CheckoutDetailsCheckoutItems>
+                <CheckoutDetailsCheckoutItems :loading="loading" @submit-order="onSubmitOrder">
+                </CheckoutDetailsCheckoutItems>
             </v-stepper-window-item>
         </v-stepper-window>
     </v-stepper>
@@ -65,6 +66,7 @@ import { useCheckoutCartStore } from "@/stores/checkoutCart";
 import { useCartStore } from "@/stores/cart";
 import { submitOrder } from "@/services/checkout";
 import { getUserProfile, saveUserProfile } from "~/services/profile";
+import { clearOrderCache } from "~/services/order";
 
 export default {
     async mounted() {
@@ -133,14 +135,17 @@ export default {
             this.loading = false;
             this.toNextStep(1);
         },
-        async submitOrder() {
+        async onSubmitOrder() {
             this.orderDialog = true;
-
             const order = await submitOrder();
+
             const ro = encodeURIComponent(JSON.stringify(order));
             const r = `${useAppConfig().routes.postPurchaseRoute}?order=${ro}`;
-            console.log(r)
             useRouter().push(r)
+
+            clearOrderCache();
+            useCartStore().clear();
+            useCheckoutCartStore().clearUserCart();
         },
         removeFromCart(item) {
             const t = this.$t('deleteFromCart');
