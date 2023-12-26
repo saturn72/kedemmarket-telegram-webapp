@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         displayDate() {
-            return moment(this.order.utcTimestamp).format("DD/MM/YY");
+            return moment(this.order.createdOnUtc._seconds * 1000).format('L LT');
         },
         repurchaseOrder() {
             const userCart = useCartStore();
