@@ -48,6 +48,7 @@
 
 <script>
 import { getOrders } from "@/services/order";
+import moment from "moment";
 
 const pageSize = 10;
 const filter = ["pending", "submitted", "processing"];
@@ -63,7 +64,7 @@ export default {
             this.orders = res.orders.map(o => {
                 return {
                     ...o,
-                    date: (new Date(o.utcTimestamp)).toLocaleDateString(),
+                    date: moment(o.createdOnUtc._seconds * 1000).format('L LT'),
                     orderTotalToDisplay: `${o.orderTotal} ${this.$t('currencySymbol')}`
                 }
             });
