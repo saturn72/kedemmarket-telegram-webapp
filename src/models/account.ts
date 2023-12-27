@@ -1,8 +1,12 @@
 
 export interface UserProfile {
     userId: any;
-    billingInfo?: Address;
+    billingInfo?: BillingInfo;
     shipping?: ShippingInfo;
+}
+
+export interface BillingInfo extends Partial<Address> {
+    valid?: boolean;
 }
 
 export interface ShippingInfo {
@@ -11,7 +15,6 @@ export interface ShippingInfo {
 }
 
 export interface Address {
-    valid?: boolean;
     fullName: string | undefined;
     phoneNumber: string | undefined;
     email: string | undefined;

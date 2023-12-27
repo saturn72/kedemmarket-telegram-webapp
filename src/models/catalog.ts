@@ -24,7 +24,7 @@ export interface Product {
     gtin: string;
     height: number;
     isNew: boolean;
-    isShipEnabled: Boolean;
+    isShipEnabled: boolean;
     length: number;
     manufacturers: string[],
     media: MediaItem[],

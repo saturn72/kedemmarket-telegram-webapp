@@ -18,9 +18,12 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
         cachingTime);
 
     if (up) {
-        up.billingInfo!.valid = isAddressValid(up.billingInfo!);
+        const valid = isAddressValid(up.billingInfo as Address);
+        if (!up.billingInfo) {
+            up.billingInfo = {};
+        }
+        up.billingInfo.valid = valid;
     }
-
     return up || alignWithUser(up);
 }
 

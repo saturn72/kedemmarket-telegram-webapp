@@ -23,6 +23,7 @@
     "@invictus.codes/nuxt-vuetify": "^0.3.0",
     "@microsoft/signalr": "^8.0.0",
     "@pinia/nuxt": "^0.5.1",
+    "deep-object-diff": "^1.1.9",
     "defu": "^6.1.3",
     "firebase": "^10.6.0",
     "firebaseui": "^6.1.0",

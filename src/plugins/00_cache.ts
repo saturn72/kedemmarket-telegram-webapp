@@ -1,33 +1,36 @@
 import moment from "moment";
 
 type CacheEntry = { data: any, expiration: moment.Moment };
+
+const prepareCacheKey = (key: string): string => `km-${key.replaceAll(' ', '-').toLowerCase()}`;
+
 const getItemFromLocalStorage = <T>(key: any): T | undefined => {
-    const value = localStorage.getItem(key);
+    const ck = prepareCacheKey(key);
+    const value = localStorage.getItem(ck);
     if (!value) {
         return undefined;
     }
 
     const entry = JSON.parse(value) as CacheEntry;
     if (!entry || moment.utc().isAfter(entry.expiration)) {
-        localStorage.removeItem(key);
+        localStorage.removeItem(ck);
         return undefined;
     }
 
     return entry.data as T;
 }
 
-const prepareCacheKey = (key: string): string => `km-${key.replaceAll(' ', '-').toLowerCase()}`;
-
 const setItemInternal = <T>(key: string,
     data: T,
     expiration: number): void => {
-    const k = prepareCacheKey(key);
+
+    const ck = prepareCacheKey(key);
     const entry: CacheEntry =
     {
         data: data,
         expiration: moment.utc().add(expiration, 'seconds')
     }
-    localStorage.setItem(k, JSON.stringify(entry))
+    localStorage.setItem(ck, JSON.stringify(entry))
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -39,19 +42,23 @@ export default defineNuxtPlugin((nuxtApp) => {
                     expiration: number): Promise<void> => {
 
                     if (data) {
-                        setItemInternal<T>(key, data, expiration);
+                        const ck = prepareCacheKey(key);
+                        setItemInternal<T>(ck, data, expiration);
                     }
                 },
+
                 remove: async (key: string): Promise<void> => {
+                    const ck = prepareCacheKey(key);
                     localStorage.removeItem(key)
                 },
 
                 removeByPrefix: (prefix: string): void => {
+                    const kmPrefix = prepareCacheKey(prefix);
                     const keysToRemove: string[] = [];
                     for (let i = 0; i < localStorage.length; i++) {
                         const key = localStorage.key(i);
 
-                        if (key?.startsWith(prefix)) {
+                        if (key?.startsWith(kmPrefix)) {
                             keysToRemove.push(key);
                         }
                     }
@@ -78,7 +85,6 @@ export default defineNuxtPlugin((nuxtApp) => {
                         setItemInternal<T>(key, av, expiration);
                     }
                     return av;
-                    // return null;
                 }
             }
         }

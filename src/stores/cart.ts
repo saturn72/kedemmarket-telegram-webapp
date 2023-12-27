@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 import type { Product } from '@/models/catalog';
 import _ from 'lodash';
 import { useUserStore } from './user';
-import type { CartItem, UserCart } from '@/models/cart';
+import type { CartItem, CartProductMessage, UserCart } from '~/models/cart';
+import { diff } from "deep-object-diff";
+
 type CartState = {
     usersCarts: [key: string, items: UserCart] | any
 }
@@ -110,18 +112,39 @@ export const useCartStore = defineStore('cart', {
             _.remove(cart.items, (ci: CartItem) => ci.product.id === product.id);
         },
 
-        updateProductsAvailability(activeProducts: Product[]): void {
+        updateCartProducts(activeProducts: Product[]): void {
             const cart = getOrCreateCurrentUserCart(this.$state);
+
+            const updated: CartProductMessage[] = [];
 
             for (let idx = 0; idx < cart.items.length; idx++) {
                 const ci = cart.items[idx];
-                const exist = activeProducts.some(ap => ap.id == ci.product.id);
+                const updatedProduct = activeProducts.find(ap => ap.id == ci.product.id);
 
-                if (exist) {
+                if (updatedProduct) {
+                    const d = {
+                        from: ci.product,
+                        to: updatedProduct,
+                        diff: diff(ci.product, updatedProduct)
+                    };
+                    ci.product = updatedProduct;
+
+                    if (Object.keys(d.diff).length > 0) {
+                        updated.push(d);
+                    }
+                    setCartItemPrice(ci);
                     continue;
                 }
                 _.remove(cart.items, (i: CartItem) => i.product.id === ci.product.id);
             }
+            console.log("2", updated);
+            if (updated.length > 0) {
+                cart.messages = cart.messages?.filter(x => x.type != 'product-update') ?? [];
+                updated.forEach(u => cart.messages.push({ type: 'product-update', ...u }));
+                const txt = useNuxtApp().$t('cartProductsChanged');
+                useAlertStore().setSnackbar(txt);
+            }
+
         },
         clear(): void {
             const userId = useUserStore().getUser.uid;

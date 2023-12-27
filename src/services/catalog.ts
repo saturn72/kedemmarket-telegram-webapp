@@ -46,6 +46,6 @@ export async function getCatalog(): Promise<Catalog | null | undefined> {
     const allProducts = _.flatMap(catalog?.stores, "products");
     const activeProducts = _.uniqBy(allProducts, "id");
 
-    useCartStore().updateProductsAvailability(activeProducts);
+    useCartStore().updateCartProducts(activeProducts);
     return catalog
 }

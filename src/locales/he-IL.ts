@@ -15,6 +15,7 @@ export default {
     calculatingCart: "🧮 מחשב פרטי עגלה 🛒",
     cancel: "ביטול",
     cart: "🛒 עגלת קניות",
+    cartProductsChanged: "המוצרים בעגלת הקניות שונו 🛒",
     carts: "🛒 עגלות הקנייה שלי",
     cartTotal: "סה\"כ לעגלה:",
     checkout: "סיום רכישה",

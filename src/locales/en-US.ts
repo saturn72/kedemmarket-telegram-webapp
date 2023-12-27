@@ -14,6 +14,7 @@ export default {
     cancel: "Cancel",
     calculatingCart: "🧮 Calculating Cart... 🛒",
     cart: "Cart 🛒",
+    cartProductsChanged: "Cart products have changed 🛒",
     carts: "Carts 🛒",
     cartTotal: "Cart Total:",
     checkout: "Checkout",
