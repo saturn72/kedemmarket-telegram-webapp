@@ -5,6 +5,10 @@ export type CartItem = {
     orderedQuantity: number;
     totalPrice?: number;
     addedOnUtc: Date;
+    priceBeforeDiscounts: number;
+    priceAfterDiscounts: number;
+    numericDiscount: number;
+    percentageDiscount: number;
 }
 
 export type Order = {

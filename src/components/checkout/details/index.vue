@@ -110,11 +110,12 @@ export default {
             this.step = this.steps[to];
         },
         toNextStep(from) {
-            if (!from) {
+            if (!from || from == 0) {
                 if (!this.profile?.billingInfo?.valid) {
                     this.toStep(0);
                     const txt = this.$t("updateBillingInfoIsRequired");
-                    useAlertStore().setSnackbar(txt);
+
+                    useAlertStore().setSnackbar(txt, {});
                     return;
                 }
 

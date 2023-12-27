@@ -10,6 +10,7 @@ export default {
     backToBillingInfo: "לעדכון פרטי לחיוב",
     backToShippingAddress: "לעדכון פרטי משלוח",
     backToStore: "חזרה לחנות 🏬",
+    beginChatMessage: "🙋‍♀️ שלום!\nיש לי שאלה...\n\n",
     billingInfo: "פרטי חיוב",
     browsingToOrders: "עובר לדף הזמנות",
     calculatingCart: "🧮 מחשב פרטי עגלה 🛒",

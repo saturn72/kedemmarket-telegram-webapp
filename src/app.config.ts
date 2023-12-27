@@ -14,7 +14,7 @@ export default defineAppConfig({
     defaults: {
         thumbnail: '/logo.jpg',
         logo: '/logo.jpg',
-        whatsappPhone: '972542204119'
+        whatsappPhone: '+972542204119'
     },
     routes: {
         account: "/account",

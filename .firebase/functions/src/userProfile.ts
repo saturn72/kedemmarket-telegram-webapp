@@ -27,8 +27,10 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
   const {uid} = validateAuth(req);
 
   const profiles = await getUserProfiles(uid);
+
   if (profiles.length == 0) {
-    logger.debug(`no user profile was found for uid:${uid}`);
+    const msg = `no user profile was found for uid:${uid}`;
+    logger.debug(msg, {structuredData: true});
     return {};
   }
 
@@ -56,8 +58,8 @@ export const saveUserProfile = onCall(async (req): Promise<any> => {
 
     const p = {
       userId: uid,
-      billingInfo: req.data.billingInfo,
-      shipping: req.data.shipping,
+      billingInfo: req.data.billingInfo || {},
+      shipping: req.data.shipping || {},
       updatedOnUtc: Timestamp.now(),
     };
     await col.add(p);
