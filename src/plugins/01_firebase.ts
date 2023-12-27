@@ -66,13 +66,13 @@ const initCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefin
 const executeFunction = async (functionName: string, payload?: any): Promise<any | ErrorResponse> => {
     const f = getFunctions();
     const po = httpsCallable(f, functionName);
+
     try {
         const res = await po(payload);
         return res.data;
     } catch (err) {
         return { message: `failed to run \'${functionName}\'` };
     }
-
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {

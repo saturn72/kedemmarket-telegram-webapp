@@ -13,6 +13,7 @@
                 </v-badge>
                 {{ $t('toCart') }}
             </v-btn>
+
             <v-btn plain @click="toRoute(account)">
                 <v-icon>mdi-account-outline</v-icon>
                 {{ $t('toAccount') }}

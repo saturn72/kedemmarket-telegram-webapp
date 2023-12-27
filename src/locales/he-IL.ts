@@ -38,6 +38,7 @@ export default {
     firstName: "שם פרטי",
     for: "ב-",
     fullName: "שם מלא",
+    goToCart: "מעבר לעגלת הקניות 🛒",
     isRequired: "נדרש",
     itemTotal: "סה\"כ לפריט",
     kedemmarket: "קדם מרקט",

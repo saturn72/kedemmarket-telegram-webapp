@@ -17,6 +17,7 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
         async () => await useNuxtApp().$backend.getUserProfile(),
         cachingTime);
 
+
     if (up) {
         const valid = isAddressValid(up.billingInfo as Address);
         if (!up.billingInfo) {

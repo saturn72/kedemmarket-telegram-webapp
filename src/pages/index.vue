@@ -9,6 +9,11 @@
     <v-container v-else>
         <AppSearchBar @onSearchUpdated="onSearchUpdated" />
         <v-card flat>
+            <v-card-actions>
+                <v-btn block :variant="(hasCartItems ? 'flat' : 'tonal')" size="small" color="primary"
+                    transition="fade-transition" @click="navigateTo(useAppConfig().routes.checkout)"> {{ $t('goToCart')
+                    }}</v-btn>
+            </v-card-actions>
             <v-card-text>
                 <v-row justify="center">
                     <v-col cols="6" v-for=" product  in  itemsToDisplay " :key="product.id">
@@ -30,7 +35,11 @@ import { useSearchStore } from '@/stores/search'
 export default {
     setup() {
         const products = computed(() => useCatalogStore().products);
-        return { products };
+        const hasCartItems = computed(() => useCartStore().getCartTotal > 0);
+        return {
+            products,
+            hasCartItems
+        };
     },
     watch: {
         products() {

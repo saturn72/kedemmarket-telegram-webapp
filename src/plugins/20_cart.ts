@@ -19,7 +19,8 @@ const showSnackbarIfRequired = (cart: UserCart): void => {
     });
 
     if (enteredTier) {
-        useAlertStore().setSnackbar(useNuxtApp().$t("priceUpdatesAtCheckout"));
+        const txt = useNuxtApp().$t("priceUpdatesAtCheckout");
+        useAlertStore().setSnackbar(txt, {});
     }
 }
 
