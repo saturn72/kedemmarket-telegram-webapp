@@ -17,13 +17,15 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
         async () => await useNuxtApp().$backend.getUserProfile(),
         cachingTime);
 
-
+    if (!up || up == null || Object.keys(up).length == 0) {
+        await useNuxtApp().$cache.remove(key);
+    }
     if (up) {
-        const valid = isAddressValid(up.billingInfo as Address);
+        const valid = isAddressValid(up?.billingInfo as Address);
         if (!up.billingInfo) {
             up.billingInfo = {};
         }
-        up.billingInfo.valid = valid;
+        up.billingInfo.valid = valid || false;
     }
     return up || alignWithUser(up);
 }

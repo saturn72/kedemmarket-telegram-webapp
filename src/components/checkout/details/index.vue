@@ -114,7 +114,8 @@ export default {
                 if (!this.profile?.billingInfo?.valid) {
                     this.toStep(0);
                     const txt = this.$t("updateBillingInfoIsRequired");
-                    useAlertStore().setSnackbar(txt);
+
+                    useAlertStore().setSnackbar(txt, {});
                     return;
                 }
 

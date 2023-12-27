@@ -30,7 +30,7 @@ export const useAlertStore = defineStore('alert', {
     },
     actions: {
         clearAlarms() {
-            this.$state.alertTimelines = undefined;
+            this.$state.alertTimelines = {};
             this.$state.duration = undefined;
             this.$state.data = undefined;
             this.$state.text = undefined;
@@ -50,11 +50,11 @@ export const useAlertStore = defineStore('alert', {
             {
                 duration = 5000,
                 timeBetweenAlerts = 5000,
-                force = false,
+                force = false
             }: {
                 duration?: number,
                 timeBetweenAlerts?: number,
-                force?: boolean
+                force?: boolean,
             }) {
             const type = "snackbar";
             const cur = Date.now();
