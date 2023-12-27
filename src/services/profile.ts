@@ -16,19 +16,9 @@ export async function getUserProfile(): Promise<UserProfile | null | undefined> 
     const up = await useNuxtApp().$cache.getOrAcquire(key,
         async () => await useNuxtApp().$backend.getUserProfile(),
         cachingTime);
-
-    if (!up || up == null || Object.keys(up).length == 0) {
-        await useNuxtApp().$cache.remove(key);
-    }
-    if (up) {
-        const valid = isAddressValid(up?.billingInfo as Address);
-        if (!up.billingInfo) {
-            up.billingInfo = {};
-        }
-        up.billingInfo.valid = valid || false;
-    }
-    return up || alignWithUser(up);
+    return await validateUserProfile(up);
 }
+
 
 export async function saveUserProfile(profile: UserProfile): Promise<UserProfile | null | undefined> {
     const up = await useNuxtApp().$backend.saveUserProfile(profile);
@@ -36,8 +26,26 @@ export async function saveUserProfile(profile: UserProfile): Promise<UserProfile
     const key = userProfileCacheKey();
     await useNuxtApp().$cache.set(key, up, cachingTime);
 
-    const res = alignWithUser(up);
-    return res;
+    return await validateUserProfile(up);
+}
+
+const validateUserProfile = async (profile: UserProfile | null | undefined): Promise<UserProfile> => {
+    if (!profile ||
+        profile == null ||
+        Object.keys(profile).length == 0 ||
+        Object.keys(profile).some(k => k == "message")) {
+        await useNuxtApp().$cache.remove(userProfileCacheKey());
+        return alignWithUser(profile);
+    }
+
+    if (profile) {
+        const valid = isAddressValid(profile?.billingInfo as Address);
+        if (!profile.billingInfo) {
+            profile.billingInfo = {};
+        }
+        profile.billingInfo.valid = valid || false;
+    }
+    return profile;
 }
 
 function notNullAndNotEmpty(str: string | undefined): boolean {

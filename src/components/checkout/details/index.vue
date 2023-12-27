@@ -110,7 +110,8 @@ export default {
             this.step = this.steps[to];
         },
         toNextStep(from) {
-            if (!from) {
+            if (!from || from == 0) {
+                console.log("2", this.profile?.billingInfo)
                 if (!this.profile?.billingInfo?.valid) {
                     this.toStep(0);
                     const txt = this.$t("updateBillingInfoIsRequired");
