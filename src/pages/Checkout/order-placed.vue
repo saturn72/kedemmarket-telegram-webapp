@@ -14,7 +14,8 @@
         </v-card-text>
 
         <v-card-actions>
-            <v-btn v-if="order" variant="outlined" color="#128C7E" prepend-icon="mdi-whatsapp" @click="sendToWhatsapp">
+            <v-btn v-if="order" variant="outlined" color="#128C7E" prepend-icon="mdi-whatsapp"
+                @click="sendOrderToChat(order)">
                 {{ $t('sendToWhatsapp') }}
                 <template v-slot:prepend>
                     <v-icon color="#128C7E"></v-icon>
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+import { sendOrderToChat } from "~/services/whatsapp";
 
 let intervalTimer = undefined;
 let timoutTimer = undefined;
@@ -62,30 +64,6 @@ export default {
         return {
             order: undefined,
             bufferValue: 0
-        }
-    },
-    methods: {
-        sendToWhatsapp() {
-            const o = this.order;
-            let text = `${this.$t('kedemmarket')}\n${this.$t('orderNumber')}\t*${o.orderId}*\n\n`;
-
-            let i = 1;
-            o.items.forEach(x => {
-                text += `${i++}.\t${x.product.name}\t${x.orderedQuantity} ${this.$t('units')}\t${this.$t('itemTotal')} ${x.priceAfterDiscounts}\n`
-            });
-            const { store, accountOrders } = useAppConfig().routes;
-            text += `\n\n*${this.$t('orderLink')}:* ${store}${accountOrders}/${o.orderId}`
-
-            const te = encodeURIComponent(text);
-            const link = `https://wa.me/${useAppConfig().defaults.whatsappPhone}?text=${te}`
-
-            navigateTo(link, {
-                external: true,
-                open: {
-                    target: '_blank',
-                }
-            })
-            useRouter().push(useAppConfig().routes.home)
         }
     }
 }

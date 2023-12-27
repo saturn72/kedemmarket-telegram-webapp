@@ -9,6 +9,7 @@ export default {
     backToBillingInfo: "Back to Billing Address",
     backToShippingAddress: "Back to Shipping Address",
     backToStore: "Back to Store 🏬",
+    beginChatMessage: "🙋‍♀️ Hello!\nI have a question...\n\n",
     billingInfo: "Billing Details",
     browsingToOrders: "Browsing to Orders",
     cancel: "Cancel",
