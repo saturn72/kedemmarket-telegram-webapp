@@ -33,6 +33,10 @@ const setItemInternal = <T>(key: string,
     localStorage.setItem(ck, JSON.stringify(entry))
 }
 
+const removeItemInternal = <T>(key: string,): void => {
+    localStorage.removeItem(key)
+}
+
 export default defineNuxtPlugin((nuxtApp) => {
     return {
         provide: {
@@ -42,14 +46,13 @@ export default defineNuxtPlugin((nuxtApp) => {
                     expiration: number): Promise<void> => {
 
                     if (data) {
-                        const ck = prepareCacheKey(key);
-                        setItemInternal<T>(ck, data, expiration);
+                        setItemInternal<T>(key, data, expiration);
                     }
                 },
 
                 remove: async (key: string): Promise<void> => {
                     const ck = prepareCacheKey(key);
-                    localStorage.removeItem(key)
+                    removeItemInternal(ck)
                 },
 
                 removeByPrefix: (prefix: string): void => {
@@ -64,7 +67,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                     }
 
                     for (let i = 0; i < keysToRemove.length; i++) {
-                        localStorage.removeItem(keysToRemove[i]);
+                        removeItemInternal(keysToRemove[i]);
                     }
                 },
 
@@ -73,9 +76,8 @@ export default defineNuxtPlugin((nuxtApp) => {
                 getOrAcquire: async<T>(key: string,
                     acquire: () => Promise<T>,
                     expiration: number): Promise<T | undefined | null> => {
-                    const k = prepareCacheKey(key);
 
-                    var item = getItemFromLocalStorage<T>(k);
+                    let item = getItemFromLocalStorage<T>(key);
                     if (item) {
                         return item;
                     }

@@ -20,18 +20,17 @@
     </v-container>
 </template>
   
+
 <script>
-import { getCatalog } from '@/services/catalog'
+function textMatchsTerm(text, term) { text && text.toLowerCase().indexOf(term) > -1; }
+function tagsMatchTerm(tags, term) { tags && tags.some(t => t.toLowerCase().indexOf(term) > -1); }
+
 import { useSearchStore } from '@/stores/search'
 
 export default {
-    async setup() {
-        const catalog = await getCatalog();
-        const products = catalog.stores[0].products;
-
-        return {
-            products
-        }
+    setup() {
+        const products = computed(() => useCatalogStore().products);
+        return { products };
     },
     watch: {
         products() {
@@ -47,17 +46,10 @@ export default {
 
             const term = value.toLowerCase();
             this.itemsToDisplay = this.products.filter(p =>
-                this.textMatchTerm(p.name, term) ||
-                this.textMatchTerm(p.description, term) ||
-                this.tagsMatchTerm(p.tags, term));
+                textMatchsTerm(p.name, term) ||
+                textMatchsTerm(p.description, term) ||
+                tagsMatchTerm(p.tags, term));
         },
-        textMatchTerm(text, term) {
-            return text && text.toLowerCase().indexOf(term) > -1;
-        },
-
-        tagsMatchTerm(tags, term) {
-            return tags && tags.some(t => t.toLowerCase().indexOf(term) > -1);
-        }
     },
     data() {
         return {
@@ -65,4 +57,4 @@ export default {
         }
     }
 }
-</script>stores/catalog
+</script>

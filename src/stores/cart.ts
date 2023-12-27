@@ -114,7 +114,6 @@ export const useCartStore = defineStore('cart', {
 
         updateCartProducts(activeProducts: Product[]): void {
             const cart = getOrCreateCurrentUserCart(this.$state);
-
             const updated: CartProductMessage[] = [];
 
             for (let idx = 0; idx < cart.items.length; idx++) {
@@ -128,7 +127,6 @@ export const useCartStore = defineStore('cart', {
                         diff: diff(ci.product, updatedProduct)
                     };
                     ci.product = updatedProduct;
-
                     if (Object.keys(d.diff).length > 0) {
                         updated.push(d);
                     }
@@ -137,12 +135,11 @@ export const useCartStore = defineStore('cart', {
                 }
                 _.remove(cart.items, (i: CartItem) => i.product.id === ci.product.id);
             }
-            console.log("2", updated);
             if (updated.length > 0) {
                 cart.messages = cart.messages?.filter(x => x.type != 'product-update') ?? [];
                 updated.forEach(u => cart.messages.push({ type: 'product-update', ...u }));
                 const txt = useNuxtApp().$t('cartProductsChanged');
-                useAlertStore().setSnackbar(txt);
+                useAlertStore().setSnackbar(txt, { force: true });
             }
 
         },

@@ -47,10 +47,15 @@ export const useAlertStore = defineStore('alert', {
         },
         setSnackbar(
             text: string,
-            duration: number = 5000,
-            timeBetweenAlerts: number = 5000,
-            force: boolean = false) {
-
+            {
+                duration = 5000,
+                timeBetweenAlerts = 5000,
+                force = false,
+            }: {
+                duration?: number,
+                timeBetweenAlerts?: number,
+                force?: boolean
+            }) {
             const type = "snackbar";
             const cur = Date.now();
             const a = this.$state.alertTimelines[type];

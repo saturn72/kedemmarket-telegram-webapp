@@ -1,5 +1,6 @@
 import type { Catalog, Product } from "@/models/catalog";
 import { useCartStore } from "@/stores/cart";
+import { useCatalogStore } from "@/stores/catalog";
 import _ from "lodash";
 import { getMediaUrlOrDefault } from "./media";
 
@@ -32,20 +33,28 @@ const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | 
     return await getMediaUrlOrDefault(ppmi.url, useAppConfig().defaults.thumbnail);
 };
 const expiration = 10 * 60;
-
+const CatalogProductPrimaryMediaCachePrefix = "catalog:product-primary-media:";
 export async function getProductPrimaryMediaUrl(product: Product, type: "thumbnail" | "image"): Promise<string> {
-    const p = await useNuxtApp().$cache.getOrAcquire(`catalog:product-primary-media:${type}`,
+    const p = await useNuxtApp().$cache.getOrAcquire(`${CatalogProductPrimaryMediaCachePrefix}${type}`,
         () => acquireProductPrimaryMedia(product, type), expiration);
     return p as string;
 }
 
 export async function getCatalog(): Promise<Catalog | null | undefined> {
-    const catalog = await useNuxtApp().$cache.getOrAcquire(`catalog:index`,
-        () => acquireCatalog(), expiration);
+    const cache = useNuxtApp().$cache;
+    let acquired = false;
+    const catalog = await cache.getOrAcquire(`catalog:index`,
+        () => {
+            acquired = true;
+            return acquireCatalog();
+        }
+        , expiration);
 
-    const allProducts = _.flatMap(catalog?.stores, "products");
-    const activeProducts = _.uniqBy(allProducts, "id");
-
-    useCartStore().updateCartProducts(activeProducts);
-    return catalog
+    if (acquired && catalog) {
+        cache.removeByPrefix(CatalogProductPrimaryMediaCachePrefix);
+        const allProducts = _.flatMap(catalog?.stores, "products");
+        const activeProducts = _.uniqBy(allProducts, "id");
+        useCartStore().updateCartProducts(activeProducts);
+    }
+    return catalog;
 }

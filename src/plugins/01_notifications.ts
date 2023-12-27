@@ -39,7 +39,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     connectToSignalR(`${useRuntimeConfig().public.wsUrl}catalog`, false, hcc => {
         hcc.on("updated", async () => {
             useNuxtApp().$cache.removeByPrefix("catalog");
-            await getCatalog();
+            await useCatalogStore().loadCatalog();
         });
     });
     connectToSignalR(`${useRuntimeConfig().public.wsUrl}order`, true, hcc => {

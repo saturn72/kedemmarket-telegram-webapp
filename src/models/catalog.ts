@@ -1,8 +1,8 @@
 import type { MediaItem } from "@/models/common";
 
 export interface Catalog {
-    createdOnUtc: Date;
-    version: string;
+    createdOnUtc?: Date;
+    version?: string;
     stores?: Store[];
 }
 
