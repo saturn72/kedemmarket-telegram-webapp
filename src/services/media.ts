@@ -20,6 +20,6 @@ export async function getMediaItemOrDefault(
         alt: mediaItem?.alt || defaultValues.alt,
         src: mediaItem?.uri || defaultValues.src,
         title: mediaItem?.title || defaultValues.title,
-        url
+        uri: url
     }
 }

@@ -1,6 +1,5 @@
 import type { Catalog, Product } from "@/models/catalog";
 import { useCartStore } from "@/stores/cart";
-import { useCatalogStore } from "@/stores/catalog";
 import _ from "lodash";
 import { getMediaUrlOrDefault } from "./media";
 
@@ -14,6 +13,7 @@ const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
 }
 
 const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | "image"): Promise<string> => {
+
     if (!product) {
         return useAppConfig().defaults.thumbnail;
     }
@@ -30,12 +30,13 @@ const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | 
             ppmi = c;
         }
     }
-    return await getMediaUrlOrDefault(ppmi.url, useAppConfig().defaults.thumbnail);
+    return await getMediaUrlOrDefault(ppmi.uri, useAppConfig().defaults.thumbnail);
 };
 const expiration = 10 * 60;
 const CatalogProductPrimaryMediaCachePrefix = "catalog:product-primary-media:";
+
 export async function getProductPrimaryMediaUrl(product: Product, type: "thumbnail" | "image"): Promise<string> {
-    const p = await useNuxtApp().$cache.getOrAcquire(`${CatalogProductPrimaryMediaCachePrefix}${type}`,
+    const p = await useNuxtApp().$cache.getOrAcquire(`${CatalogProductPrimaryMediaCachePrefix}id=${product.id}_${type}`,
         () => acquireProductPrimaryMedia(product, type), expiration);
     return p as string;
 }
