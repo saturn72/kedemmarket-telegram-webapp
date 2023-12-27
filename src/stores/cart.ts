@@ -115,7 +115,7 @@ export const useCartStore = defineStore('cart', {
         updateCartProducts(activeProducts: Product[]): void {
             const cart = getOrCreateCurrentUserCart(this.$state);
             const updated: CartProductMessage[] = [];
-
+            const productIdsToRemove: any[] = [];
             for (let idx = 0; idx < cart.items.length; idx++) {
                 const ci = cart.items[idx];
                 const updatedProduct = activeProducts.find(ap => ap.id == ci.product.id);
@@ -133,8 +133,13 @@ export const useCartStore = defineStore('cart', {
                     setCartItemPrice(ci);
                     continue;
                 }
-                _.remove(cart.items, (i: CartItem) => i.product.id === ci.product.id);
+                productIdsToRemove.push(ci.product.id);
             }
+
+            if (productIdsToRemove.length > 0) {
+                _.remove(cart.items, c => productIdsToRemove.some(pi => pi == c.product.id));
+            }
+
             if (updated.length > 0) {
                 cart.messages = cart.messages?.filter(x => x.type != 'product-update') ?? [];
                 updated.forEach(u => cart.messages.push({ type: 'product-update', ...u }));

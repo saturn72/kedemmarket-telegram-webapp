@@ -47,8 +47,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             await getOrderById(orderId, true);
         });
     });
-
-    return {
-    }
 });
 
