@@ -8,7 +8,7 @@
             <v-btn variant='outlined' density="compact" icon="mdi-arrow-left" @click="$router.back()"></v-btn>
         </template>
         <template v-slot:prepend>
-            <v-sheet rounded color="grey-lighten-5" elevation="1">
+            <v-sheet rounded color="grey-lighten-5">
                 <v-row>
                     <v-col>
                         <a :href="`tel:${useAppConfig().defaults.whatsappPhone}`">
