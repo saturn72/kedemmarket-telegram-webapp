@@ -15,6 +15,5 @@ export async function submitOrder(): Promise<Order | undefined> {
         userId,
         shippingAddress: checoutCart.shippingAddress,
     };
-
     return await useNuxtApp().$backend.placeOrder(order);
 }
