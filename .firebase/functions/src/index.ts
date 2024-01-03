@@ -8,7 +8,6 @@ import {initializeApp} from "firebase-admin/app";
 const app = initializeApp();
 orderNotifications.init(app);
 
-export const prepareCartForCheckout = cart.prepareCartForCheckout;
 export const getOrCreateCart = cart.getOrCreateCart;
 export const updateCart = cart.updateCart;
 
