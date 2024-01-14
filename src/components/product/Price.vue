@@ -1,21 +1,26 @@
 <template>
-    <div v-for="item in tierPrices">
+    {{ prices }}
+    <div v-for="item in prices">
         {{ item.quantity }}<strong>&centerdot; {{ $t('for') }} {{ item.price }} {{ $t('currencySymbol')
         }}</strong>&nbsp;{{ $t('perUnit') }}
     </div>
 </template>
 <script>
+import _ from "lodash";
+
 export default {
     props: {
         product: { type: Object }
     },
     computed: {
-        tierPrices() {
+        prices() {
+            let prices = [{ quantity: 1, price: this.product.price }];
             const tp = this.product.tierPrices;
 
-            return tp && tp.length > 0 ?
-                tp :
-                [{ quantity: 1, price: this.product.price }]
+            if (tp && tp.length > 0) {
+                prices = _.sortedUniqBy(prices.concat(tp), o => o.quantity);
+            }
+            return prices;
         }
     }
 }
