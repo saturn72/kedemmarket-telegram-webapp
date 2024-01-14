@@ -43,7 +43,6 @@ export default {
             action: undefined,
             timeout: undefined
         }
-    }
-
+    },
 }
 </script>
