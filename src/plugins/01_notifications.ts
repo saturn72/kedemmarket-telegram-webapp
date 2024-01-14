@@ -1,5 +1,4 @@
 import * as signalR from "@microsoft/signalr";
-import { getCatalog } from "@/services/catalog";
 import { HubConnection } from "@microsoft/signalr";
 import { useUserStore } from "@/stores/user";
 import { getOrderById } from "@/services/order";
@@ -36,16 +35,19 @@ const connectToSignalR = async (
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-    connectToSignalR(`${useRuntimeConfig().public.wsUrl}catalog`, false, hcc => {
-        hcc.on("updated", async () => {
-            useNuxtApp().$cache.removeByPrefix("catalog");
-            await useCatalogStore().loadCatalog();
+    connectToSignalR(`${useRuntimeConfig().public.wsUrl}catalog`,
+        false, hcc => {
+            hcc.on("updated", async () => {
+                useNuxtApp().$cache.removeByPrefix("catalog");
+                await useCatalogStore().loadCatalog();
+            });
         });
-    });
-    connectToSignalR(`${useRuntimeConfig().public.wsUrl}order`, true, hcc => {
-        hcc.on("updated", async (orderId: string) => {
-            await getOrderById(orderId, true);
-        });
-    });
-});
 
+
+    connectToSignalR(`${useRuntimeConfig().public.wsUrl}order`,
+        true, hcc => {
+            hcc.on("updated", async (orderId: string) => {
+                await getOrderById(orderId, true);
+            });
+        });
+})
