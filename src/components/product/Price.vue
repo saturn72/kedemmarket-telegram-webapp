@@ -1,5 +1,4 @@
 <template>
-    {{ prices }}
     <div v-for="item in prices">
         {{ item.quantity }}<strong>&centerdot; {{ $t('for') }} {{ item.price }} {{ $t('currencySymbol')
         }}</strong>&nbsp;{{ $t('perUnit') }}
