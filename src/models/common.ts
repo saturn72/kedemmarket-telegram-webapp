@@ -4,7 +4,7 @@ export interface MediaItem {
     src: string;
     title: string;
     type: "image" | "thumbnail" | "video";
-    url: string;
+    uri: string;
 }
 
 export type ErrorResponse = {

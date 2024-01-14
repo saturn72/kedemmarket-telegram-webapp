@@ -1,13 +1,11 @@
 import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import {validateAuth, validateData} from "./requestUtils";
+import {validateAuth} from "./requestUtils";
 import {
   DocumentData,
-  FieldPath,
   QueryDocumentSnapshot,
   getFirestore,
 } from "firebase-admin/firestore";
-import {getUserProfiles} from "./userProfile";
 
 export async function getUserCarts(uid: string):
   Promise<QueryDocumentSnapshot<DocumentData>[]> {
@@ -64,39 +62,6 @@ export const updateCart = onCall(async (req) => {
   }
 });
 
-export const prepareCartForCheckout = onCall(async (req) => {
-  logger.debug("start prepareCartForCheckout", {structuredData: true});
-
-  validateAuth(req);
-  validateData(req);
-
-  const userCart = req.data;
-  const o = await getCheckoutCart(userCart);
-
-  logger.debug("end prepareCartForCheckout. output object: ",
-    o, {structuredData: true});
-  return o;
-});
-
-type CartItem = {
-  orderedQuantity: number;
-  percentageDiscount: number;
-  numericDiscount: number;
-  priceAfterDiscounts: number;
-  priceBeforeDiscounts: number;
-  message: string;
-  product: {
-    id: any
-    price: number;
-  },
-}
-
-type UserCart = {
-  items: CartItem[],
-  paymentMethod: string;
-  userId: any;
-}
-
 export async function deleteUserCarts(uid: string) {
   const userCarts = await getUserCarts(uid);
 
@@ -105,67 +70,4 @@ export async function deleteUserCarts(uid: string) {
       await doc.ref.delete();
     });
   }
-}
-export async function getCheckoutCart(userCart: UserCart) {
-  const productIds = userCart.items.map((i: any) => i.product.id);
-  const dbProducts = await getFirestore()
-    .collection("products")
-    .where(FieldPath.documentId(), "in", productIds)
-    .get();
-
-  const docs = dbProducts.docs;
-
-  const items = [];
-
-  for (let index = 0; index < userCart.items.length; index++) {
-    const cur = userCart.items[index];
-
-    const curDoc = docs.find((pt) => pt.id == cur.product.id);
-
-    const p = curDoc?.data();
-    if (!p) {
-      cur.message = "item not found";
-      cur.priceBeforeDiscounts = 0;
-      cur.priceAfterDiscounts = 0;
-      cur.numericDiscount = 0;
-      cur.percentageDiscount = 0;
-
-      continue;
-    }
-
-    cur.priceBeforeDiscounts = cur.orderedQuantity * cur.product.price;
-    cur.priceAfterDiscounts = cur.priceBeforeDiscounts;
-    cur.numericDiscount = 0;
-    cur.percentageDiscount = 0;
-
-    // only tier price is supportted at this point
-    if (p.tierPrices && p.tierPrices.length > 0) {
-      let lastTier = {quantity: 0};
-      for (let idx = 0; idx < p.tierPrices.length; idx++) {
-        const curTier = p.tierPrices[idx];
-
-        if (lastTier.quantity < curTier.quantity &&
-          cur.orderedQuantity >= curTier.quantity) {
-          lastTier = {...curTier};
-          cur.priceAfterDiscounts = cur.orderedQuantity * curTier.price;
-          cur.percentageDiscount =
-            cur.priceAfterDiscounts / cur.priceBeforeDiscounts;
-          cur.numericDiscount =
-            cur.priceBeforeDiscounts - cur.priceAfterDiscounts;
-        }
-      }
-    }
-    items.push(cur);
-  }
-
-  let cartTotal = 0;
-  let totalDiscounts = 0;
-  items.map((x) => {
-    cartTotal += x.priceAfterDiscounts;
-    totalDiscounts += x.numericDiscount;
-  });
-
-  const profiles = await getUserProfiles(userCart.userId);
-  const userProfile = profiles[0].data();
-  return {userProfile, userCart, items, cartTotal, totalDiscounts};
 }

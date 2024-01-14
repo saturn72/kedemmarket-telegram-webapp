@@ -73,13 +73,13 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         }
 
         cp.orderedQuantity = di.Quantity;
+        cp.numericDiscount = di.DiscountValue;
+        cp.percentageDiscount = 1 - (di.DiscountValue / di.UnitPriceValue);
+        cp.priceAfterDiscounts = di.UnitPriceValue - di.DiscountValue;
+        cp.priceBeforeDiscounts = di.UnitPriceValue;
         stateItems.push({
             cartTotal: di.SubTotalValue,
             itemPrice: di.UnitPriceValue,
-            numericDiscount: di.DiscountValue,
-            percentageDiscount: 1 - (di.DiscountValue / di.UnitPriceValue),
-            priceAfterDiscounts: di.UnitPriceValue - di.DiscountValue,
-            priceBeforeDiscounts: di.UnitPriceValue,
             ...cp,
         });
         state.cartTotal += di.SubTotalValue;

@@ -75,7 +75,7 @@ export default {
         this.profile = await getUserProfile();
 
         if (this.requireShipping) {
-            if (this.profile.shipping?.addresses?.length == 0) {
+            if (!this.profile.shipping?.addresses || this.profile.shipping?.addresses?.length == 0) {
                 this.profile.shipping = { useBillingAddress: true };
             }
             if (this.profile.shipping?.useBillingAddress) {
@@ -83,7 +83,7 @@ export default {
                 const a = _.omit(c, ['valid']);
                 this.checkout_selectShippingAddress(a);
             }
-            const da = this.profile.shipping?.addresses.find(a => a.isDefault);
+            const da = this.profile.shipping?.addresses?.find(a => a.isDefault);
             if (da) {
                 this.checkout_selectShippingAddress(da);
             }

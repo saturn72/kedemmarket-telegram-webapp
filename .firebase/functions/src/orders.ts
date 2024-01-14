@@ -7,7 +7,8 @@ import {
   Timestamp,
 } from "firebase-admin/firestore";
 
-import {deleteUserCarts, getCheckoutCart} from "./cart";
+import {deleteUserCarts} from "./cart";
+import {getUserProfiles} from "./userProfile";
 
 export const submitOrder = onCall(async (req) => {
   logger.debug("start submitOrder", {structuredData: true});
@@ -15,20 +16,22 @@ export const submitOrder = onCall(async (req) => {
   const {uid} = validateAuth(req);
   validateData(req);
 
-  const checkoutCart = await getCheckoutCart(req.data);
+  const profiles = await getUserProfiles(req.data.userId);
+  const userProfile = profiles[0].data();
+
   const o = {
     createdOnUtc: Timestamp.now(),
     ipAddress: req.rawRequest.ip,
-    submitterUserId: req.auth?.uid,
-    userId: req.data.userId,
-    user: checkoutCart.userProfile,
-    status: "submitted",
-    items: checkoutCart.items,
+    items: req.data.items,
+    orderTotal: req.data.orderTotal,
+    originalSentItems: req.data.originalSentItems,
     paymentMethod: req.data.paymentMethod || "cash",
-    orderTotal: checkoutCart.cartTotal,
-    sentItems: checkoutCart.userCart,
     shippingAddress: req.data.shippingAddress,
-    totalDiscounts: checkoutCart.totalDiscounts,
+    status: "submitted",
+    submitterUserId: req.auth?.uid,
+    totalDiscounts: req.data.totalDiscounts,
+    user: userProfile,
+    userId: req.data.userId,
   };
 
   const orders = getFirestore()
