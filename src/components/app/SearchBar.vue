@@ -1,6 +1,6 @@
 <template>
-    <v-text-field outlined prepend-inner-icon="mdi-magnify" :label="$t('productSearch')" clearable persistent-clear
-        v-model="search" :loading="loading" density="comfortable" @update:model-value="updated" hide-no-data hide-details>
+    <v-text-field variant="solo" prepend-inner-icon="mdi-magnify" :label="$t('productSearch')" clearable persistent-clear
+        v-model="search" :loading="loading" density="compact" @update:model-value="updated" hide-no-data hide-details>
     </v-text-field>
 </template>
 

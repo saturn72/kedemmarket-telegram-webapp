@@ -30,25 +30,26 @@
                 <CheckoutDetailsBillingInfo :profile="profile" :loading="loading"
                     @saved_billing_info="checkout_approveBillingInfo" />
             </v-stepper-window-item>
-
             <v-stepper-window-item :value="steps[1]">
-                <v-btn block color="info" variant="outlined" @click="toStep(0)">
+                <v-btn color="info" variant="tonal" @click="toStep(0)">
                     <template v-slot:prepend><v-icon>
                             mdi-arrow-right
                         </v-icon>
                     </template>
-                    {{ $t('backToBillingInfo') }}</v-btn>
+                    {{ $t('backToBillingInfo') }}
+                </v-btn>
                 <CheckoutDetailsShippingAddress :profile="profile" :loading="loading"
                     @shipping-address-selected="checkout_selectShippingAddress" />
             </v-stepper-window-item>
 
             <v-stepper-window-item :value="steps[2]">
-                <v-btn block color="info" variant="outlined" @click="toStep(requireShipping ? 1 : 0)">
+                <v-btn variant="tonal" color="info" @click="toStep(requireShipping ? 1 : 0)">
                     <template v-slot:prepend><v-icon>
                             mdi-arrow-right
                         </v-icon>
                     </template>
-                    {{ requireShipping ? $t('backToShippingAddress') : $t('backToBillingInfo') }}</v-btn>
+                    {{ requireShipping ? $t('backToShippingAddress') : $t('backToBillingInfo') }}
+                </v-btn>
                 <CheckoutDetailsCheckoutItems :loading="loading" @submit-order="onSubmitOrder">
                 </CheckoutDetailsCheckoutItems>
             </v-stepper-window-item>
