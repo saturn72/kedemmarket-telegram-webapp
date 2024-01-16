@@ -4,9 +4,10 @@
             <ProductBadgedAvatar :product="product"></ProductBadgedAvatar>
         </v-card-title>
         <v-card-text>
-            <strong> {{ product.name }}</strong>
+            <NuxtLink :to="`/product/${product.name}`">
+                <strong> {{ product.name }}</strong>
+            </NuxtLink>
             <!-- <strong>&centerdot; {{ product.price }} {{ $t('currencySymbol') }}</strong> -->
-
             <v-divider thickness="2"></v-divider>
             <ProductPrice :product="product" />
         </v-card-text>
