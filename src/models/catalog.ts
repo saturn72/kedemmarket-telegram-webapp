@@ -41,6 +41,7 @@ export interface Product {
     reviews: number;
     shippingCost: number;
     shortDescription: string;
+    slug: string;
     sku: string;
     tags?: string[],
     tierPrices?: TierPrice[]

@@ -1,8 +1,8 @@
 <template>
-    <v-avatar :size="size" :image="src" :lazy-src="useAppConfig().defaults.thumbnail">
-        <v-img>
+    <v-avatar :size="size" :image="images[0]" :lazy-src="useAppConfig().defaults.thumbnail">
+        <v-img :height="size" :lazy-src="useAppConfig().defaults.thumbnail">
             <template #sources>
-                <source :srcset="srcset">
+                <source :srcset="images">
             </template>
             <template v-slot:placeholder>
                 <div class="d-flex align-center justify-center fill-height">
@@ -18,22 +18,11 @@
 </template>
 
 <script>
-import { getProductPrimaryMediaUrl } from "@/services/catalog";
 
 export default {
     props: {
-        product: { type: Object, default: undefined },
+        images: { type: Array, default: () => [] },
         size: { type: Number, default: 75 }
-    },
-    async mounted() {
-        this.src = await getProductPrimaryMediaUrl(this.product, "thumbnail");
-        this.srcset = [this.src, await getProductPrimaryMediaUrl(this.product, "image")];
-    },
-    data: () => {
-        return {
-            src: undefined,
-            srcset: []
-        };
     }
 }
 </script>

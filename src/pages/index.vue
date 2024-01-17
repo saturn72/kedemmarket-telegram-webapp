@@ -1,5 +1,6 @@
 <template>
     <v-container v-if="!products">
+        <h1>Tests</h1>
         <v-row>
             <v-col class="d-flex justify-center">
                 <v-progress-circular indeterminate :size="75" :width="5"></v-progress-circular>
@@ -16,7 +17,7 @@
             </v-card-actions>
             <v-card-text>
                 <v-row justify="center">
-                    <v-col cols="6" v-for=" product  in  itemsToDisplay " :key="product.id">
+                    <v-col cols="6" v-for="product in itemsToDisplay" :key="product.id">
                         <ProductCard :product="product"></ProductCard>
                     </v-col>
                 </v-row>
@@ -25,10 +26,7 @@
     </v-container>
 </template>
   
-
 <script>
-function textMatchsTerm(text, term) { text && text.toLowerCase().indexOf(term) > -1; }
-function tagsMatchTerm(tags, term) { tags && tags.some(t => t.toLowerCase().indexOf(term) > -1); }
 
 import { useSearchStore } from '@/stores/search'
 
@@ -36,6 +34,7 @@ export default {
     setup() {
         const products = computed(() => useCatalogStore().products);
         const hasCartItems = computed(() => useCartStore().getCartTotal > 0);
+
         return {
             products,
             hasCartItems
@@ -45,6 +44,7 @@ export default {
         products() {
             this.onSearchUpdated(useSearchStore().search);
         }
+
     },
     methods: {
         onSearchUpdated(value) {
@@ -55,9 +55,9 @@ export default {
 
             const term = value.toLowerCase();
             this.itemsToDisplay = this.products.filter(p =>
-                textMatchsTerm(p.name, term) ||
-                textMatchsTerm(p.description, term) ||
-                tagsMatchTerm(p.tags, term));
+                (!!p.name && p.name.toLowerCase().indexOf(term) > -1) ||
+                (!!p.description && p.description.toLowerCase().indexOf(term) > -1) ||
+                (p.tags && p.tags.some(t => t.toLowerCase().indexOf(term) > -1)));
         },
     },
     data() {
