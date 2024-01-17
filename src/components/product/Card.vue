@@ -1,5 +1,5 @@
 <template>
-    <v-card flat>
+    <v-card flat density="compact" ripple>
         <v-card-title class="d-flex justify-center">
             <ProductBadgedAvatar :product="product" :imageIndex="imageIndex"></ProductBadgedAvatar>
         </v-card-title>
