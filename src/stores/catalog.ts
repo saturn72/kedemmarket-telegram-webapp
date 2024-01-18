@@ -1,11 +1,8 @@
 import { defineStore } from 'pinia'
-import type { Catalog, Product } from '@/models/catalog';
+import type { Catalog } from '@/models/catalog';
 import _ from 'lodash';
-import { getCatalog } from '~/services/catalog';
 
-type CatalogState = Catalog & {
-    products?: Product[]
-}
+type CatalogState = Catalog;
 
 const defaultValue = {
     createdOnUtc: undefined,
@@ -17,16 +14,18 @@ const defaultValue = {
 export const useCatalogStore = defineStore('catalog', {
     state: (): CatalogState => defaultValue,
     actions: {
-        async loadCatalog() {
-            const catalog = await getCatalog();
+        async setCatalog(catalog: Catalog) {
             if (!catalog || catalog == null || this.$state.version == catalog.version) {
                 return;
             }
 
-            this.$state.createdOnUtc = catalog.createdOnUtc;
-            this.$state.version = catalog.version;
-            this.$state.stores = catalog.stores;
-            this.$state.products = _.flatMap(catalog?.stores, "products");
-        },
+            this.createdOnUtc = catalog.createdOnUtc;
+            this.version = catalog.version;
+            this.stores = catalog.stores;
+            this.products = _.flatMap(catalog?.stores, "products");
+        }
+    },
+    persist: {
+        storage: localStorage
     }
 })

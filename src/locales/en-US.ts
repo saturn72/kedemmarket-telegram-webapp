@@ -72,6 +72,7 @@ export default {
     price: "price",
     pricesAfterDiscounts: "(Prices are after discount)",
     priceUpdatesAtCheckout: "📝 Price Updates at Checkout",
+    productCartQuantity: "##0## product units in cart 🛒",
     requiredField: "value is required",
     repurchaseItem: "Repurchase Item",
     repurchaseOrder: "Repurchase Order",

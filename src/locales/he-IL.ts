@@ -71,6 +71,7 @@ export default {
     price: "מחיר",
     pricesAfterDiscounts: "(מחיר לאחר הנחות)",
     priceUpdatesAtCheckout: "📝 מחיר לאחר הנחות/מבצעים יעודכן בקופה",
+    productCartQuantity: "##0## יחידות מהמוצר בעגלה 🛒",
     productSearch: "🔎 חיפוש...",
     profile: "פרופיל",
     repurchaseOrder: "רכישת ההזמנה מחדש",

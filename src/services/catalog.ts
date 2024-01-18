@@ -9,15 +9,19 @@ const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
         return undefined;
     }
 
-    return await $fetch<Catalog>(url);
+    const catalog = await $fetch<Catalog>(url);
+    if (catalog) {
+        const storeProducts = _.flatMap(catalog?.stores, "products");
+        const products = _.uniqBy(storeProducts, "id");
+        catalog.products = products;
+        return catalog;
+    }
 }
 
 const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | "image"): Promise<string> => {
-
     if (!product) {
         return useAppConfig().defaults.thumbnail;
     }
-
     const apmis = product.media.filter(m => m.type == type);
     if (apmis.length == 0) {
         return useAppConfig().defaults.thumbnail;
@@ -32,6 +36,7 @@ const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | 
     }
     return await getMediaUrlOrDefault(ppmi.uri, useAppConfig().defaults.thumbnail);
 };
+
 const expiration = 10 * 60;
 const CatalogProductPrimaryMediaCachePrefix = "catalog:product-primary-media:";
 
@@ -39,6 +44,14 @@ export async function getProductPrimaryMediaUrl(product: Product, type: "thumbna
     const p = await useNuxtApp().$cache.getOrAcquire(`${CatalogProductPrimaryMediaCachePrefix}id=${product.id}_${type}`,
         () => acquireProductPrimaryMedia(product, type), expiration);
     return p as string;
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+    var catalog = await getCatalog();
+    if (!catalog || !catalog.products || catalog.products.length == 0) {
+        return undefined;
+    }
+    return catalog.products.find(p => p.slug == slug);
 }
 
 export async function getCatalog(): Promise<Catalog | null | undefined> {
@@ -53,9 +66,11 @@ export async function getCatalog(): Promise<Catalog | null | undefined> {
 
     if (acquired && catalog) {
         cache.removeByPrefix(CatalogProductPrimaryMediaCachePrefix);
-        const allProducts = _.flatMap(catalog?.stores, "products");
-        const activeProducts = _.uniqBy(allProducts, "id");
-        useCartStore().updateCartProducts(activeProducts);
+        useCatalogStore().setCatalog(catalog);
+        if (catalog.products) {
+            useCartStore().updateCartProducts(catalog.products);
+        }
     }
+
     return catalog;
 }

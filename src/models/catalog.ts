@@ -4,6 +4,7 @@ export interface Catalog {
     createdOnUtc?: Date;
     version?: string;
     stores?: Store[];
+    products?: Product[]
 }
 
 export interface Store {
@@ -41,6 +42,7 @@ export interface Product {
     reviews: number;
     shippingCost: number;
     shortDescription: string;
+    slug?: string;
     sku: string;
     tags?: string[],
     tierPrices?: TierPrice[]

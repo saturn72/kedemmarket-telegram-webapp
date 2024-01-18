@@ -41,9 +41,11 @@ function textMatchsTerm(text, term) { text && text.toLowerCase().indexOf(term) >
 function tagsMatchTerm(tags, term) { tags && tags.some(t => t.toLowerCase().indexOf(term) > -1); }
 
 import { useSearchStore } from '@/stores/search'
+import { getCatalog } from '~/services/catalog';
 
 export default {
     setup() {
+        getCatalog();
         const products = computed(() => useCatalogStore().products);
         const hasCartItems = computed(() => useCartStore().getCartTotal > 0);
         return {

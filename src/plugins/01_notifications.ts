@@ -2,6 +2,7 @@ import * as signalR from "@microsoft/signalr";
 import { HubConnection } from "@microsoft/signalr";
 import { useUserStore } from "@/stores/user";
 import { getOrderById } from "@/services/order";
+import { getCatalog } from "~/services/catalog";
 
 const maxRetries = 5;
 const connectToSignalR = async (
@@ -39,7 +40,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         false, hcc => {
             hcc.on("updated", async () => {
                 useNuxtApp().$cache.removeByPrefix("catalog");
-                await useCatalogStore().loadCatalog();
+                await getCatalog();
             });
         });
 
