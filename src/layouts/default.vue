@@ -16,6 +16,10 @@ const textContent = computed(() => store.value);
 
 const header = usePageStore().header;
 useHeadSafe({
+    titleTemplate: (titleChunk) => {
+        const title = useNuxtApp().$t('kedemmarket');
+        return titleChunk ? `${title} - ${titleChunk}` : title;
+    },
     script: [{
         type: "application/ld+json",
         textContent

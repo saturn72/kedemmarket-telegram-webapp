@@ -40,6 +40,7 @@ export default {
     for: "ב-",
     fullName: "שם מלא",
     goToCart: "מעבר לעגלת הקניות 🛒",
+    homePage: "דף הבית 🏠",
     isRequired: "נדרש",
     itemTotal: "סה\"כ לפריט",
     kedemmarket: "קדם מרקט",

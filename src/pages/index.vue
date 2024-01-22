@@ -45,6 +45,7 @@ import { getCatalog } from '~/services/catalog';
 
 export default {
     setup() {
+        useHead({ title: useNuxtApp().$t('homePage') });
         getCatalog();
         const products = computed(() => useCatalogStore().products);
         const hasCartItems = computed(() => useCartStore().getCartTotal > 0);

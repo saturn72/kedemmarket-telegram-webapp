@@ -39,6 +39,7 @@ export default {
     for: "for",
     fullName: "Full Name",
     goToCart: "go to Cart 🛒",
+    homePage: "Home Page 🏠",
     isRequired: "is required",
     itemTotal: "item's total",
     kedemmarket: "Kedem Market",

@@ -25,8 +25,15 @@
 </template>
 <script>
 export default {
+    setup() {
+    },
     props: {
         product: { type: Object, default: {} }
+    },
+    watch: {
+        product(newVal) {
+            useHead({ title: newVal.name });
+        }
     },
     computed: {
         description() {
