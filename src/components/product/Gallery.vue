@@ -1,5 +1,5 @@
 <template>
-    <v-img :src="src">
+    <v-img :src="src" :lazy-src="useAppConfig().defaults.logo">
         <template #sources>
             <source :srcset="srcset">
         </template>
@@ -21,6 +21,7 @@ import { getProductPrimaryMediaUrl } from "@/services/catalog";
 export default {
     props: {
         product: { type: Object, default: {} },
+        loading: { type: Boolean, default: false }
     },
     watch: {
         async product() {
@@ -35,7 +36,7 @@ export default {
     },
     data: () => {
         return {
-            src: '',
+            src: undefined,
             srcset: []
         };
     }

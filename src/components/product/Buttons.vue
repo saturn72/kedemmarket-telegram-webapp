@@ -1,11 +1,5 @@
 <template>
-    <v-row v-if="qty == 0">
-        <v-col cols="10">
-            <ProductCartAddButton :product="product"></ProductCartAddButton>
-        </v-col>
-        <v-col>
-        </v-col>
-    </v-row>
+    <ProductCartAddButton v-if="qty == 0" :product="product"></ProductCartAddButton>
     <ProductCartPlusMinusButtons v-else :product="product"></ProductCartPlusMinusButtons>
 </template>
 <script>

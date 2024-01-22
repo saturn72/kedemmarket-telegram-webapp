@@ -1,6 +1,6 @@
 
 <template>
-    <ProductProfile :product="product"></ProductProfile>
+    <ProductProfile :product="product" :loading="loading"></ProductProfile>
 </template>
   
 <script>

@@ -1,7 +1,7 @@
 <template>
-    <v-card flat density="compact" ripple>
+    <v-card flat density="compact" ripple :loading="loading">
         <v-card-title class="d-flex justify-center">
-            <ProductGallery :product="product">
+            <ProductGallery :product="product" :loading="loading">
             </ProductGallery>
         </v-card-title>
         <v-card-text>
@@ -28,7 +28,8 @@ export default {
     setup() {
     },
     props: {
-        product: { type: Object, default: {} }
+        product: { type: Object, default: {} },
+        loading: { type: Boolean, default: false }
     },
     watch: {
         product(newVal) {
@@ -49,7 +50,9 @@ export default {
         }
     },
     data: () => {
-        return { quantityText: '' }
+        return {
+            quantityText: ''
+        }
     }
 }
 </script>

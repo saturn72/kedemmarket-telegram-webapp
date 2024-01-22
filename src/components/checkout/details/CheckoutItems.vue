@@ -4,7 +4,7 @@
             <v-progress-circular indeterminate width="1"></v-progress-circular>
         </v-card-title>
 
-        <v-card-title>
+        <v-card-title v-else>
             <v-icon>mdi-cart-outline</v-icon>
             {{ $t('cartTotal') }}&nbsp;{{ $t('currencySymbol') }}{{ checkoutCartStore.cartTotal }}
             <v-card-subtitle>
