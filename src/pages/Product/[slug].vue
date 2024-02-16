@@ -1,21 +1,27 @@
+
 <template>
-    {{ product }}
+    <ProductProfile :product="product" :loading="loading"></ProductProfile>
 </template>
+  
 <script>
 import { getProductBySlug } from "@/services/catalog";
 
 export default {
     async mounted() {
-        const slug = useRoute().params.slug;
         this.loading = true;
-        this.product = await getProductBySlug(slug);
+        const slug = useRoute().params.slug;
+        if (slug) {
+            this.product = await getProductBySlug(slug);
+        }
+        useStructuredDataStore().setSingleProductPageStructuredData(this.product);
+
         this.loading = false;
     },
     data: () => {
         return {
+            product: undefined,
             loading: false,
-            product: {}
-        };
+        }
     }
 }
 </script>
