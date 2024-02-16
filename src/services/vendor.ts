@@ -16,7 +16,7 @@ const acquireVendor = async (key: string): Promise<Vendor | undefined | null> =>
             const tn = p.media?.find((m: any) => m.type == "thumbs") ||
                 p.media?.find((m: any) => m.displayOrder == 0);
 
-            const image = await getMediaItemOrDefault(
+            const media = await getMediaItemOrDefault(
                 tn,
                 "thumbnail",
                 {
@@ -26,18 +26,16 @@ const acquireVendor = async (key: string): Promise<Vendor | undefined | null> =>
 
                 });
 
-            products.push({
-                id: p.id,
-                name: p.name,
-                description: p.shortDescription,
-                price: p.price,
-                tierPrices: p.tierPrices.sort((a: { quantity: number }, b: { quantity: number }) => a.quantity - b.quantity),
-                tags: p.tags,
-                image
-            });
+            const vp: Product = {
+                ...p
+            };
+
+            vp.tierPrices = p.tierPrices.sort((a: { quantity: number }, b: { quantity: number }) => a.quantity - b.quantity);
+            vp.media = [media];
+            products.push(vp);
         }
     }
-    const image = await getMediaItemOrDefault(
+    const logo = await getMediaItemOrDefault(
         v.logo?.uri,
         "thumbnail",
         {
@@ -50,7 +48,7 @@ const acquireVendor = async (key: string): Promise<Vendor | undefined | null> =>
     return {
         id: v.id,
         name: v.name,
-        image,
+        logo,
         store: {
             id: v.store.id,
             name: v.store.name,

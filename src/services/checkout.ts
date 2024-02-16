@@ -57,8 +57,8 @@ const prepareOrderItems = (cartItems: CartItem[]) => {
     let orderTotal = 0;
     let totalDiscounts = 0;
     items.map((x) => {
-        orderTotal += x.priceAfterDiscounts;
-        totalDiscounts += x.numericDiscount;
+        orderTotal += x.priceAfterDiscounts || 0;
+        totalDiscounts += x.numericDiscount || 0;
     });
     return { items, orderTotal, totalDiscounts };
 }

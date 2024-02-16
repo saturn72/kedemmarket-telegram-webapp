@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Product } from '~/models/catalog'
+import { Product } from '../models/catalog';
 
 type ProductStructureDataInfo = { productId: any, image: string | undefined };
 type StructureDataState = {
@@ -13,14 +13,14 @@ const prepareProduct = (product: Product): void => {
 }
 const normalize = (value: any | undefined): string => {
     return value ? JSON.stringify(value)
-        .replaceAll('\"type\"', '\"@type\"')
-        .replaceAll('\'type\'', '\'@type\'')
-        .replaceAll('\"context\"', '\"@context\"')
-        .replaceAll('\'context\'', '\'@context\'')
+        .replace('\"type\"', '\"@type\"')
+        .replace('\'type\'', '\'@type\'')
+        .replace('\"context\"', '\"@context\"')
+        .replace('\'context\'', '\'@context\'')
         : "{}";
 }
 
-export const useStructuredDataStore = defineStore('structure-Data', {
+export const useStructuredDataStore = defineStore('structureData', {
     state: (): StructureDataState => ({ value: undefined, productsStructureDataState: [] }),
     actions: {
         clearValue() {

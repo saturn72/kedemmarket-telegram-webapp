@@ -1,5 +1,6 @@
 import type { Order } from "@/models/cart";
 import { useUserStore } from "@/stores/user";
+import type { ErrorResponse } from "~/models/common";
 
 const expiration = 10 * 60;
 
@@ -26,9 +27,14 @@ export async function getOrders(options: Pagination = {
     const s = status ? `_status:${status.toString().toLowerCase()}` : '';
     const key = `${getOrdersCacheKeyPrefix()}_pagesize:${options.pageSize}_skip:${options.skip}${s}`;
 
-    return await cache().getOrAcquire(key,
+    const res = await cache().getOrAcquire(key,
         async () => await useNuxtApp().$backend.getOrders(options, status),
         expiration);
+
+    if (!res || res == null) {
+        return [];
+    }
+    return 'code' in res || 'message' in res ? [] : res as Order[];
 }
 
 export async function getOrderById(orderId: string, force: boolean = false): Promise<Order | null | undefined> {

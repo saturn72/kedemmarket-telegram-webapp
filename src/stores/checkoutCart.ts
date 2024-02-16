@@ -78,9 +78,9 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         cp.priceAfterDiscounts = di.UnitPriceValue - di.DiscountValue;
         cp.priceBeforeDiscounts = di.UnitPriceValue;
         stateItems.push({
+            ...cp,
             cartTotal: di.SubTotalValue,
             itemPrice: di.UnitPriceValue,
-            ...cp,
         });
         state.cartTotal += di.SubTotalValue;
         state.totalDiscounts += di.numericDiscount;
