@@ -85,6 +85,5 @@ export async function getCatalog(): Promise<Catalog | null | undefined> {
             useCartStore().updateCartProducts(catalog.products);
         }
     }
-    console.log("ttttttt", catalog);
     return catalog;
 }
