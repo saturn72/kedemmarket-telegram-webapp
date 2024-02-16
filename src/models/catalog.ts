@@ -13,6 +13,7 @@ export interface Store {
     logoThumb?: MediaItem;
     logoPicture?: MediaItem;
     products: Product[];
+    structuredData?: any;
     vendors?: Vendor[];
 }
 

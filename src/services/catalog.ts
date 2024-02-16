@@ -11,14 +11,15 @@ const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
 
     const catalog = await $fetch<Catalog>(url);
     if (catalog) {
-        const storeProducts = _.flatMap(catalog?.stores, "products");
-        const products = _.uniqBy(storeProducts, "id");
-        catalog.products = products.map(p => {
-            return {
-                ...p,
-                structuredData: p.structuredData ? JSON.parse(p.structuredData) : {},
-            };
+        catalog.stores?.forEach(s => {
+            s.structuredData = s.structuredData ? JSON.parse(s.structuredData) : {};
+            s.products.forEach(p => {
+                p.structuredData = p.structuredData ? JSON.parse(p.structuredData) : {};
+            })
         });
+
+        const storeProducts = _.flatMap(catalog?.stores, "products");
+        catalog.products = _.uniqBy(storeProducts, "id");
         return catalog;
     }
 }
@@ -84,6 +85,6 @@ export async function getCatalog(): Promise<Catalog | null | undefined> {
             useCartStore().updateCartProducts(catalog.products);
         }
     }
-
+    console.log("ttttttt", catalog);
     return catalog;
 }

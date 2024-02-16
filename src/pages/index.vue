@@ -50,7 +50,7 @@ export default {
 
         const products = computed(() => {
             const products = useCatalogStore().products;
-            useStructuredDataStore().setCatalogStructuredData(products);
+            useStructuredDataStore().setMultipleProductPageStructuredData(products);
             return products;
         });
 

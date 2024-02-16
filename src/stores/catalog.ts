@@ -30,7 +30,6 @@ export const useCatalogStore = defineStore('catalog', {
             this.version = catalog.version;
             this.stores = catalog.stores;
             this.products = _.flatMap(catalog?.stores, "products");
-            useStructuredDataStore().setCatalogStructuredData(this.products);
         }
     },
     persist: {

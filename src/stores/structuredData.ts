@@ -7,15 +7,17 @@ type StructureDataState = {
     productsStructureDataState: ProductStructureDataInfo[]
 }
 
-const normalize = (value: string | undefined): string => {
-    const n = value ? JSON.stringify(value)
+const prepareProduct = (product: Product): void => {
+    const urlPrefix = `https://${useAppConfig().routes.store}${useAppConfig().routes.product}`;
+    product.structuredData.url = `${urlPrefix}/${product.slug}`;
+}
+const normalize = (value: any | undefined): string => {
+    return value ? JSON.stringify(value)
         .replaceAll('\"type\"', '\"@type\"')
         .replaceAll('\'type\'', '\'@type\'')
         .replaceAll('\"context\"', '\"@context\"')
         .replaceAll('\'context\'', '\'@context\'')
         : "{}";
-
-    return JSON.parse(n);
 }
 
 export const useStructuredDataStore = defineStore('structure-Data', {
@@ -24,36 +26,30 @@ export const useStructuredDataStore = defineStore('structure-Data', {
         clearValue() {
             this.$state.value = undefined;
         },
-        setCatalogStructuredData(products: Product[], updateValue: boolean = true): void {
-            const urlPrefix = `https://${useAppConfig().routes.store}${useAppConfig().routes.product}`;
-
+        setSingleProductPageStructuredData(product: Product): void {
+            prepareProduct(product)
+            const sd = normalize(product.structuredData);
+            this.$state.value = sd;
+        },
+        setMultipleProductPageStructuredData(products: Product[]): void {
             let i = 1;
             const psdObj = products.map((p: Product) => {
-                const sd = normalize(p.structuredData);
-                const sdObj = JSON.parse(sd);
-                sdObj.url = `${urlPrefix}/${p.slug}`;
-
+                prepareProduct(p)
                 return {
                     "@type": "ListItem",
                     "position": i++,
-                    "item": sdObj
+                    "item": p.structuredData
                 };
             });
 
-            // const psd = JSON.stringify(psdObj);
-            const sd = {
+            const sdObj = {
                 "@context": "https://schema.org/",
                 "@type": "ItemList",
                 "itemListElement": psdObj
             };
 
-            if (updateValue) {
-                this.$state.value = JSON.stringify(sd);
-            }
-        },
-
-        setProductStructuredDataImage(product: Product, url: string) {
-
-        },
+            var sd = normalize(sdObj)
+            this.$state.value = sd;
+        }
     },
 });
