@@ -18,7 +18,7 @@ store.$subscribe((mutation, state) => {
         script: [{
             id: 'structured-data',
             type: "application/ld+json",
-            textContent: () => state.value,
+            textContent: () => (state.value || "{}"),
         }],
     });
 })

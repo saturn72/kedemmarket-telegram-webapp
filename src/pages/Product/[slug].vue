@@ -13,8 +13,8 @@ export default {
         if (slug) {
             this.product = await getProductBySlug(slug);
         }
+        useStructuredDataStore().setSingleProductPageStructuredData(this.product);
 
-        useStructuredDataStore().setValue(this.product.structuredData);
         this.loading = false;
     },
     data: () => {
