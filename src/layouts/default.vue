@@ -11,18 +11,24 @@
 </template>
 
 <script setup>
-const store = useStructuredDataStore();
-const textContent = computed(() => store.value);
 
-const header = usePageStore().header;
-useHeadSafe({
+const store = useStructuredDataStore();
+store.$subscribe((mutation, state) => {
+    useHead({
+        script: [{
+            id: 'structured-data',
+            type: "application/ld+json",
+            textContent: () => state.value,
+        }],
+    });
+})
+
+useHead({
     titleTemplate: (titleChunk) => {
         const title = useNuxtApp().$t('kedemmarket');
         return titleChunk ? `${title} - ${titleChunk}` : title;
     },
-    script: [{
-        type: "application/ld+json",
-        textContent
-    }],
 });
+
+const header = usePageStore().header;
 </script>

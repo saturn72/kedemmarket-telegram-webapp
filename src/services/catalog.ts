@@ -13,7 +13,12 @@ const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
     if (catalog) {
         const storeProducts = _.flatMap(catalog?.stores, "products");
         const products = _.uniqBy(storeProducts, "id");
-        catalog.products = products;
+        catalog.products = products.map(p => {
+            return {
+                ...p,
+                structuredData: p.structuredData ? JSON.parse(p.structuredData) : {},
+            };
+        });
         return catalog;
     }
 }
@@ -42,7 +47,15 @@ const CatalogProductPrimaryMediaCachePrefix = "catalog:product-primary-media:";
 
 export async function getProductPrimaryMediaUrl(product: Product, type: "thumbnail" | "image"): Promise<string> {
     const p = await useNuxtApp().$cache.getOrAcquire(`${CatalogProductPrimaryMediaCachePrefix}id=${product.id}_${type}`,
-        () => acquireProductPrimaryMedia(product, type), expiration);
+        async () => {
+            const u = await acquireProductPrimaryMedia(product, type);
+
+            if (type == "image") {
+                useCatalogStore().setProductStructuredDataImage(product, u);
+            }
+
+            return u;
+        }, expiration);
     return p as string;
 }
 

@@ -47,7 +47,13 @@ export default {
     setup() {
         useHead({ title: useNuxtApp().$t('homePage') });
         getCatalog();
-        const products = computed(() => useCatalogStore().products);
+
+        const products = computed(() => {
+            const products = useCatalogStore().products;
+            useStructuredDataStore().setCatalogStructuredData(products);
+            return products;
+        });
+
         const hasCartItems = computed(() => useCartStore().getCartTotal > 0);
         return {
             products,

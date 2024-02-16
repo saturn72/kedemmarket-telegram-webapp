@@ -43,6 +43,7 @@ export interface Product {
     shippingCost: number;
     shortDescription: string;
     slug?: string;
+    structuredData?: any;
     sku: string;
     tags?: string[],
     tierPrices?: TierPrice[]

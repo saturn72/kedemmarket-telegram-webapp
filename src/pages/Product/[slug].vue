@@ -13,6 +13,8 @@ export default {
         if (slug) {
             this.product = await getProductBySlug(slug);
         }
+
+        useStructuredDataStore().setValue(this.product.structuredData);
         this.loading = false;
     },
     data: () => {

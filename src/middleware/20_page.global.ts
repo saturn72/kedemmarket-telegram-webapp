@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware((to, from) => {
     useAlertStore().clearAlarmType("dialog");
     usePageStore().$reset();
-    useStructuredDataStore().$reset();
+    useStructuredDataStore().clearValue();
 })

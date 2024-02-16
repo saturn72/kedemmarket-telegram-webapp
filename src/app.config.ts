@@ -25,6 +25,7 @@ export default defineAppConfig({
         home: "/",
         login: "/login",
         postPurchaseRoute: "/checkout/order-placed",
+        product: "/product",
         store: "kedemmarket.co.il",
     }
 })
