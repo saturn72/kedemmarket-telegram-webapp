@@ -13,8 +13,8 @@ function startChatInternal(message: string): void {
 
 }
 
-export function startChat() {
-    startChatInternal(useNuxtApp().$t("beginChatMessage"));
+export function startChat(initMessage: string) {
+    startChatInternal(initMessage || useNuxtApp().$t("beginChatMessage"));
 }
 
 export function sendOrderToChat(order: Order) {

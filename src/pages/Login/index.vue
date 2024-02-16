@@ -7,6 +7,14 @@
     <p class="d-flex justify-center my-10">
         {{ $t('loginIsRequiredToContinue') }}
     </p>
+
+
+    <p class="d-flex justify-center my-10" style="background-color: antiquewhite">
+        {{ $t('loginIsRequiredToContinueWhy') }}
+    </p>
+    <v-btn block class="ma-10" prepend-icon="mdi-face-agent" variant="elevated" @click="toChat()">
+        {{ $t('callSupport') }}
+    </v-btn>
 </template>
 
 <script>
@@ -15,8 +23,15 @@ import { useDisplay } from 'vuetify/lib/framework.mjs';
 import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
+import { startChat } from '~/services/whatsapp';
 
 export default {
+    methods: {
+        toChat() {
+            const msg = useNuxtApp().$t("beginSupportChatMessage");
+            startChat(msg);
+        }
+    },
     setup() {
         definePageMeta({
             layout: 'blank'
