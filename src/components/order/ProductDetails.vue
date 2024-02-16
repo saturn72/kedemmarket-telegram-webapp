@@ -2,7 +2,7 @@
     <v-card flat class="mb-6 mr-n4" max-width>
         <v-row>
             <v-col cols="3" justify-center class="text-subtitle-2 mt-4">
-                <ProductBadgedAvatar :product="item.product"></ProductBadgedAvatar>
+                <ProductBadgedAvatar :product="item"></ProductBadgedAvatar>
             </v-col>
             <v-col cols="4" class="text-subtitle-2 d-flex flex-column justify-center">
                 {{ item.product.name }}
@@ -25,6 +25,6 @@
 export default {
     props: {
         item: { type: Object }
-    },
+    }
 }
 </script>

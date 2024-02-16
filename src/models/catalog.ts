@@ -43,8 +43,12 @@ export interface Product {
     reviews: number;
     shippingCost: number;
     shortDescription: string;
+<<<<<<< HEAD
     slug?: string;
     structuredData?: any;
+=======
+    slug: string;
+>>>>>>> b9c2dc34cff96266c40817d31c3f0ab4b159e1a7
     sku: string;
     tags?: string[],
     tierPrices?: TierPrice[]

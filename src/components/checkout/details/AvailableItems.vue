@@ -4,7 +4,7 @@
             <v-row>
                 <v-col cols="4" justify-center class="text-subtitle-2 my-4 ml-4">
                     <v-row>
-                        <ProductAvatar :product="item.product"></ProductAvatar>
+                        <ProductAvatar :images="getImages(item)"></ProductAvatar>
                     </v-row>
                     <v-row>
                         {{ $t("unitPrice") }}&nbsp;<strong>{{ item.priceAfterDiscounts }}</strong>
