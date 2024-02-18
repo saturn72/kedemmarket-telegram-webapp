@@ -7,7 +7,7 @@ import {
   Timestamp,
 } from "firebase-admin/firestore";
 
-export const subscribeToNotifications = onCall(async (req): Promise<any> => {
+export const subscribeToNotifications = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start subscribeToNotifications", {structuredData: true});
 
   const {uid} = validateAuth(req);

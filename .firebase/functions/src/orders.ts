@@ -10,7 +10,7 @@ import {
 import {deleteUserCarts} from "./cart";
 import {getUserProfiles} from "./userProfile";
 
-export const submitOrder = onCall(async (req) => {
+export const submitOrder = onCall({enforceAppCheck: true}, async (req) => {
   logger.debug("start submitOrder", {structuredData: true});
 
   const {uid} = validateAuth(req);
@@ -59,7 +59,7 @@ const getOrdersInternal =
     return f.orderBy("createdOnUtc", "desc");
   };
 
-export const getOrders = onCall(async (req): Promise<any> => {
+export const getOrders = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start getOrderById", {structuredData: true});
 
   const {uid} = validateAuth(req);
@@ -114,7 +114,7 @@ export const getOrders = onCall(async (req): Promise<any> => {
   };
 });
 
-export const getOrderById = onCall(async (req): Promise<any> => {
+export const getOrderById = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start 'getOrderById'", {structuredData: true});
   const {uid} = validateAuth(req);
   validateData(req);

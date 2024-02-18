@@ -1,18 +1,19 @@
 import type { FirebaseApp } from "firebase/app";
 import { initializeApp } from "firebase/app";
 import type { Messaging } from "firebase/messaging";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken as getMessagingToken } from "firebase/messaging";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import type { Auth } from "firebase/auth";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
-import type { AppCheck } from "firebase/app-check";
+import { getToken as getAppCheckToken, type AppCheck } from "firebase/app-check";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import type { UserProfile } from "@/models/account";
 import type { CartItem, CheckoutCart, Order, UserCart } from "@/models/cart";
 import _ from "lodash";
 import type { ErrorResponse } from "~/models/common";
+import type { Catalog } from "~/models/catalog";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
@@ -32,14 +33,10 @@ const configureAuth = (app: FirebaseApp): Auth => {
 }
 
 const configureAppCheck = (app: FirebaseApp): AppCheck | undefined => {
-    if (process.env.NODE_ENV != 'production') {
-        return undefined;
-    }
-
     const k = useAppConfig().reCaptcha;
     return initializeAppCheck(app, {
         provider: new ReCaptchaV3Provider(k),
-        isTokenAutoRefreshEnabled: true
+        isTokenAutoRefreshEnabled: true,
     });
 }
 
@@ -51,7 +48,7 @@ const initCloudMessaging = async (app: FirebaseApp): Promise<Messaging | undefin
         return undefined;
     }
 
-    const token = await getToken(messaging, {
+    const token = await getMessagingToken(messaging, {
         vapidKey: useAppConfig().firebase.vapidKey,
     });
 
@@ -75,11 +72,13 @@ const executeFunction = async (functionName: string, payload?: any): Promise<any
     }
 }
 
+let appCheck: AppCheck | undefined;
+
 export default defineNuxtPlugin(async (nuxtApp) => {
     const app: FirebaseApp = initializeApp(useAppConfig().firebase);
 
     const auth = configureAuth(app);
-    configureAppCheck(app);
+    appCheck = configureAppCheck(app);
     // await initCloudMessaging(app);
 
     return {
@@ -110,7 +109,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             },
 
             backend: {
-
+                async getAppToken(): Promise<string> {
+                    const appCheckTokenResponse = await getAppCheckToken(appCheck as AppCheck);
+                    return appCheckTokenResponse.token;
+                },
                 async getOrders(options: { pageSize: number, skip: number }, status: string[] | undefined): Promise<Order[] | ErrorResponse> {
                     return await executeFunction('getOrders', { ...options, status });
                 },

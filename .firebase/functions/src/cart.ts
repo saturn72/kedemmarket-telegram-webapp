@@ -17,7 +17,7 @@ export async function getUserCarts(uid: string):
   return userCarts.docs;
 }
 
-export const getOrCreateCart = onCall(async (req): Promise<any> => {
+export const getOrCreateCart = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start getOrCreateCart", {structuredData: true});
 
   const {uid} = validateAuth(req);
@@ -41,7 +41,7 @@ export const getOrCreateCart = onCall(async (req): Promise<any> => {
   };
 });
 
-export const updateCart = onCall(async (req) => {
+export const updateCart = onCall({enforceAppCheck: true}, async (req) => {
   logger.debug("start updateCart", {structuredData: true});
   const {uid} = validateAuth(req);
 

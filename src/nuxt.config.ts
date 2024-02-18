@@ -20,6 +20,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       backendUrl: "",
+      bffUrl: "",
       wsUrl: ""
     },
   },

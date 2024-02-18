@@ -2,14 +2,11 @@ import type { Catalog, Product } from "@/models/catalog";
 import { useCartStore } from "@/stores/cart";
 import _ from "lodash";
 import { getMediaUrlOrDefault } from "./media";
+import { useBffFetch } from "./backend";
 
 const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
-    const url = await useNuxtApp().$storage.getDownloadUrl(`catalog/index.json`);
-    if (!url) {
-        return undefined;
-    }
+    const catalog = await useBffFetch<Catalog>("catalog");
 
-    const catalog = await $fetch<Catalog>(url);
     if (catalog) {
         catalog.stores?.forEach(s => {
             s.structuredData = s.structuredData ? JSON.parse(s.structuredData) : {};

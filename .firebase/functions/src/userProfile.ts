@@ -21,7 +21,7 @@ export async function getUserProfiles(uid: string):
   return userCarts.docs;
 }
 
-export const getUserProfile = onCall(async (req): Promise<any> => {
+export const getUserProfile = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start getUserProfile", {structuredData: true});
 
   const {uid} = validateAuth(req);
@@ -45,7 +45,7 @@ export const getUserProfile = onCall(async (req): Promise<any> => {
   return res;
 });
 
-export const saveUserProfile = onCall(async (req): Promise<any> => {
+export const saveUserProfile = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start saveUserProfile", {structuredData: true});
 
   const {uid} = validateAuth(req);
