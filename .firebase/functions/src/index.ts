@@ -4,7 +4,7 @@ import * as orderNotifications from "./order-notifications";
 import * as token from "./token";
 import * as userProfile from "./user-profile";
 import * as userManagement from "./user-management";
-import { initializeApp } from "firebase-admin/app";
+import {initializeApp} from "firebase-admin/app";
 
 const app = initializeApp();
 orderNotifications.init(app);

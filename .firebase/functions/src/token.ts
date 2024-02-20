@@ -1,20 +1,20 @@
-import { onCall } from "firebase-functions/v2/https";
+import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import { validateAuth, validateData } from "./requestUtils";
-import { getMessaging } from "firebase-admin/messaging";
+import {validateAuth, validateData} from "./requestUtils";
+import {getMessaging} from "firebase-admin/messaging";
 import {
   getFirestore,
   Timestamp,
 } from "firebase-admin/firestore";
 
 export const subscribeToNotifications =
-  onCall({ enforceAppCheck: true }, async (req): Promise<any> => {
-    logger.debug("start subscribeToNotifications", { structuredData: true });
+  onCall({enforceAppCheck: true}, async (req): Promise<any> => {
+    logger.debug("start subscribeToNotifications", {structuredData: true});
 
-    const { uid } = validateAuth(req);
+    const {uid} = validateAuth(req);
     validateData(req);
 
-    const { tokens, topics } = req.data;
+    const {tokens, topics} = req.data;
 
     if (!tokens || tokens.length == 0) {
       return;

@@ -1,6 +1,6 @@
-import { onCall } from "firebase-functions/v2/https";
+import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import { validateAuth } from "./requestUtils";
+import {validateAuth} from "./requestUtils";
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -26,10 +26,10 @@ export async function getUserProfilesInternal(uid: string):
   return userCarts.docs;
 }
 
-export const fromAnonymousUser = onCall({ enforceAppCheck: true }, async (req):
+export const fromAnonymousUser = onCall({enforceAppCheck: true}, async (req):
   Promise<any> => {
-  logger.debug("start fromAnonymousUser", { structuredData: true });
-  const { uid } = validateAuth(req);
+  logger.debug("start fromAnonymousUser", {structuredData: true});
+  const {uid} = validateAuth(req);
 
   const auid = req.data.anonymousUid;
 
@@ -57,16 +57,16 @@ export const deleteUserProfileInternal = async (uid: string) => {
 };
 
 export const getUserProfile =
-  onCall({ enforceAppCheck: true }, async (req): Promise<any> => {
-    logger.debug("start getUserProfile", { structuredData: true });
+  onCall({enforceAppCheck: true}, async (req): Promise<any> => {
+    logger.debug("start getUserProfile", {structuredData: true});
 
-    const { uid } = validateAuth(req);
+    const {uid} = validateAuth(req);
 
     const profiles = await getUserProfilesInternal(uid);
 
     if (profiles.length == 0) {
       const msg = `no user profile was found for uid:${uid}`;
-      logger.debug(msg, { structuredData: true });
+      logger.debug(msg, {structuredData: true});
       return {};
     }
 
@@ -77,15 +77,15 @@ export const getUserProfile =
     };
 
     const msg = `user profile found for uid:${uid} = ${res}`;
-    logger.debug(msg, { structuredData: true });
+    logger.debug(msg, {structuredData: true});
     return res;
   });
 
 export const saveUserProfile =
-  onCall({ enforceAppCheck: true }, async (req): Promise<any> => {
-    logger.debug("start saveUserProfile", { structuredData: true });
+  onCall({enforceAppCheck: true}, async (req): Promise<any> => {
+    logger.debug("start saveUserProfile", {structuredData: true});
 
-    const { uid } = validateAuth(req);
+    const {uid} = validateAuth(req);
 
     const profiles = await getUserProfilesInternal(uid);
 
