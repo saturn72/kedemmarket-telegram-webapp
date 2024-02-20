@@ -17,6 +17,7 @@ const findItem = (items: CartItem[] | undefined, productId: any): CartItem | und
 }
 
 const getOrCreateCurrentUserCart = (state: any): UserCart => {
+
     const userId = useUserStore().getUser.uid;
 
     if (!state.usersCarts[userId]) {
@@ -61,7 +62,6 @@ export const useCartStore = defineStore('cart', {
         }
     },
     actions: {
-
         setCart(cart: UserCart) {
             const userId = useUserStore().getUser.uid;
             this.$state.usersCarts[userId] = cart;

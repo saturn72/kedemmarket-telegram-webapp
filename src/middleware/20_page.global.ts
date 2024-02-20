@@ -3,3 +3,4 @@ export default defineNuxtRouteMiddleware((to, from) => {
     usePageStore().$reset();
     useStructuredDataStore().clearValue();
 })
+

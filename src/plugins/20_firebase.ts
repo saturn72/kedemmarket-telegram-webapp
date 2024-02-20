@@ -4,31 +4,49 @@ import type { Messaging } from "firebase/messaging";
 import { getMessaging, getToken as getMessagingToken } from "firebase/messaging";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import type { Auth } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import { getAuth, signInAnonymously } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useUserStore } from "@/stores/user";
 import { getToken as getAppCheckToken, type AppCheck } from "firebase/app-check";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import type { UserProfile } from "@/models/account";
-import type { CartItem, CheckoutCart, Order, UserCart } from "@/models/cart";
+import type { CartItem, Order, UserCart } from "@/models/cart";
 import _ from "lodash";
 import type { ErrorResponse } from "~/models/common";
-import type { Catalog } from "~/models/catalog";
 
 const configureAuth = (app: FirebaseApp): Auth => {
     const auth = getAuth(app);
     auth.useDeviceLanguage();
-    auth.currentUser;
 
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            useUserStore().setUser(user);
+    auth.onAuthStateChanged(async user => {
+        const u = user != null ? user : undefined;
+        const userStore = useUserStore();
+        if (!u) {
+            signInAnonymously(auth);
+            userStore.setUser(u); //undefined
+        }
+
+        if (u?.isAnonymous) {
+            userStore.setAnonymousUserId(u.uid);
+            userStore.setUser(u); //undefined
         }
         else {
-            useUserStore().setUser(undefined);
-            useNuxtApp().$router.push(useAppConfig().routes.login);
+            const auid = userStore.getAnonymousUserId as string;
+            const cartStore = useCartStore();
+
+            const anonymouUserCart: UserCart | undefined = useCartStore().getUserCart;
+            delete cartStore.$state.usersCarts[userStore.getAnonymousUserId as string];
+
+            userStore.setUser(u);
+            cartStore.setCart(anonymouUserCart as UserCart);
+            const o = {
+                anonymousUserUid: auid,
+                currentUserUid: u?.uid
+            };
+            // await executeFunction('switchFromAnonymousUser', o);
         }
     });
+
     return auth;
 }
 
@@ -102,6 +120,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                     }
                 }
             },
+            auth,
             user: {
                 async logout(): Promise<any> {
                     await auth.signOut();

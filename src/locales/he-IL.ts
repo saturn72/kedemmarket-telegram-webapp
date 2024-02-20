@@ -18,7 +18,7 @@ export default {
     callSupport: "📞 לתמיכה: 0542204119",
     cancel: "ביטול",
     cart: "🛒 עגלת קניות",
-    cartProductsChanged: "המוצרים בעגלת הקניות שונו 🛒",
+    cartProductsChanged: "המוצרים בעגלת הקניות עודכנו 🛒",
     carts: "🛒 עגלות הקנייה שלי",
     cartTotal: "סה\"כ לעגלה:",
     checkout: "סיום רכישה",

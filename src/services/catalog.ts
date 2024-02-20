@@ -5,7 +5,11 @@ import { getMediaUrlOrDefault } from "./media";
 import { useBffFetch } from "./backend";
 
 const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
-    const catalog = await useBffFetch<Catalog>("catalog");
+    const c = await useBffFetch<Catalog>("catalog");
+    const catalog = {
+        ...c,
+        stores: JSON.parse(c.stores)
+    };
 
     if (catalog) {
         catalog.stores?.forEach(s => {

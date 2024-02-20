@@ -18,7 +18,10 @@ export default {
     },
     logout: {
         displayText: 'logout',
-        onClick: () => { useUserStore().logout() },
+        onClick: () => {
+            useUserStore().logout();
+            navigateTo(useAppConfig().routes.home);
+        },
         icon: 'mdi-logout'
     },
 }

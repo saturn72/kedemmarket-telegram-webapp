@@ -21,9 +21,15 @@
 
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import firebase from 'firebase/compat/app';
+
 import * as firebaseui from 'firebaseui'
+
 import 'firebaseui/dist/firebaseui.css'
 import { startChat } from '~/services/whatsapp';
+import { EmailAuthProvider, GoogleAuthProvider, getAuth } from 'firebase/auth';
+import {
+    signInWithCredential,
+} from 'firebase/auth';
 
 export default {
     methods: {
@@ -36,7 +42,6 @@ export default {
         definePageMeta({
             layout: 'blank'
         });
-
         useHead({
             script: [
                 {
@@ -59,35 +64,56 @@ export default {
     },
 
     mounted() {
-        const fb = useAppConfig().firebase;
-        firebase.initializeApp(fb);
 
-        const rUrl = useRoute().query.returnUrl || "./";
+        const query = useRoute().query;
+        const rUrl = query.returnUrl ||
+            query.signInSuccessUrl ||
+            useAppConfig().routes.home;
+
         var uiConfig = {
             signInSuccessUrl: rUrl,
             signInOptions: [
-                { provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID, },
-                {
-                    provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-                    recaptchaParameters: {
-                        type: 'image',
-                        size: 'invisible',
-                        badge: 'bottomleft'
-                    },
-                    defaultCountry: 'IL',
-                    defaultNationalNumber: '1234567890',
-                    whitelistedCountries: ['IL', '+972']
-                },
-                { provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, },
+                { provider: GoogleAuthProvider.PROVIDER_ID, },
+                // {
+                //     provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+                //     recaptchaParameters: {
+                //         type: 'image',
+                //         size: 'invisible',
+                //         badge: 'bottomleft'
+                //     },
+                //     defaultCountry: 'IL',
+                //     defaultNationalNumber: '1234567890',
+                //     whitelistedCountries: ['IL', '+972']
+                // },
+                { provider: EmailAuthProvider.PROVIDER_ID, },
             ],
             credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
             callbacks: {
-                signInSuccessWithAuthResult: async (authResult, redirectUrl) => {
+                signInSuccessWithAuthResult: (authResult, redirectUrl) => {
                     return true;
                 },
+                signInFailure: async (error) => {
+                    const result = await auth.getRedirectResult()
+                    // For merge conflicts, the error.code will be
+                    // 'firebaseui/anonymous-upgrade-merge-conflict'.
+                    if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {
+                        return Promise.resolve();
+                    }
+                    // The credential the user tried to sign in with.
+                    var cred = error.credential;
+                    // Copy data from anonymous user to permanent user and delete anonymous
+                    // user.
+                    // ...
+                    // Finish sign-in after data is copied.
+                    const t = await signInWithCredential(auth, cred);
+                }
             },
         };
-        const ui = new firebaseui.auth.AuthUI(firebase.auth());
+        const fb = useAppConfig().firebase;
+        firebase.initializeApp(fb);
+        const auth = firebase.auth();
+        const ui = new firebaseui.auth.AuthUI(auth);
+
         ui.start('#firebaseui-auth-container', uiConfig);
     }
 }
