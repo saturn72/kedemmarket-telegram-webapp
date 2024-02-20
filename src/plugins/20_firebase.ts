@@ -39,11 +39,7 @@ const configureAuth = (app: FirebaseApp): Auth => {
 
             userStore.setUser(u);
             cartStore.setCart(anonymouUserCart as UserCart);
-            const o = {
-                anonymousUserUid: auid,
-                currentUserUid: u?.uid
-            };
-            // await executeFunction('switchFromAnonymousUser', o);
+            executeFunction('fromAnonymousUser', { anonymousUid: auid });
         }
     });
 

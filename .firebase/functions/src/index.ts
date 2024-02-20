@@ -17,6 +17,7 @@ export const submitOrder = orders.submitOrder;
 
 export const getUserProfile = userProfile.getUserProfile;
 export const saveUserProfile = userProfile.saveUserProfile;
+export const fromAnonymousUser = userProfile.fromAnonymousUser;
 
 export const subscribeToNotifications = token.subscribeToNotifications;
 // on cloud firestore update

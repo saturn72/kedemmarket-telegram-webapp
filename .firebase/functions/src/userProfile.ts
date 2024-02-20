@@ -7,10 +7,11 @@ import {
   getFirestore,
   Timestamp,
 } from "firebase-admin/firestore";
+import {deleteUserCartsInternal, getUserCartsInternal, updateCartInternal} from "./cart";
 
 const USER_PROFILE_COLLECTION_NAME = "user-profiles";
 
-export async function getUserProfiles(uid: string):
+export async function getUserProfilesInternal(uid: string):
   Promise<QueryDocumentSnapshot<DocumentData>[]> {
   const userCarts = await getFirestore()
     .collection(USER_PROFILE_COLLECTION_NAME)
@@ -21,12 +22,39 @@ export async function getUserProfiles(uid: string):
   return userCarts.docs;
 }
 
+export const fromAnonymousUser = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
+  logger.debug("start fromAnonymousUser", {structuredData: true});
+  const {uid} = validateAuth(req);
+
+  // update and delete carts
+  const auid = req.data.anonymousUid;
+
+  const q = getUserCartsInternal(auid);
+  const p = await q.limit(1).get();
+  const allAnonymousUserCarts = p.docs;
+
+  if (allAnonymousUserCarts.length > 0) {
+    const items = allAnonymousUserCarts[0].data().items;
+    await updateCartInternal(uid, items);
+    await deleteUserCartsInternal(auid);
+  }
+
+  // delete anonymous user profile
+  const profiles = await getUserProfilesInternal(auid);
+
+  if (profiles.length == 0) {
+    profiles.forEach(async (doc) => {
+      await doc.ref.delete();
+    });
+  }
+});
+
 export const getUserProfile = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
   logger.debug("start getUserProfile", {structuredData: true});
 
   const {uid} = validateAuth(req);
 
-  const profiles = await getUserProfiles(uid);
+  const profiles = await getUserProfilesInternal(uid);
 
   if (profiles.length == 0) {
     const msg = `no user profile was found for uid:${uid}`;
@@ -50,7 +78,7 @@ export const saveUserProfile = onCall({enforceAppCheck: true}, async (req): Prom
 
   const {uid} = validateAuth(req);
 
-  const profiles = await getUserProfiles(uid);
+  const profiles = await getUserProfilesInternal(uid);
 
   if (profiles.length == 0) {
     const col = getFirestore()

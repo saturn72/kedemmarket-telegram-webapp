@@ -7,8 +7,8 @@ import {
   Timestamp,
 } from "firebase-admin/firestore";
 
-import {deleteUserCarts} from "./cart";
-import {getUserProfiles} from "./userProfile";
+import {deleteUserCartsInternal} from "./cart";
+import {getUserProfilesInternal} from "./userProfile";
 
 export const submitOrder = onCall({enforceAppCheck: true}, async (req) => {
   logger.debug("start submitOrder", {structuredData: true});
@@ -16,7 +16,7 @@ export const submitOrder = onCall({enforceAppCheck: true}, async (req) => {
   const {uid} = validateAuth(req);
   validateData(req);
 
-  const profiles = await getUserProfiles(req.data.userId);
+  const profiles = await getUserProfilesInternal(req.data.userId);
   const userProfile = profiles[0].data();
 
   const o = {
@@ -37,7 +37,7 @@ export const submitOrder = onCall({enforceAppCheck: true}, async (req) => {
   const orders = getFirestore()
     .collection("orders");
   const writeResult = await orders.add(o);
-  await deleteUserCarts(uid);
+  await deleteUserCartsInternal(uid);
 
   logger.debug("end submitOrder", {structuredData: true});
   return {
