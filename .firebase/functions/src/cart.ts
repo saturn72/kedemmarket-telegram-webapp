@@ -22,30 +22,31 @@ export async function getUserCarts(uid: string):
   return userCarts.docs;
 }
 
-export const getOrCreateCart = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
-  logger.debug("start getOrCreateCart", {structuredData: true});
+export const getOrCreateCart =
+  onCall({enforceAppCheck: true}, async (req): Promise<any> => {
+    logger.debug("start getOrCreateCart", {structuredData: true});
 
-  const {uid} = validateAuth(req);
+    const {uid} = validateAuth(req);
 
-  const userCarts = await getUserCarts(uid);
-  let items: any[] = [];
+    const userCarts = await getUserCarts(uid);
+    let items: any[] = [];
 
-  if (userCarts.length > 0) {
-    items = userCarts[0].data().items;
-  } else {
-    await getFirestore()
-      .collection("carts")
-      .add({
-        items,
-      });
-  }
+    if (userCarts.length > 0) {
+      items = userCarts[0].data().items;
+    } else {
+      await getFirestore()
+        .collection("carts")
+        .add({
+          items,
+        });
+    }
 
-  logger.debug("end getOrCreateCart", {structuredData: true});
+    logger.debug("end getOrCreateCart", {structuredData: true});
 
-  return {
-    items,
-  };
-});
+    return {
+      items,
+    };
+  });
 
 export const updateCart = onCall({enforceAppCheck: true}, async (req) => {
   logger.debug("start updateCart", {structuredData: true});

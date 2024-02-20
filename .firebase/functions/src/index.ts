@@ -2,8 +2,9 @@ import * as orders from "./orders";
 import * as cart from "./cart";
 import * as orderNotifications from "./order-notifications";
 import * as token from "./token";
-import * as userProfile from "./userProfile";
-import {initializeApp} from "firebase-admin/app";
+import * as userProfile from "./user-profile";
+import * as userManagement from "./user-management";
+import { initializeApp } from "firebase-admin/app";
 
 const app = initializeApp();
 orderNotifications.init(app);
@@ -22,3 +23,4 @@ export const fromAnonymousUser = userProfile.fromAnonymousUser;
 export const subscribeToNotifications = token.subscribeToNotifications;
 // on cloud firestore update
 export const onOrderUpdated = orderNotifications.onOrderUpdated;
+export const onAnonymousUserDeleted = userManagement.onAnonymousUserDeleted;

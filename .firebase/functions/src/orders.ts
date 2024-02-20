@@ -1,19 +1,19 @@
-import {onCall} from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import {validateAuth, validateData} from "./requestUtils";
+import { validateAuth, validateData } from "./requestUtils";
 import {
   FieldPath,
   getFirestore,
   Timestamp,
 } from "firebase-admin/firestore";
 
-import {deleteUserCartsInternal} from "./cart";
-import {getUserProfilesInternal} from "./userProfile";
+import { deleteUserCartsInternal } from "./cart";
+import { getUserProfilesInternal } from "./user-profile";
 
-export const submitOrder = onCall({enforceAppCheck: true}, async (req) => {
-  logger.debug("start submitOrder", {structuredData: true});
+export const submitOrder = onCall({ enforceAppCheck: true }, async (req) => {
+  logger.debug("start submitOrder", { structuredData: true });
 
-  const {uid} = validateAuth(req);
+  const { uid } = validateAuth(req);
   validateData(req);
 
   const profiles = await getUserProfilesInternal(req.data.userId);
@@ -39,7 +39,7 @@ export const submitOrder = onCall({enforceAppCheck: true}, async (req) => {
   const writeResult = await orders.add(o);
   await deleteUserCartsInternal(uid);
 
-  logger.debug("end submitOrder", {structuredData: true});
+  logger.debug("end submitOrder", { structuredData: true });
   return {
     orderId: writeResult.id,
     items: req.data.items,
@@ -59,11 +59,12 @@ const getOrdersInternal =
     return f.orderBy("createdOnUtc", "desc");
   };
 
-export const getOrders = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
-  logger.debug("start getOrderById", {structuredData: true});
+export const getOrders = onCall({ enforceAppCheck: true }, async (req):
+  Promise<any> => {
+  logger.debug("start getOrderById", { structuredData: true });
 
-  const {uid} = validateAuth(req);
-  const {pageSize = 10, skip = 0, status = []} = req.data;
+  const { uid } = validateAuth(req);
+  const { pageSize = 10, skip = 0, status = [] } = req.data;
   logger.debug("pageSize, skip, status", pageSize, skip, status);
 
   const t = await getOrdersInternal(uid, status)
@@ -114,9 +115,10 @@ export const getOrders = onCall({enforceAppCheck: true}, async (req): Promise<an
   };
 });
 
-export const getOrderById = onCall({enforceAppCheck: true}, async (req): Promise<any> => {
-  logger.debug("start 'getOrderById'", {structuredData: true});
-  const {uid} = validateAuth(req);
+export const getOrderById = onCall({ enforceAppCheck: true }, async (req):
+  Promise<any> => {
+  logger.debug("start 'getOrderById'", { structuredData: true });
+  const { uid } = validateAuth(req);
   validateData(req);
 
   const orderId = req.data?.orderId;
