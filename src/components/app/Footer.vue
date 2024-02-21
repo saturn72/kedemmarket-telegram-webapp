@@ -14,10 +14,18 @@
                 {{ $t('toCart') }}
             </v-btn>
 
-            <v-btn plain @click="toRoute(account)">
+            <v-btn v-if="userImage">
+                <v-avatar size="small">
+                    <v-img :src="userImage">
+                    </v-img>
+                </v-avatar>
+                {{ $t('toAccount') }}
+            </v-btn>
+            <v-btn v-else plain @click="toRoute(account)">
                 <v-icon>mdi-account-outline</v-icon>
                 {{ $t('toAccount') }}
             </v-btn>
+
             <v-btn plain @click="toRoute(home)">
                 <v-icon>mdi-store-outline</v-icon>
                 {{ $t('toStore') }}
@@ -34,10 +42,21 @@ const cartItemCount = computed(() => useCartStore().getTotalCartItemsCount);
 const cartTotal = computed(() => useCartStore().getCartTotal);
 const isCheckout = computed(() => useRoute().path.startsWith(useAppConfig().routes.checkout))
 const { account, checkout, home, } = useAppConfig().routes;
-
 </script>
+
 <script>
 export default {
+    computed: {
+        userImage() {
+            let img = useUserStore().getUser?.photoURL;
+            if (img == null) {
+                img = undefined;
+            }
+
+            console.timeLog("ttttttt", img);
+            return img;
+        }
+    },
     methods: {
         toRoute(route) {
             useRouter().push(route)

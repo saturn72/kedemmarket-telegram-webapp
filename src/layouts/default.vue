@@ -1,7 +1,10 @@
 <template>
     <v-app>
         <AppHeader />
-        <v-main>
+        <v-main v-if="useAlertStore().$state.type == 'loader'">
+            <AppLoader />
+        </v-main>
+        <v-main v-else>
             <p v-if="header" justify-center class="text-subtitle-1 mx-7">{{ header }}</p>
             <slot />
         </v-main>
@@ -11,7 +14,6 @@
 </template>
 
 <script setup>
-
 const store = useStructuredDataStore();
 store.$subscribe((mutation, state) => {
     useHead({

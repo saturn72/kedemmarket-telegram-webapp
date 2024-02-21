@@ -20,7 +20,7 @@ export const useUserStore = defineStore('user', {
         },
         getAnonymousUserId(state): string | undefined {
             return state.anonymousUserId;
-        }
+        },
     },
     actions: {
         setUser(user: any): void {

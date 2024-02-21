@@ -16,4 +16,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
             return navigateTo(`${useAppConfig().routes.login}?returnUrl=${to.fullPath}`);
         }
     }
+    else {
+        console.log("wait until use is updated")
+    }
 })

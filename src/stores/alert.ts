@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { defineStore } from 'pinia'
 
-type AlertType = "snackbar" | "dialog";
+type AlertType = "dialog" | "loader" | "snackbar";
 
 type AlertState = {
     alertTimelines: [key: AlertType, item: number] | any
@@ -19,15 +19,6 @@ export const useAlertStore = defineStore('alert', {
     state: (): AlertState => {
         return initValue;
     },
-    getters: {
-        getType: (state): AlertType | undefined => {
-            return state.type;
-        },
-
-        getData: (state): any => {
-            return state.data;
-        },
-    },
     actions: {
         clearAlarms() {
             this.$state.alertTimelines = {};
@@ -40,6 +31,9 @@ export const useAlertStore = defineStore('alert', {
             if (this.$state.type == type) {
                 this.clearAlarms()
             }
+        },
+        setAppLoader() {
+            this.$state.type = "loader";
         },
         setDialog(data: any) {
             this.$state.type = "dialog";

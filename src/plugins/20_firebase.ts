@@ -22,8 +22,10 @@ const configureAuth = (app: FirebaseApp): Auth => {
         const u = user != null ? user : undefined;
         const userStore = useUserStore();
         if (!u) {
-            signInAnonymously(auth);
             userStore.setUser(u); //undefined
+            useAlertStore().setAppLoader();
+            signInAnonymously(auth);
+            return;
         }
 
         if (u?.isAnonymous) {
@@ -41,6 +43,7 @@ const configureAuth = (app: FirebaseApp): Auth => {
             cartStore.setCart(anonymouUserCart as UserCart);
             executeFunction('fromAnonymousUser', { anonymousUid: auid });
         }
+        useAlertStore().clearAlarmType("loader");
     });
 
     return auth;
