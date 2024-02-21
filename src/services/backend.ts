@@ -18,7 +18,7 @@ async function makeHttpCall<ResT = void>(url: string, opts?: UseFetchOptions<Res
         const { data, error } = await useFetch(url, o);
 
         if (error.value) {
-            console.debug(`failed to fetch data from url: ${url} using options: ${JSON.stringify(o)}`);
+            console.debug(`Failed to fetch data from url: ${url} using options: ${JSON.stringify(o)}`);
             throw new Error(error.value?.message);
         }
 

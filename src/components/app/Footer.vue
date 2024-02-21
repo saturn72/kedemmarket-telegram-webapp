@@ -52,8 +52,6 @@ export default {
             if (img == null) {
                 img = undefined;
             }
-
-            console.timeLog("ttttttt", img);
             return img;
         }
     },
