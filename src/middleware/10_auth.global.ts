@@ -1,6 +1,6 @@
 import { useUserStore } from "@/stores/user";
 
-const excludedPaths: string[] = ['', '/', '/product'];
+const excludedPaths: string[] = ['/login', '/product'];
 
 export default defineNuxtRouteMiddleware((to, from) => {
     const t = to.fullPath

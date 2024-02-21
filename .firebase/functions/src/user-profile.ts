@@ -39,7 +39,9 @@ export const fromAnonymousUser = onCall({enforceAppCheck: true}, async (req):
 
   if (allAnonymousUserCarts.length > 0) {
     const items = allAnonymousUserCarts[0].data().items;
-    await updateCartInternal(uid, items);
+    if (items.length > 0) {
+      await updateCartInternal(uid, items);
+    }
     await deleteUserCartsInternal(auid);
   }
 
