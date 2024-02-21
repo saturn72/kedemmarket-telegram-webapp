@@ -18,7 +18,8 @@ async function makeHttpCall<ResT = void>(url: string, opts?: UseFetchOptions<Res
         const { data, error } = await useFetch(url, o);
 
         if (error.value) {
-            throw new Error(error.value?.message)
+            console.debug(`failed to fetch data from url: ${url} using options: ${JSON.stringify(o)}`);
+            throw new Error(error.value?.message);
         }
 
         d = _.cloneDeep(toRaw(data.value));
@@ -31,7 +32,7 @@ async function makeHttpCall<ResT = void>(url: string, opts?: UseFetchOptions<Res
         maxTimeout: 1000,
         minTimeout: 50,
         onFailedAttempt: e => {
-            console.error(`Failed to access backend. Attempt ${e.attemptNumber} of  ${e.attemptNumber + e.retriesLeft}`);
+            console.error(`Failed to access backend.Attempt ${e.attemptNumber} of  ${e.attemptNumber + e.retriesLeft}`);
         },
     });
 
@@ -44,6 +45,6 @@ export async function useBffFetch<ResT = void>(uri: string, opts?: UseFetchOptio
 }
 
 export async function useBackendFetch<ResT = void>(uri: string, opts?: UseFetchOptions<ResT>): Promise<ResT> {
-    const url = `${useRuntimeConfig().public.backendUrl}/${uri}`;
+    const url = `${useRuntimeConfig().public.backendUrl} / ${uri}`;
     return makeHttpCall<ResT>(url, opts);
 }
