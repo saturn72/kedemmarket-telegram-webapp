@@ -4,9 +4,7 @@
 </template>
 
 <script setup>
-definePageMeta({
-    middleware: ['auth'],
-});
+
 import { useCartStore } from '@/stores/cart'
 import { usePageStore } from '@/stores/page'
 import { computed } from 'vue'

@@ -14,15 +14,18 @@
                 {{ $t('toCart') }}
             </v-btn>
 
-            <v-btn v-if="userImage">
-                <v-avatar size="small">
+            <v-btn plain @click="toRoute(account)">
+                <v-avatar v-if="userImage" size="small">
                     <v-img :src="userImage">
+                        <template v-slot:placeholder>
+                            <div class="d-flex align-center justify-center fill-height">
+                                <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                            </div>
+                        </template>
                     </v-img>
                 </v-avatar>
-                {{ $t('toAccount') }}
-            </v-btn>
-            <v-btn v-else plain @click="toRoute(account)">
-                <v-icon>mdi-account-outline</v-icon>
+
+                <v-icon v-else>mdi-account-outline</v-icon>
                 {{ $t('toAccount') }}
             </v-btn>
 
@@ -39,22 +42,24 @@ import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
 const cartItemCount = computed(() => useCartStore().getTotalCartItemsCount);
+
 const cartTotal = computed(() => useCartStore().getCartTotal);
-const isCheckout = computed(() => useRoute().path.startsWith(useAppConfig().routes.checkout))
-const { account, checkout, home, } = useAppConfig().routes;
+
+const isCheckout = computed(() => useRoute().path.startsWith(useAppConfig().routes.checkout));
+
+const userImage = computed(() => {
+    const img = useUserStore().getUser?.photoURL;
+    if (!img || img == null) {
+        return undefined;
+    }
+    return img.trim();
+});
+
+const { account, checkout, home } = useAppConfig().routes;
 </script>
 
 <script>
 export default {
-    computed: {
-        userImage() {
-            let img = useUserStore().getUser?.photoURL;
-            if (img == null) {
-                img = undefined;
-            }
-            return img;
-        }
-    },
     methods: {
         toRoute(route) {
             useRouter().push(route)
