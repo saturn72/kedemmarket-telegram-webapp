@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import type { CartItem, CheckoutCart, CheckoutCartItem } from '@/models/cart';
+import type { BackendCartItem, CartItem, CheckoutCart, CheckoutCartItem } from '@/models/cart';
 import { defineStore } from 'pinia'
 import { useCartStore } from './cart';
 import { useUserStore } from './user';
@@ -39,7 +39,7 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         }
     });
 
-    const { data, error } = await useBackendFetch("shopping-cart", {
+    const { Items } = await useBackendFetch<{ Items: BackendCartItem[] }>("shopping-cart", {
         method: "POST",
         body: {
             storeId: 1,
@@ -48,7 +48,7 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
         }
     });
 
-    if (error) {
+    if (!Items) {
         state.error = true;
         return;
     }
@@ -62,9 +62,10 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
     const scis = state.userCart?.items ?? [];
     for (let index = 0; index < scis.length; index++) {
         const cur = scis[index];
-        const di = data.Items.find((t: any) => t.ProductId == cur.product.id);
+        const di = Items.find((t: BackendCartItem) => t.ProductId == cur.product.id);
         if (!di) {
-            state.notAvailableItems.push({ ...di });
+            state.notAvailableItems.push({ ...cur });
+            continue;
         }
 
         const cp = _.cloneDeep(cur);
@@ -83,7 +84,7 @@ const calculateInternal = async (state: CheckoutCartState): Promise<void> => {
             itemPrice: di.UnitPriceValue,
         });
         state.cartTotal += di.SubTotalValue;
-        state.totalDiscounts += di.numericDiscount;
+        state.totalDiscounts += di.DiscountValue;
     }
     state.items = stateItems;
 }

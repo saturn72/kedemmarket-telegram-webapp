@@ -1,14 +1,23 @@
 import type { Product } from "./catalog";
 
+export interface BackendCartItem {
+    DiscountValue: number;
+    ProductId: number;
+    ProductName: string;
+    Quantity: number;
+    Sku: string | null | undefined
+    SubTotalValue: number;
+    UnitPriceValue: number;
+}
 export type CartItem = {
     product: Product;
     orderedQuantity: number;
     totalPrice?: number;
     addedOnUtc: Date;
-    priceBeforeDiscounts?: number;
-    priceAfterDiscounts?: number;
-    numericDiscount?: number;
-    percentageDiscount?: number;
+    priceBeforeDiscounts: number;
+    priceAfterDiscounts: number;
+    numericDiscount: number;
+    percentageDiscount: number;
 }
 
 export type Order = {

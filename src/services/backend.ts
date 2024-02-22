@@ -44,7 +44,8 @@ export async function useBffFetch<ResT = void>(uri: string, opts?: UseFetchOptio
     return await makeHttpCall<ResT>(url, opts);
 }
 
-export async function useBackendFetch<ResT = void>(uri: string, opts?: UseFetchOptions<ResT>): Promise<ResT> {
-    const url = `${useRuntimeConfig().public.backendUrl} / ${uri}`;
+export async function useBackendFetch<ResT = void>(uri: string, opts?: UseFetchOptions<ResT>)
+    : Promise<ResT> {
+    const url = `${useRuntimeConfig().public.backendUrl}${uri}`;
     return makeHttpCall<ResT>(url, opts);
 }
