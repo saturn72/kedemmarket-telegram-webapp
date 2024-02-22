@@ -5,11 +5,7 @@ import { getMediaUrlOrDefault } from "./media";
 import { useBffFetch } from "./backend";
 
 const acquireCatalog = async (): Promise<Catalog | undefined | null> => {
-    const c = await useBffFetch<Catalog>("catalog");
-    const catalog = {
-        ...c,
-        stores: JSON.parse(c.stores)
-    };
+    const catalog = await useBffFetch<Catalog>("catalog");
 
     if (catalog) {
         catalog.stores?.forEach(s => {
@@ -71,20 +67,29 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
 
 export async function getCatalog(): Promise<Catalog | null | undefined> {
     const cache = useNuxtApp().$cache;
+
     let acquired = false;
-    const catalog = await cache.getOrAcquire(`catalog:index`,
+    let catalog = await cache.getOrAcquire(`catalog:index`,
         () => {
             acquired = true;
             return acquireCatalog();
         }
         , expiration);
 
+    //if acquired - clear keys
     if (acquired && catalog) {
         cache.removeByPrefix(CatalogProductPrimaryMediaCachePrefix);
         useCatalogStore().setCatalog(catalog);
         if (catalog.products) {
             useCartStore().updateCartProducts(catalog.products);
         }
+
+        return catalog;
     }
-    return catalog;
+
+    //if not acquired/failed during acquiration - retutn the cached value
+    if (!catalog) {
+        catalog = await cache.get<Catalog>(`catalog:index`);
+    }
+    return catalog
 }
