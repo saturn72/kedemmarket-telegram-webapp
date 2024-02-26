@@ -38,7 +38,7 @@ let timoutTimer: NodeJS.Timeout;
 
 const subscribeToNotifications = (retryCount: number) => {
     console.log("start ws connection")
-    socket = io(useRuntimeConfig().public.bffUrl);
+    socket = io(useRuntimeConfig().public.bffUrl, { path: '/notify/' });
 
     socket.on('connect_error', (error) => {
         console.log("error:", error);

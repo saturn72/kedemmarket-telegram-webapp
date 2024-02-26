@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     public: {
       backendUrl: "",
       bffUrl: "",
+      wsUrl: "",
     },
   },
   components: [
