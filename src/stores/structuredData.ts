@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Product } from '../models/catalog';
+import type { Product } from '../models/catalog';
 
 type ProductStructureDataInfo = { productId: any, image: string | undefined };
 type StructureDataState = {

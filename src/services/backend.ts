@@ -44,6 +44,30 @@ export async function useBffFetch<ResT = void>(uri: string, opts?: UseFetchOptio
     return await makeHttpCall<ResT>(url, opts);
 }
 
+export async function useBffNotifications<ResT = void>(
+    uri: string,
+    opts?: UseFetchOptions<ResT>): Promise<EventSource> {
+
+    const url = `${useRuntimeConfig().public.bffUrl}${uri}`;
+    makeHttpCall<ResT>(url, opts);
+
+    const appToken = await useNuxtApp().$backend.getAppToken();
+    const o = {
+        headers: {
+            'X-Firebase-AppCheck': appToken
+        }
+    };
+    const eventSource = new EventSource(url, { withCredentials: true });
+
+    eventSource.onerror = (ev: Event) => {
+        console.log(`Error in event source \'${url}\': \'${JSON.stringify(ev)}\'`);
+        console.log(`Closing event source: \'${url}\;`);
+        eventSource.close();
+        console.log(`Event source closed: \'${url}\;`);
+    };
+    return eventSource;
+}
+
 export async function useBackendFetch<ResT = void>(uri: string, opts?: UseFetchOptions<ResT>)
     : Promise<ResT> {
     const url = `${useRuntimeConfig().public.backendUrl}${uri}`;

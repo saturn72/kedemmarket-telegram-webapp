@@ -1,4 +1,5 @@
 import * as orders from "./orders";
+import * as catalog from "./catalog";
 import * as cart from "./cart";
 import * as orderNotifications from "./order-notifications";
 import * as token from "./token";
@@ -11,6 +12,8 @@ orderNotifications.init(app);
 
 export const getOrCreateCart = cart.getOrCreateCart;
 export const updateCart = cart.updateCart;
+
+export const onCatalogCreated = catalog.onCatalogCreated;
 
 export const getOrders = orders.getOrders;
 export const getOrderById = orders.getOrderById;

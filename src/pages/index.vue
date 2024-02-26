@@ -44,8 +44,20 @@ import { useSearchStore } from '@/stores/search'
 import { getCatalog } from '~/services/catalog';
 
 export default {
+    // beforeRouteLeave() {
+    //     this.unsubsribeFromNotifications();
+    // },
+    // beforeMount() {
+    //     window.onbeforeunload = (e) => {
+    //         this.unsubsribeFromNotifications();
+    //     };
+    // },
+    // mounted() {
+    //     this.subscribeToNotifications();
+    // },
     setup() {
         useHead({ title: useNuxtApp().$t('homePage') });
+
         getCatalog();
 
         const products = computed(() => {
@@ -66,6 +78,32 @@ export default {
         }
     },
     methods: {
+        // subscribeToNotifications() {
+        //     console.debug("start ws connection")
+        //     const wsUrl = `${useRuntimeConfig().public.bffUrl}catalog`;
+        //     this.socket = io(wsUrl);
+
+        //     this.socket.on('connect_error', (e) => console.log("error:", e));
+        //     this.socket.on('connect', function () {
+        //         console.debug('Connected to wss');
+        //     });
+
+        //     this.socket.on('update', ({ data }) => {
+        //         console.debug('update', data);
+        //     });
+
+        //     // this.socket = useBffNotifications('catalog/sse');
+        //     // console.log("The response:", this.socket);
+
+
+        //     // this.socket.addEventListener("message", (e) => console.log('New message', JSON.parse(e.data)));
+        //     // this.socket.addEventListener("error", (event) => this.unsubsribeFromNotifications());
+        // },
+        // unsubsribeFromNotifications() {
+        //     this.socket.disconnect();
+        //     window.onbeforeunload = null;
+        //     console.log("wws connection closed");
+        // },
         onSearchUpdated(value) {
             this.search = value;
             if (!value || value.trim().length == 0) {
@@ -83,7 +121,8 @@ export default {
     data() {
         return {
             itemsToDisplay: [],
-            search: ''
+            search: '',
+            socket: {},
         }
     }
 }
