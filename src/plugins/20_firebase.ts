@@ -21,10 +21,12 @@ const configureAuth = (app: FirebaseApp): Auth => {
     auth.onAuthStateChanged(async user => {
         const u = user != null ? user : undefined;
         const userStore = useUserStore();
+
+        //user logged out
         if (!u) {
             userStore.setUser(u); //undefined
             useAlertStore().setAppLoader();
-            signInAnonymously(auth);
+            await signInAnonymously(auth);
             return;
         }
 
@@ -45,7 +47,6 @@ const configureAuth = (app: FirebaseApp): Auth => {
         }
         useAlertStore().clearAlarmType("loader");
     });
-
     return auth;
 }
 
