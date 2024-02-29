@@ -26,15 +26,14 @@ export type Order = {
     orderTotal: number;
     totalDiscounts: number;
 }
-export type CartProductMessage =
-    {
-        from: Product,
-        to: Product,
-        diff: object,
-        type?: string
-    };
+export type CartProductMessage = {
+    from: Product,
+    to: Product,
+    diff: object,
+    type?: string
+};
 
-export type UserCart = {
+export interface UserCart {
     items: CartItem[]
     messages: (CartProductMessage)[]
 };

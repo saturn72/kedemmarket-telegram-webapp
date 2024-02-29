@@ -38,7 +38,11 @@ const configureAuth = (app: FirebaseApp): Auth => {
             const auid = userStore.getAnonymousUserId as string;
             const cartStore = useCartStore();
 
-            const anonymouUserCart: UserCart | undefined = useCartStore().getUserCart;
+            const anonymouUserCart: UserCart | undefined = auid ? useCartStore().getUserCart :
+                {
+                    items: [],
+                    messages: []
+                };
             delete cartStore.$state.usersCarts[userStore.getAnonymousUserId as string];
 
             userStore.setUser(u);

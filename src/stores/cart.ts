@@ -37,7 +37,7 @@ export const useCartStore = defineStore('cart', {
     state: (): CartState => defaultValue,
     getters: {
         getUserCart(state): UserCart | undefined {
-            const userId = useUserStore().getUser.uid;
+            const userId = useUserStore().getUser?.uid;
             if (!userId) {
                 return undefined;
             }
