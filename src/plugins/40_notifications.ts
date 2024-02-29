@@ -61,14 +61,11 @@ const subscribeToNotifications = () => {
         console.log('Connected to wss');
     });
 
-    socket.on("catalog:updated", () => {
-        console.log("catalog:updated");
-        // useNuxtApp().$cache.removeByPrefix("catalog");
-        // await getCatalog();
+    socket.on("catalog:updated", async () => {
+        useNuxtApp().$cache.removeByPrefix("catalog");
     });
 
     socket.on("order:updated", async ({ orderId }) => {
-        console.log("order:updated");
         await getOrderById(orderId, true);
     });
 }
