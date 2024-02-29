@@ -9,11 +9,11 @@
         </v-card>
     </v-dialog>
 
-    <v-card v-if="loading" height="100%" flat class="d-flex flex-column align-center justify-center">
+    <!-- <v-card v-if="loading" height="100%" flat class="d-flex flex-column align-center justify-center">
         <v-card-text>
             <AppProgressCircular />
         </v-card-text>
-    </v-card>
+    </v-card> -->
 
     <CheckoutErrorDialog :show="error" @retry="$router.go();"></CheckoutErrorDialog>
     <CheckoutOrderDialog :show="orderDialog"></CheckoutOrderDialog>
@@ -70,6 +70,9 @@ import { getUserProfile, saveUserProfile } from "~/services/profile";
 import { clearOrderCache } from "~/services/order";
 
 export default {
+    setup() {
+        useAlertStore().setAppLoaderByCondition(() => this.loading);
+    },
     async mounted() {
         this.loading = true;
 

@@ -15,6 +15,18 @@ const initValue = {
     alertTimelines: {}
 };
 
+async function waitForCondition(condition: () => boolean, ms: number = 250) {
+    return await new Promise(resolve => {
+        const interval = setInterval(() => {
+            if (!condition()) {
+                clearInterval(interval);
+                resolve(true);
+            };
+        }, ms);
+    });
+}
+
+
 export const useAlertStore = defineStore('alert', {
     state: (): AlertState => {
         return initValue;
@@ -34,6 +46,11 @@ export const useAlertStore = defineStore('alert', {
         },
         setAppLoader(): void {
             this.$state.type = "loader";
+        },
+        async setAppLoaderByCondition(condition: () => boolean): Promise<void> {
+            this.$state.type = "loader";
+            await waitForCondition(condition);
+            this.$state.type = undefined;
         },
         setDialog(data: any) {
             this.$state.type = "dialog";

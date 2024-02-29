@@ -34,8 +34,7 @@
         </template>
     </v-data-iterator>
 </template>
-  
-
+    
 <script>
 function textMatchsTerm(text, term) { text && text.toLowerCase().indexOf(term) > -1; }
 function tagsMatchTerm(tags, term) { tags && tags.some(t => t.toLowerCase().indexOf(term) > -1); }
