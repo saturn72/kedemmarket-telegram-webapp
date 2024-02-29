@@ -36,16 +36,22 @@ let timoutTimer: NodeJS.Timeout;
 //     }
 // }
 
-const subscribeToNotifications = (retryCount: number) => {
-    console.log("start ws connection")
-    socket = io(useRuntimeConfig().public.bffUrl, { path: '/notify/' });
+const subscribeToNotifications = () => {
+    let retryCount: number = 1;
+    const tryConnect = () => {
+        console.log(`start ws connection - socketio connection attempt #${retryCount}`);
+        socket?.disconnect();
 
+        socket = io(useRuntimeConfig().public.bffUrl, { path: '/notify' });
+        socket?.connect();
+    };
+
+    tryConnect();
     socket.on('connect_error', (error) => {
         console.log("error:", error);
-        if (retryCount++ < maxRetries) {
+        if (retryCount++ <= maxRetries && !socket.active) {
             const delay = Math.pow(2, retryCount);
-            timoutTimer = setTimeout(() => subscribeToNotifications(retryCount),
-                delay * 1000);
+            timoutTimer = setTimeout(tryConnect, delay * 1000);
         } else {
             console.error(error)
         }
@@ -55,10 +61,10 @@ const subscribeToNotifications = (retryCount: number) => {
         console.log('Connected to wss');
     });
 
-    socket.on("catalog:updated", async () => {
+    socket.on("catalog:updated", () => {
         console.log("catalog:updated");
-        useNuxtApp().$cache.removeByPrefix("catalog");
-        await getCatalog();
+        // useNuxtApp().$cache.removeByPrefix("catalog");
+        // await getCatalog();
     });
 
     socket.on("order:updated", async ({ orderId }) => {
@@ -74,7 +80,7 @@ const unsubsribeFromNotifications = () => {
 };
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-    subscribeToNotifications(0);
+    subscribeToNotifications();
 
     window.onbeforeunload = (e) => {
         clearTimeout(timoutTimer)

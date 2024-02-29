@@ -32,7 +32,7 @@ export const useAlertStore = defineStore('alert', {
                 this.clearAlarms()
             }
         },
-        setAppLoader() {
+        setAppLoader(): void {
             this.$state.type = "loader";
         },
         setDialog(data: any) {

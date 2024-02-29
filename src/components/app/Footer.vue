@@ -42,9 +42,7 @@ import { useCartStore } from '@/stores/cart'
 import { computed } from 'vue'
 
 const cartItemCount = computed(() => useCartStore().getTotalCartItemsCount);
-
 const cartTotal = computed(() => useCartStore().getCartTotal);
-
 const isCheckout = computed(() => useRoute().path.startsWith(useAppConfig().routes.checkout));
 
 const userImage = computed(() => {
