@@ -1,12 +1,5 @@
 <template>
-    <v-container v-if="!products">
-        <v-row>
-            <v-col class="d-flex justify-center">
-                <v-progress-circular indeterminate :size="75" :width="5"></v-progress-circular>
-            </v-col>
-        </v-row>
-    </v-container>
-    <v-data-iterator v-else :items="products" :search="search">
+    <v-data-iterator :items="products" :search="search" items-per-page="100">
         <template v-slot:header>
             <v-toolbar class="px-2">
                 <AppSearchBar @onSearchUpdated="onSearchUpdated" />
@@ -41,6 +34,7 @@ function tagsMatchTerm(tags, term) { tags && tags.some(t => t.toLowerCase().inde
 
 import { useSearchStore } from '@/stores/search'
 import { getCatalog } from '~/services/catalog';
+import _ from "lodash";
 
 export default {
     setup() {
@@ -48,9 +42,10 @@ export default {
         getCatalog();
 
         const products = computed(() => {
-            const products = useCatalogStore().products;
+            const products = _.sortBy(useCatalogStore().products, 
+            o => [o.displayOrder, o.name]);
             useStructuredDataStore().setMultipleProductPageStructuredData(products);
-            return products;
+            return products.sort(p => p.displayOrder);
         });
 
         const hasCartItems = computed(() => useCartStore().getCartTotal > 0);

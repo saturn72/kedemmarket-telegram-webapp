@@ -5,6 +5,7 @@ export interface Catalog {
     version?: string;
     stores?: Store[];
     products?: Product[]
+    categories?: Category[]
 }
 
 export interface Store {
@@ -15,6 +16,11 @@ export interface Store {
     products: Product[];
     structuredData?: any;
     vendors?: Vendor[];
+}
+
+export interface Category {
+    id: any;
+
 }
 
 export interface Product {

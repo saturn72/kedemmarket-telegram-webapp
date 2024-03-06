@@ -1,20 +1,28 @@
 <template>
-    <v-col class="d-flex justify-center my-10">
-        <v-avatar :size="width" :image="useAppConfig().defaults.thumbnail"></v-avatar>
-    </v-col>
-    <div id="firebaseui-auth-container"></div>
+    <v-card flat>
+        <v-card-text>
 
-    <p class="d-flex justify-center my-10">
-        {{ $t('loginIsRequiredToContinue') }}
-    </p>
+            <v-col class="d-flex justify-center my-10">
+                <v-avatar :size="width" :image="useAppConfig().defaults.thumbnail"></v-avatar>
+            </v-col>
+            <div id="firebaseui-auth-container"></div>
 
+            <p class="d-flex justify-center my-10">
+                {{ $t('loginIsRequiredToContinue') }}
+            </p>
 
-    <p class="d-flex justify-center my-10" style="background-color: antiquewhite">
-        {{ $t('loginIsRequiredToContinueWhy') }}
-    </p>
-    <v-btn block class="ma-10" prepend-icon="mdi-face-agent" variant="elevated" @click="toChat()">
-        {{ $t('callSupport') }}
-    </v-btn>
+            <p class="d-flex justify-center my-10" style="background-color: antiquewhite">
+                {{ $t('loginIsRequiredToContinueWhy') }}
+            </p>
+
+        </v-card-text>
+
+        <v-card-actions>
+            <v-btn block prepend-icon="mdi-face-agent" variant="elevated" @click="toChat()">
+                {{ $t('callSupport') }}
+            </v-btn>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>

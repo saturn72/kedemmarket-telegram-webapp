@@ -40,7 +40,7 @@ const acquireProductPrimaryMedia = async (product: Product, type: "thumbnail" | 
     return await getMediaUrlOrDefault(ppmi.uri, useAppConfig().defaults.thumbnail);
 };
 
-const expiration = 10 * 60;
+const expiration = 5 * 60;
 const CatalogProductPrimaryMediaCachePrefix = "catalog:product-primary-media:";
 
 export async function getProductPrimaryMediaUrl(product: Product, type: "thumbnail" | "image"): Promise<string> {
